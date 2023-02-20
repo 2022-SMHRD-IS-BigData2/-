@@ -1,15 +1,8 @@
-from typing import Union
-
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles   #<-- Add this
 
 app = FastAPI()
 
 
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
-
-
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Union[str, None] = None):
-    return {"item_id": item_id, "q": q}
+#static files & load
+app.mount("/", StaticFiles(directory="static", html = True), name="static") #<-- Add this
