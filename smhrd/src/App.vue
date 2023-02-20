@@ -1,30 +1,142 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view/>
+  <div id="header">
+    <div id="backward">
+      <router-link to="/" id="back"><i class="fa-solid fa-arrow-left fa-2x"></i></router-link>
+    </div>
+        <div id="nav">
+          <router-link to="/">Detected</router-link>
+          <router-link to="/">All patients</router-link>
+          <div id="line"></div>
+        </div>
+            <div id="wrap-time">
+              <div id="search">
+                <span id="search-glass"><i class="fa-solid fa-magnifying-glass"></i></span>
+                <input type="search" id="searchbox" placeholder="환자 ID 혹은 이름 검색">
+              </div>
+              <div id="time">
+                {{ currentTime }}
+              </div>
+           </div>
+  </div>
+<router-view/>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+import moment from 'moment'
 
-nav {
-  padding: 30px;
-}
+export default {
+  data () {
+    return {
+      currentTime: ''
+    }
+  },
+  mounted () {
+    this.moment = moment // moment 함수를 this에 할당합니다.
 
-nav a {
+    this.timer = setInterval(() => {
+      this.currentTime = this.moment().format('YYYY년 MM월 DD일 HH:mm:ss')
+    }, 1000)
+  },
+  beforeUnmount () {
+    clearInterval(this.timer)
+  }
+}
+</script>
+
+<style scoped>
+*{font-family: 'Nanum Gothic', sans-serif;}
+#header{
+  width: 100vw;
+  height: 130px;
+}
+#backward{
+  width: 70px;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  float: left;
+}
+#nav{
+  width: 300px;
+  height: 100%;
+  float: left;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  -ms-user-select: none;
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
   font-weight: bold;
-  color: #2c3e50;
 }
-
-nav a.router-link-exact-active {
-  color: #42b983;
+#nav a{
+  display: block;
+  width: 70%;
+  padding: .75em 0;
+  color: #333;
+  text-decoration: none;
+  text-align: center;
+}
+#back:link{
+  text-decoration: none;
+  color: #333;
+}
+#back:hover{
+  text-decoration: none;
+  color: none;
+}
+#back:visited{
+  text-decoration: none;
+  color: #333;
+}
+#back:active{
+  text-decoration: none;
+  color: #333;
+}
+#nav a:hover{
+  text-decoration: underline;
+  text-decoration-color: #74b9ff;
+  text-underline-position: under;
+  text-decoration-thickness: 5px;
+}
+#nav a.router-link-exact-active{
+  text-decoration: underline;
+  text-decoration-color: #74b9ff;
+  text-underline-position: under;
+  text-decoration-thickness: 5px;
+}
+#searchbox{
+  border: 2px solid #333;
+  border-radius: 10px;
+  width: 200px;
+  height: 30px;
+  padding: 5px;
+  margin-left: 5px;
+}
+#wrap-time{
+  float: right;
+  width: 500px;
+  height: 100%;
+}
+#search{
+float: left;
+width: 50%;
+height: 100%;
+display: flex;
+justify-content: center;
+align-items: center;
+}
+#time{
+  float: right;
+  height: 100%;
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: medium;
+  color: #333;
 }
 </style>
