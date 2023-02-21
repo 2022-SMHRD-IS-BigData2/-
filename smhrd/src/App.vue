@@ -123,7 +123,7 @@ export default {
   border-radius: 10px;
   width: 200px;
   height: 30px;
-  padding: 5px;
+  padding: 7px;
   margin-left: 5px;
 }
 #wrap-time{
