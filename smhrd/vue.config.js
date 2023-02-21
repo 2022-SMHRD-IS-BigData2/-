@@ -3,6 +3,7 @@ const path = require('path');
 
 module.exports = defineConfig({
   transpileDependencies: true,    //Transpile your dependencies
+  lintOnSave : false,
   publicPath: "",          //Path of static directory
   outputDir: path.resolve(__dirname, '../static'),   // Output path for the static files
   runtimeCompiler: true,
@@ -11,6 +12,7 @@ module.exports = defineConfig({
     port: 8000,
     devMiddleware: {
       writeToDisk: true,
-    }
+    },
+    historyApiFallback: true
   },
 })
