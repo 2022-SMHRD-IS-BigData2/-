@@ -1,10 +1,10 @@
 <template>
   <div id="header">
     <div id="backward">
-      <router-link to="/" id="back"><i class="fa-solid fa-arrow-left fa-2x"></i></router-link>
+      <button id="back" @click="goBack"><i class="fa-solid fa-arrow-left fa-2x"></i></button>
     </div>
         <div id="nav">
-          <router-link to="/">Detected</router-link>
+          <router-link to="/about">Detected</router-link>
           <router-link to="/">All patients</router-link>
           <div id="line"></div>
         </div>
@@ -18,6 +18,7 @@
               </div>
            </div>
   </div>
+  <hr>
 <router-view/>
 </template>
 
@@ -28,6 +29,11 @@ export default {
   data () {
     return {
       currentTime: ''
+    }
+  },
+  methods: {
+    goBack () {
+      this.$router.go(-1)
     }
   },
   mounted () {
@@ -47,7 +53,7 @@ export default {
 *{font-family: 'Nanum Gothic', sans-serif;}
 #header{
   width: 100vw;
-  height: 130px;
+  height: 100px;
 }
 #backward{
   width: 70px;
@@ -94,6 +100,11 @@ export default {
 #back:active{
   text-decoration: none;
   color: #333;
+}
+#back{
+  border: 0;
+  background-color: transparent;
+  cursor: pointer;
 }
 #nav a:hover{
   text-decoration: underline;
