@@ -1,10 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import MainView from '../views/main/MainView.vue'
 
 const routes = [
   {
     path: '/',
     name: 'MainView',
-    component: () => import(/* webpackChunkName: "home" */ '../views/main/MainView.vue')
+    component: MainView
   },
   {
     path: '/detected',
