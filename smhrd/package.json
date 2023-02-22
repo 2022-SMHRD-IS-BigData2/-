@@ -16,7 +16,8 @@
     "vue": "^3.2.13",
     "vue-moment": "^4.1.0",
     "vue-router": "^4.1.6",
-    "vuex": "^4.0.0"
+    "vuex": "^4.0.0",
+    "yarn": "^1.22.19"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
@@ -47,9 +48,9 @@
     },
     "rules": {
       "space-before-function-paren": "off",
-      "no-unused-vars":"off",
-      "no-mixed-spaces-and-tabs":0,
-      "vue/multi-word-component-names":0
+      "no-unused-vars": "off",
+      "no-mixed-spaces-and-tabs": 0,
+      "vue/multi-word-component-names": 0
     }
   },
   "browserslist": [
