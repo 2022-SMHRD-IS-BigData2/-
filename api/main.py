@@ -11,10 +11,18 @@ import datetime
 from pydantic import BaseModel
 from fastapi.staticfiles import StaticFiles
 
+import os
+
 app = FastAPI()
 
-#static files & load
-app.mount("/", StaticFiles(directory="static", html = True), name="static") #<-- Add this
+# 현재 파일(main.py)의 경로에서 상위 경로인 sepsis/까지의 경로를 구합니다.
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# static 디렉토리의 경로를 구합니다.
+STATIC_DIR = os.path.join(BASE_DIR, "static")
+
+# static 디렉토리를 정적 파일 서빙 미들웨어에 등록합니다.
+app.mount("/", StaticFiles(directory=STATIC_DIR, html=True), name="static")
 
 app.add_middleware(
   CORSMiddleware,
