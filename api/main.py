@@ -9,8 +9,12 @@ from sqlalchemy import Boolean, Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 import datetime
 from pydantic import BaseModel
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
+
+#static files & load
+app.mount("/", StaticFiles(directory="static", html = True), name="static") #<-- Add this
 
 app.add_middleware(
   CORSMiddleware,
