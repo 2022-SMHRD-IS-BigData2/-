@@ -16,6 +16,11 @@
             <td colspan="2">vitalsign 최신/ 클릭시 이동</td>
             <td colspan="2">비고</td>
           </tr>
+          <tr>
+            <td v-for="(patient, p_id) in patients" :key="p_id">
+              {{ patient.p_name }}, {{ patient.p_id }}
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>
@@ -36,7 +41,13 @@ export default {
   },
   mounted() {
     axios.get('http://172.30.1.25:8807/api/patients')
-      .then(response =>console.log(response.data))
+      .then(response =>{
+        return response.data;
+      })
+      .then(data => {
+        console.log(data);
+        this.patients=data;
+      })
       .catch(error => {
         console.log(error);
       });
