@@ -54,8 +54,8 @@
   </div>
 </template>
 <script>
-import axios from 'axios';
-import moment from 'moment';
+import axios from 'axios'
+import moment from 'moment'
 
 export default {
   data() {
@@ -67,7 +67,7 @@ export default {
   },
   computed: {
     gender() {
-      return this.patients.sex === 1? 'F' : 'M'
+      return this.patients.sex === 1 ? 'F' : 'M'
     },
     age() {
       if (!this.dbDate) return null;

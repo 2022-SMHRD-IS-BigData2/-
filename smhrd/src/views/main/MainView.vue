@@ -6,7 +6,7 @@
       </div>
       <div id="rerun">
         <span>{{ clickTime }}</span>
-        <button @click="reRun" id="rerun-btn" class="btn">새로고침</button>
+        <button @click="reRun" id="rerun-btn" class="btn" >새로고침</button>
       </div>
     </div>
     <div>
@@ -28,11 +28,14 @@
             <td style="width: 10%;">S-Score</td>
           </tr>
         </thead>
+
+    <div v-if="showAlert" class="alert" :class="alertClass">{{ alertMessage }}</div>
+
         <!-- tbody for문 돌리기 10명 -->
         <tbody>
           <tr>
             <td><input type="checkbox" style="width: 20px; height: 20px; cursor: pointer;" @click="addOn" /></td>
-            <td>00</td>
+            <td @click="copyCell('Cell 1')">Cell 2</td>
             <td>00</td>
             <td>00</td>
             <td>00</td>
@@ -62,11 +65,11 @@
 </template>
 
 <script>
-// 새로고침 클릭시 테이블만 새로고침
 // 아래 페이징 번호 가져와서 구현 https://junhyunny.github.io/spring-boot/vue.js/spring-boot-vue-js-paging-table/
 // tbody 환자 10명만 나오게 for문 돌리기 >2페이지 넘어가면 그다음 환자부터
 // 환자 추가 버튼 누르고 정보 입력하면 정보 받아와서 반영
 // 체크박스 눌렀을때 빠른정보 입력 기능 추가
+// 환자 아이디 복사기능 작동 되는지 확인
 
 import moment from 'moment'
 import { useRouter } from 'vue-router'
@@ -75,7 +78,10 @@ export default {
   data () {
     return {
       clickTime: moment().format('YYYY-MM-DD HH:mm:ss'),
-      isAddOn: false
+      isAddOn: false,
+      showAlert: false,
+      alertMessage: '',
+      alertClass: ''
     }
   },
   setup () {
@@ -94,13 +100,34 @@ export default {
   unmounted () {},
   methods: {
     reRun() {
-      this.clickTime = moment().format('YYYY-MM-DD HH:mm:ss')
+      this.clickTime = moment().format('YYYY-MM-DD HH:mm:ss'),
+      window.location.reload()
     },
     addOn: function() {
       this.isAddOn = !this.isAddOn
-    }
-    }
+    },
+    copyCell(content) {
+      const el = document.createElement('textarea');
+      el.value = content;
+      el.setAttribute('readonly', '');
+      el.style.position = 'absolute';
+      el.style.left = '-9999px';
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+
+      this.showAlert = true;
+      this.alertMessage = `Copied: ${content}`;
+      this.alertClass = 'alert-success';
+
+      setTimeout(() => {
+        this.showAlert = false;
+      }, 700);
+    },
   }
+    }
+
 
 </script>
 
@@ -172,6 +199,24 @@ tbody tr{
 }
 
 input{
-  border: 2px solid #333;
+  border: 2px solid #dfe6e9;
+  margin-right: 10px;
+}
+
+.alert {
+  position: fixed;
+  top: 10%;
+  left: 50%;
+  transform: translate(-50%, 100%);
+  z-index: 9999;
+  width: 300px;
+  padding: 12px;
+  border-radius: 4px;
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.5);
+  background-color: #dff0d8;
+  font-size: 14px;
+  line-height: 1.4;
+  text-align: center;
+  color: #333;
 }
 </style>

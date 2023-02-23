@@ -11,7 +11,8 @@
             <div id="wrap-time">
               <div id="search">
                 <span id="search-glass"><i class="fa-solid fa-magnifying-glass"></i></span>
-                <input type="search" id="searchbox" placeholder="환자 ID 검색">
+                <input type="search" id="searchbox" placeholder="환자 ID 검색" v-on:keyup.enter="submit">
+                <button type="submit" id="src-btn">검색</button>
               </div>
               <div id="time">
                 {{ currentTime }}
@@ -47,8 +48,6 @@ export default {
     clearInterval(this.timer)
   }
 }
-
-
 
 </script>
 
@@ -166,5 +165,16 @@ align-items: center;
   font-weight: bold;
   font-size: medium;
   color: #333;
+}
+#src-btn{
+  border: none;
+  background-color: #ced6e0;
+  font-weight: bold;
+  font-size: small;
+  width: 50px;
+  margin: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 5px;
 }
 </style>

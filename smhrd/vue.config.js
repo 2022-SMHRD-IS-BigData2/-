@@ -17,6 +17,7 @@ module.exports = defineConfig({
   },
 })
 module.exports = {
+  lintOnSave: false,
   devServer: {
     proxy: {
       '^/api': {
