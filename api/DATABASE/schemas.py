@@ -16,13 +16,13 @@ class Patient(BaseModel):
 
 class Record(BaseModel):
   record_id : int
+  p_id : int
   birth_date :int
   input_time : datetime.datetime
   p_age: int
   hr: int
   p_temp: float
   resp: int
-  bp: int
   sbp: int
   dbp: int
   BaseExcess:float
@@ -31,7 +31,7 @@ class Record(BaseModel):
   pH:float
   PaCO2:float
   SaO2:float
-  ASAlkalinephos:float
+  Alkalinephos:float
   Calcium:float
   Chloride:float
   Creatinine:float
@@ -66,7 +66,6 @@ class Record_v(BaseModel):
   hr: int
   temp: float
   resp: int
-  bp: int
   sbp: int
   dbp: int
   BaseExcess:float
@@ -75,7 +74,7 @@ class Record_v(BaseModel):
   pH:float
   PaCO2:float
   SaO2:float
-  ASAlkalinephos:float
+  Alkalinephos:float
   Calcium:float
   Chloride:float
   Creatinine:float
@@ -94,3 +93,14 @@ class Record_v(BaseModel):
   Platelets:float
   sepsis_in_six:int
   sepsis_percent:float
+
+class Record_for_Predict:
+  record_id : int
+  p_id : int
+  age : int
+  hr: int
+  temp: float
+  resp: int
+  bp: int
+  sbp: int
+  dbp: int
