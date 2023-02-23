@@ -4,7 +4,7 @@ from DATABASE.schemas import Patient,Record
 from typing import List
 from starlette.middleware.cors import CORSMiddleware
 from db import session,Database
-from DATABASE.models import VitalRecordAll,PatientGeneralTable
+from DATABASE.models import VitalRecordAll,PatientGeneralTable,VitalRecordLatestView,VitalRecordNowView
 from sqlalchemy import Boolean, Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 import datetime
@@ -153,3 +153,10 @@ async def input_record(record :Record):
   session.commit()
   session.close()
   return {"record":pred}
+
+  # 모든 환자의 최근 데이터를 가져오자(뷰를 만들었음)
+@app.get('/api/get_latest_all')
+def get_latest_all():
+  record=session.query(VitalRecordLatestView).all()
+  session.close()
+  return record
