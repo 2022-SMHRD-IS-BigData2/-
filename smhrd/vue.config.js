@@ -9,7 +9,7 @@ module.exports = defineConfig({
   runtimeCompiler: true,
   devServer: {
     // Write files to disk in dev mode, so FastAPI can serve the assets
-    port: 8000,
+    port: 8002,
     devMiddleware: {
       writeToDisk: true,
     },
