@@ -1,6 +1,7 @@
 <template>
   <div>
     <div>
+      <button type="button" @click="getAllPatient">모든환자조회</button>
       <table>
         <thead>
           <tr>
@@ -25,6 +26,26 @@
   </div>
 </template>
 <script>
+import axios from 'axios';
+
+export default {
+  data() {
+    return {
+      patients: [],
+    };
+  },
+  mounted() {
+    axios.get('http://172.30.1.25:8807/api/patients')
+      .then(response =>console.log(response.data))
+      .catch(error => {
+        console.log(error);
+      });
+  }
+}
+</script>
+<!-- this.patients = response.data.patients -->
+
+<!-- 
 export default {
   components: {},
   data () {
@@ -37,5 +58,4 @@ export default {
   mounted () {},
   unmounted () {},
   methods: {}
-}
-</script>
+} -->
