@@ -5,5 +5,3 @@ import store from './store'
 import '@fortawesome/fontawesome-free/js/all.js'
 
 createApp(App).use(store).use(router).mount('#app')
-
-Vue.config.productionTip = false;
