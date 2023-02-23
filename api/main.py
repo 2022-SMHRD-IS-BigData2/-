@@ -1,28 +1,43 @@
-from fastapi import FastAPI
+from fastapi import FastAPI,Response
 from fastapi.encoders import jsonable_encoder
 from DATABASE.schemas import Patient,Record
 from typing import List
 from starlette.middleware.cors import CORSMiddleware
-from db import session
+from db import session,Database
 from DATABASE.models import VitalRecordAll,PatientGeneralTable
 from sqlalchemy import Boolean, Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 import datetime
 from pydantic import BaseModel
 from fastapi.staticfiles import StaticFiles
-
+import json
+import sys
 import os
 
+sys.setrecursionlimit(10**7)
+
 app = FastAPI()
-
+db=Database(app)
 # 현재 파일(main.py)의 경로에서 상위 경로인 sepsis/까지의 경로를 구합니다.
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# static 디렉토리의 경로를 구합니다.
-STATIC_DIR = os.path.join(BASE_DIR, "static")
+# # static 디렉토리의 경로를 구합니다.
+# STATIC_DIR = os.path.join(BASE_DIR, "static")
 
-# static 디렉토리를 정적 파일 서빙 미들웨어에 등록합니다.
-app.mount("/", StaticFiles(directory=STATIC_DIR, html=True), name="static")
+# # static 디렉토리를 정적 파일 서빙 미들웨어에 등록합니다.
+# app.mount("/", StaticFiles(directory=STATIC_DIR, html=True), name="static")
+
+
+@app.on_event("startup")
+async def startup_event():
+    db.connect()
+
+def get_db():
+    try:
+        db = session()
+        yield db
+    finally:
+        db.close()
 
 app.add_middleware(
   CORSMiddleware,
@@ -68,12 +83,15 @@ async def p_record_all(p_id:int):
   return p_record
 
 
-  # mk_patient=PatientGeneralTable()
-  # mk_patient.birth_date=birth
-  # mk_patient.p_name=name
-  # mk_patient.admin_date=admin_date
 
-  # session.add(mk_patient)
-  # session.commit()
 
-  # return f"{name} 환자 등록 완료..."
+
+@app.get("/api/all_from_view")
+async def get_view():
+    query = "SELECT * FROM vital_record_now_view"
+    result=db.execute(query)
+
+    data = [row for row in result]
+    # data_json = json.dumps(data)
+
+    return {"data": data}

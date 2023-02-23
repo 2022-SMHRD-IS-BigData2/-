@@ -1,6 +1,7 @@
 <template>
   <div>
     <div>
+      <button type="button" @click="getAllPatient">모든환자조회</button>
       <table>
         <thead>
           <tr>
@@ -15,6 +16,11 @@
             <td colspan="2">vitalsign 최신/ 클릭시 이동</td>
             <td colspan="2">비고</td>
           </tr>
+          <tr>
+            <td v-for="(patient, p_id) in patients" :key="p_id">
+              {{ patient.p_name }}, {{ patient.p_id }}
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>
@@ -25,6 +31,32 @@
   </div>
 </template>
 <script>
+import axios from 'axios';
+
+export default {
+  data() {
+    return {
+      patients: [],
+    };
+  },
+  mounted() {
+    axios.get('http://172.30.1.25:8807/api/patients')
+      .then(response =>{
+        return response.data;
+      })
+      .then(data => {
+        console.log(data);
+        this.patients=data;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+}
+</script>
+<!-- this.patients = response.data.patients -->
+
+<!-- 
 export default {
   components: {},
   data () {
@@ -37,5 +69,4 @@ export default {
   mounted () {},
   unmounted () {},
   methods: {}
-}
-</script>
+} -->

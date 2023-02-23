@@ -16,7 +16,7 @@
               <div id="time">
                 {{ currentTime }}
               </div>
-           </div>
+          </div>
   </div>
   <hr>
 <router-view/>
@@ -47,6 +47,9 @@ export default {
     clearInterval(this.timer)
   }
 }
+
+
+
 </script>
 
 <style scoped>
