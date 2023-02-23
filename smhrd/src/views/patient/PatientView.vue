@@ -77,7 +77,7 @@ export default {
     }
   },
   mounted() {
-    axios.get('http://127.0.0.1:8002/api/patients')
+    axios.get('http://127.0.0.1:8000/api/patients')
       .then(response =>{
         return response.data
       })
@@ -94,6 +94,7 @@ export default {
   }
 }
 </script>
+
 <style scoped>
 
 </style>

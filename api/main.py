@@ -17,6 +17,13 @@ import os
 sys.setrecursionlimit(10**7)
 
 app = FastAPI()
+origins = [
+    "http://localhost",
+    "http://localhost:8002",
+    "http://localhost:3000",
+]
+
+app = FastAPI()
 db=Database(app)
 # 현재 파일(main.py)의 경로에서 상위 경로인 sepsis/까지의 경로를 구합니다.
 # BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -41,7 +48,7 @@ def get_db():
 
 app.add_middleware(
   CORSMiddleware,
-  allow_origins=['*'],
+  allow_origins=origins,
   allow_credentials=True,
   allow_methods=['*'],
   allow_headers=['mysql://project-db-stu2.ddns.net:3307','*']
@@ -82,16 +89,66 @@ async def p_record_all(p_id:int):
   p_record=session.query(VitalRecordAll).filter(VitalRecordAll.p_id==p_id).all()
   return p_record
 
-
-
-
-
 @app.get("/api/all_from_view")
 async def get_view():
-    query = "SELECT * FROM vital_record_now_view"
-    result=db.execute(query)
+  query = "SELECT * FROM vital_record_now_view"
+  result=db.execute(query)
 
-    data = [row for row in result]
-    # data_json = json.dumps(data)
+  data = [row for row in result]
+  # data_json = json.dumps(data)
 
-    return {"data": data}
+  return {"data": data}
+
+def model_predict(record:VitalRecordAll):
+  per=round(random.random()*100,2)
+  if per>50:
+    record.sepsis_in_six=1
+  else :
+    record.sepsis_in_six=0
+  record.sepsis_percent=per
+  return record
+
+@app.post("/api/input_record")
+async def input_record(record :Record):
+  temp=VitalRecordAll()
+  temp.record_id=record.record_id
+  temp.p_id=record.p_id
+  temp.birth_date=record.birth_date
+  temp.input_time=datetime.datetime.now()
+  temp.p_age=record.p_age
+  temp.hr=record.hr
+  temp.p_temp=record.p_temp
+  temp.resp=record.resp
+  temp.sbp=record.sbp
+  temp.dbp=record.dbp
+  temp.BaseExcess=record.BaseExcess
+  temp.HCO3=record.HCO3
+  temp.FiO2=record.FiO2
+  temp.pH=record.pH
+  temp.PaCO2=record.PaCO2
+  temp.SaO2=record.SaO2
+  temp.Alkalinephos=record.Alkalinephos
+  temp.Calcium=record.Calcium
+  temp.Chloride=record.Chloride
+  temp.Creatinine=record.Creatinine
+  temp.Bilirubin_direct=record.Bilirubin_direct
+  temp.Glucose=record.Glucose
+  temp.Lactate=record.Lactate
+  temp.Phosphate=record.Phosphate
+  temp.Potassium=record.Potassium
+  temp.Bilirubin_total=record.Bilirubin_total
+  temp.TroponinI=record.TroponinI
+  temp.Hct=record.Hct
+  temp.Hgb=record.Hgb
+  temp.PTT=record.PTT
+  temp.WBC=record.WBC
+  temp.Fibrinogen=record.Fibrinogen
+  temp.Platelets=record.Platelets
+  temp.sepsis_in_six=record.sepsis_in_six
+  temp.sepsis_percent=record.sepsis_percent
+
+  pred=model_predict(temp)
+  session.add(pred)
+  session.commit()
+  session.close()
+  return {"record":pred}
