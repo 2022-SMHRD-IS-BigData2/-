@@ -17,17 +17,19 @@ import os
 
 sys.setrecursionlimit(10**7)
 
-app = FastAPI(root_path=os.getcwd())
+# app = FastAPI(root_path=os.getcwd())
+app=FastAPI()
 
-print(f"Root path: {app.root_path}")
+# print(f"Root path: {app.root_path}")
 origins = [
     "http://localhost",
     "http://localhost:8002",
     "http://localhost:8000",
     "http://localhost:3000",
+    "*"
 ]
 
-app = FastAPI()
+# app = FastAPI()
 db=Database(app)
 # 현재 파일(main.py)의 경로에서 상위 경로인 sepsis/까지의 경로를 구합니다.
 # BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
