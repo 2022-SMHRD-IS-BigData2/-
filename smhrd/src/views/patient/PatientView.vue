@@ -2,49 +2,36 @@
   <div id="wrap">
     <div id="table">
       <table border="1" id="fulltable">
-        <thead>
           <tr>
-            <td>이름</td>
-            <td>나이/성별</td>
-            <td>환자번호</td>
-            <td>주민번호</td>
-          </tr>
-          <tr>
+            <td style="font-weight: bold;">이름</td>
             <td>{{ patients.p_name }}</td>
-            <td>{{ diff }} / {{  patients.sex }}</td>
-            <td>{{ patients.p_id }}</td>
-            <td>{{ patients.birthdate }}</td>
+            <td style="font-weight: bold;">HR</td>
+            <td>00</td>
           </tr>
-        </thead>
-        <tbody>
           <tr>
-            <td align="center">
-              <table border="0" id="smalltable">
-                <tr>
-                  <td>HR</td>
-                  <td>00</td>
-                </tr>
-                <tr>
-                  <td>Temp</td>
-                  <td>00</td>
-                </tr>
-                <tr>
-                  <td>Resp</td>
-                  <td>00</td>
-                </tr>
-                <tr>
-                  <td>SBP</td>
-                  <td>00</td>
-                </tr>
-                <tr>
-                  <td>DBP</td>
-                  <td>00</td>
-                </tr>
-              </table>
-            </td>
-            <td colspan="3"><textarea id="comment" rows="10"></textarea></td>
+            <td style="font-weight: bold;">나이</td>
+            <td>{{ diff }}</td>
+            <td style="font-weight: bold;">Temp</td>
+            <td>00</td>
           </tr>
-        </tbody>
+          <tr>
+            <td style="font-weight: bold;">성별</td>
+            <td>{{  patients.sex }}</td>
+            <td style="font-weight: bold;">Resp</td>
+            <td>00</td>
+          </tr>
+          <tr>
+            <td style="font-weight: bold;">환자번호</td>
+            <td>{{ patients.p_id }}</td>
+            <td style="font-weight: bold;">SBP</td>
+            <td>00</td>
+          </tr>
+          <tr>
+            <td style="font-weight: bold;">주민번호</td>
+            <td>{{ patients.birthdate }}</td>
+            <td style="font-weight: bold;">DBP</td>
+            <td>00</td>
+          </tr>
       </table>
     </div>
     <div id="under">
@@ -99,10 +86,18 @@ export default {
 <style scoped>
 *{font-family: 'Nanum Gothic', sans-serif;}
 #fulltable{
-  width: 100%;
-  height: 50%;
+  width: 80%;
+  height: 100%;
   border-collapse : collapse;
   margin: 0;
+  text-align: center;
+  margin-top: 30px;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: large;
+}
+#fulltable tr td{
+  width: 25%;
 }
 #fulltable thead{
   text-align: center;
@@ -113,34 +108,37 @@ export default {
   resize: none;
   border: none;
   padding: 20px;
+  margin: 10px;
 }
 thead tr{
   height: 50px;
-} 
- #wrap {
-  width: 98vw;
-  height: 100vh;
 }
-body{
-  overflow-x:hidden; overflow-y:auto;
+ #wrap {
+  width: 100%;
+  height: 100vh;
 }
 #table{
   width: 100%;
-  height: 40%;
+  height: 30%;
 }
 #under{
   width: 100%;
-  height: 50%;
+  height: 40%;
+  margin-top: 20px;
 }
 #score{
   float: left;
-  width: 30%;
+  width: 25%;
   height: 100%;
+  border: 1px solid black;
+  margin-left: 50px;
 }
 #graph{
   float: right;
-  width: 70%;
+  width: 65%;
   height: 100%;
+  border: 1px solid black;
+  margin-right: 50px;
 }
 #smalltable{
   width: 50%;

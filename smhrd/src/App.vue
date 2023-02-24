@@ -53,8 +53,11 @@ export default {
 
 <style scoped>
 *{font-family: 'Nanum Gothic', sans-serif;}
+template{
+  overflow-x: hidden;
+}
 #header{
-  width: 100vw;
+  width: 100%;
   height: 100px;
 }
 #backward{
