@@ -53,6 +53,7 @@
     </div>
   </div>
 </template>
+
 <script>
 import axios from 'axios'
 import moment from 'moment'
@@ -97,10 +98,11 @@ export default {
 
 <style scoped>
 *{font-family: 'Nanum Gothic', sans-serif;}
-/* #fulltable{
-  width: 95%;
+#fulltable{
+  width: 100%;
   height: 50%;
   border-collapse : collapse;
+  margin: 0;
 }
 #fulltable thead{
   text-align: center;
@@ -114,17 +116,17 @@ export default {
 }
 thead tr{
   height: 50px;
-} */
-/* #wrap {
-  width: 100vw;
+} 
+ #wrap {
+  width: 98vw;
   height: 100vh;
 }
-template{
+body{
   overflow-x:hidden; overflow-y:auto;
 }
 #table{
   width: 100%;
-  height: 50%;
+  height: 40%;
 }
 #under{
   width: 100%;
@@ -144,7 +146,7 @@ template{
   width: 50%;
   height: 100%;
   text-align: center;
-} */
+}
 </style>
 <!-- this.patients = response.data.patients -->
 
