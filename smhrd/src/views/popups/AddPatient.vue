@@ -4,23 +4,23 @@
 <script>
 export default {
   components: {},
-  data () {
+  data() {
     return {
       sampleData: ''
     }
   },
-  setup () {},
-  created () {},
-  mounted () {},
-  unmounted () {},
+  setup() {},
+  created() {},
+  mounted() {},
+  unmounted() {},
   methods: {}
 }
 </script>
 <style>
-#header{
+#header {
   display: none;
 }
-hr{
+hr {
   display: none;
 }
 </style>
