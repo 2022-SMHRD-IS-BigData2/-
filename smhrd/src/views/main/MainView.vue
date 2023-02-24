@@ -14,48 +14,45 @@
         <thead>
           <tr>
             <td style="width: 5%;"></td>
-            <td style="width: 10%;">PID</td>
+            <td style="width: 13%;">InputTime</td>
+            <td style="width: 12%;">PID</td>
             <td style="width: 10%;">Name</td>
             <td style="width: 5%;">Age</td>
             <td style="width: 5%;">Sex</td>
-            <td style="width: 10%;">Department</td>
-            <td style="width: 10%;">Ward</td>
             <td style="width: 5%;">HR</td>
             <td style="width: 5%;">Temp</td>
             <td style="width: 5%;">Resp</td>
             <td style="width: 5%;">SBP</td>
             <td style="width: 5%;">DBP</td>
-            <td style="width: 10%;">S-Score</td>
+            <td style="width: 15%;">S-Score</td>
           </tr>
         </thead>
 
         <!-- tbody for문 돌리기 10명 -->
-        <tbody>
-          <tr v-for="(patient, index) in patients" :key="index">
-            <td><input type="checkbox" style="width: 20px; height: 20px; cursor: pointer;" @click="addOn(patient.p_id)"/></td>
+        <tbody   v-for="(patient, index) in patients" :key="index">
+          <tr>
+            <td><input type="checkbox" style="width: 20px; height: 20px; cursor: pointer;" @click="addOn(patient.pid), selectPatient(patient)"/></td>
+            <td>{{ patient.input_time }}</td>
             <td>
-            <router-link :to="{ name: 'PatientView', params: { pid: patient.p_id } }">
-          {{ patient.p_id }}
+            <router-link :to="{ name: 'PatientView', params: { pid: patient.pid } }">
+          {{ patient.pid }}
             </router-link>
             </td>
             <td>{{ patient.p_name }}</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
+            <td>{{ patient.age }}</td>
+            <td>{{ gender }}</td>
+            <td>{{ patient.hr }}</td>
+            <td>{{ patient.temp }}</td>
+            <td>{{ patient.resp }}</td>
+            <td>{{ patient.sbp }}</td>
+            <td>{{ patient.dbp }}</td>
+            <td>{{ patient.sepsis_percent }}</td>
           </tr>
-          <tr class="hide">
-            <!-- v-if="isAddOn" -->
+          <tr v-if="isAddOn && addOnIndex === index">
             <td colspan="13">
-             PID <input type="text" readonly> Name <input type="text" readonly>   HR <input type="text">   Temp <input type="text">   Resp <input type="text">  SBP <input type="text">   DBP <input type="text">   <button id="addbtn"> 추가 </button>
+             PID <input type="text" readonly v-model="selectedPatient.pid" > Name <input type="text" readonly v-model="selectedPatient.p_name">   HR <input type="text">   Temp <input type="text">   Resp <input type="text">  SBP <input type="text">   DBP <input type="text">   <button type="submit" id="addbtn" @click="detailAdd"> 추가 </button>
             </td>
-        </tr>
+         </tr>
         </tbody>
       </table>
     </div>
@@ -74,13 +71,19 @@
 // 체크박스 눌렀을때 빠른정보 입력 기능 추가
 
 import moment from 'moment'
+import axios from 'axios'
 import { useRouter } from 'vue-router'
 export default {
   components: {},
   data () {
     return {
       clickTime: moment().format('YYYY-MM-DD HH:mm:ss'),
-      isAddOn: false
+      isAddOn: false,
+      patients: [],
+      addOnIndex: -1,
+      selectedPatient: { // 선택한 환자 정보
+      pid: '',
+      p_name: ''}
     }
   },
   setup () {
@@ -96,7 +99,7 @@ export default {
   },
   created () {},
   mounted () {
-    axios.get('http://127.0.0.1:8002/api/patients')
+    axios.get('http://127.0.0.1:8002/api/get_latest_all')
       .then(response =>{
         return response.data
       })
@@ -118,9 +121,22 @@ export default {
       this.clickTime = moment().format('YYYY-MM-DD HH:mm:ss'),
       window.location.reload()
     },
-    // addOn(pid) {
-    //   this.isAddOn = !this.isAddOn;
-    // }
+    addOn(pid) {
+    this.isAddOn = !this.isAddOn;
+    this.addOnIndex = this.patients.findIndex(patient => patient.pid === pid);
+  },
+  selectPatient(patient) {
+    this.selectedPatient.pid = patient.pid;
+    this.selectedPatient.p_name = patient.p_name;
+    },
+  detailAdd(){
+    this.isAddOn = false;
+  }
+  },
+    computed: {
+      gender() {
+      return this.patients.sex === 1 ? 'F' : 'M'
+    }
     }
   }
 
@@ -200,4 +216,15 @@ input{
   margin-right: 10px;
   width: 70px;
 }
+a{
+  text-decoration: none;
+}
+a:visited { text-decoration: none;
+color: black; }
+a:hover { text-decoration: none;
+  color: black; }
+a:focus { text-decoration: none;
+  color: black; }
+a:hover, a:active { text-decoration: none;
+  color: black; }
 </style>

@@ -6,31 +6,31 @@
             <td style="font-weight: bold;">이름</td>
             <td>{{ patients.p_name }}</td>
             <td style="font-weight: bold;">HR</td>
-            <td>00</td>
+            <td>{{ patients.hr }}</td>
           </tr>
           <tr>
             <td style="font-weight: bold;">나이</td>
-            <td>{{ diff }}</td>
+            <td>{{ patients.age }}</td>
             <td style="font-weight: bold;">Temp</td>
-            <td>00</td>
+            <td>{{patients.temp}}</td>
           </tr>
           <tr>
             <td style="font-weight: bold;">성별</td>
-            <td>{{  gender }}</td>
+            <td>{{ gender }}</td>
             <td style="font-weight: bold;">Resp</td>
-            <td>00</td>
+            <td>{{ patients.resp }}</td>
           </tr>
           <tr>
             <td style="font-weight: bold;">환자번호</td>
-            <td>{{ patients.p_id }}</td>
+            <td>{{ patients.pid }}</td>
             <td style="font-weight: bold;">SBP</td>
-            <td>00</td>
+            <td>{{ patients.sbp }}</td>
           </tr>
           <tr>
-            <td style="font-weight: bold;">주민번호</td>
-            <td>{{ patients.birthdate }}</td>
+            <td style="font-weight: bold;">생년월일</td>
+            <td>{{ patients.birth_date }}</td>
             <td style="font-weight: bold;">DBP</td>
-            <td>00</td>
+            <td>{{ patients.dbp }}</td>
           </tr>
       </table>
     </div>
@@ -43,35 +43,42 @@
 
 <script>
 import axios from 'axios'
-import moment from 'moment'
 
 export default {
   data() {
     return {
       patients: [],
       dbDate: null,
-      age: null
+      pid: '',
+      p_name: '',
+      age:'',
+      birth_date: '',
+      hr: '',
+      temp: '',
+      resp: '',
+      sbp: '',
+      dbp: ''
     };
   },
   computed: {
     gender() {
       return this.patients.sex === 1 ? 'F' : 'M'
-    },
-    age() {
-      if (!this.dbDate) return null;
-      const now = moment();
-      const diff = now.diff(this.dbDate, 'years')
-      return diff
     }
   },
+  methods: {
+    getPatientName() {
+      const result = this.patients.filter( patient => patient.pid  === this.$route.params.pid );
+
+  }
+},
   mounted() {
-    axios.get('http://127.0.0.1:8002/api/patients/'+ $route.params.id)
+    axios.get('http://127.0.0.1:8002/api/get_latest_all/'+ this.$route.params.pid)
       .then(response =>{
         return response.data
       })
       .then(data => {
-        console.log(data)
-        this.patients=data;
+        console.log(data[0])
+        this.patients=data[0];
         return data
       })
       .then(response => {
@@ -79,7 +86,8 @@ export default {
       })
       .catch(error => {
         console.log(error)
-      })
+      }),
+      this.getPatientName();
   }
 }
 </script>
@@ -96,6 +104,7 @@ export default {
   margin-left: auto;
   margin-right: auto;
   font-size: large;
+  border: 3px solid #333;
 }
 #fulltable tr td{
   width: 25%;
@@ -131,14 +140,14 @@ thead tr{
   float: left;
   width: 25%;
   height: 100%;
-  border: 1px solid black;
+  border: 3px solid #333;
   margin-left: 50px;
 }
 #graph{
   float: right;
   width: 65%;
   height: 100%;
-  border: 1px solid black;
+  border: 3px solid #333;
   margin-right: 50px;
 }
 #smalltable{

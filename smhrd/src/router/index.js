@@ -17,7 +17,7 @@ const routes = [
   },
   {
     // path: '/patient/:pid'
-    path: '/patient',
+    path: '/patient/:pid',
     name: 'PatientView',
     component: PatientView
   },

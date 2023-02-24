@@ -6,7 +6,7 @@
       </div>
       <div id="rerun">
         <span>{{ clickTime }}</span>
-        <button @click="reRun" id="rerun-btn" class="btn">새로고침</button>
+        <button @click="reRun" id="rerun-btn" class="btn" >새로고침</button>
       </div>
     </div>
     <div>
@@ -14,48 +14,45 @@
         <thead>
           <tr>
             <td style="width: 5%;"></td>
-            <td style="width: 10%;">PID</td>
+            <td style="width: 13%;">InputTime</td>
+            <td style="width: 12%;">PID</td>
             <td style="width: 10%;">Name</td>
             <td style="width: 5%;">Age</td>
             <td style="width: 5%;">Sex</td>
-            <td style="width: 10%;">Department</td>
-            <td style="width: 10%;">Ward</td>
             <td style="width: 5%;">HR</td>
             <td style="width: 5%;">Temp</td>
             <td style="width: 5%;">Resp</td>
             <td style="width: 5%;">SBP</td>
             <td style="width: 5%;">DBP</td>
-            <td style="width: 10%;">S-Score</td>
+            <td style="width: 15%;">S-Score</td>
           </tr>
         </thead>
+
         <!-- tbody for문 돌리기 10명 -->
-        <tbody>
+        <tbody   v-for="(patient, index) in patients" :key="index">
           <tr>
-            <td><input type="checkbox" style="width: 20px; height: 20px; cursor: pointer;"/></td>
-             <!-- @click="addOn(patient.p_id)" -->
+            <td><input type="checkbox" style="width: 20px; height: 20px; cursor: pointer;" @click="addOn(patient.pid)"/></td>
+            <td>{{ patient.input_time }}</td>
             <td>
-              <!-- <router-link :to="{ name: 'PatientView', params: { pid: patients.pid } }">
-          {{ patients.pid }}
-            </router-link> -->
+            <router-link :to="{ name: 'PatientView', params: { pid: patient.pid } }">
+          {{ patient.pid }}
+            </router-link>
             </td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
+            <td>{{ patient.p_name }}</td>
+            <td>{{ patient.age }}</td>
+            <td>{{ gender }}</td>
+            <td>{{ patient.hr }}</td>
+            <td>{{ patient.temp }}</td>
+            <td>{{ patient.resp }}</td>
+            <td>{{ patient.sbp }}</td>
+            <td>{{ patient.dbp }}</td>
+            <td>{{ patient.sepsis_percent }}</td>
           </tr>
-          <tr class="hide">
-            <!-- v-if="isAddOn" -->
+          <tr v-if="isAddOn && addOnIndex === index">
             <td colspan="13">
-             PID <input type="text" readonly> Name <input type="text" readonly>   HR <input type="text">   Temp <input type="text">   Resp <input type="text">  SBP <input type="text">   DBP <input type="text">   <button id="addbtn"> 추가 </button>
+             PID <input type="text" readonly value="" > Name <input type="text" readonly>   HR <input type="text">   Temp <input type="text">   Resp <input type="text">  SBP <input type="text">   DBP <input type="text">   <button type="submit" id="addbtn"> 추가 </button>
             </td>
-          </tr>
+         </tr>
         </tbody>
       </table>
     </div>
@@ -71,16 +68,19 @@
 // 아래 페이징 번호 가져와서 구현 https://junhyunny.github.io/spring-boot/vue.js/spring-boot-vue-js-paging-table/
 // tbody 환자 10명만 나오게 for문 돌리기 >2페이지 넘어가면 그다음 환자부터
 // 환자 추가 버튼 누르고 정보 입력하면 정보 받아와서 반영
-// 체크박스 눌렀을때 빠른정보 입력 기능 수정
+// 체크박스 눌렀을때 빠른정보 입력 기능 추가
 
 import moment from 'moment'
+import axios from 'axios'
 import { useRouter } from 'vue-router'
 export default {
   components: {},
   data () {
     return {
       clickTime: moment().format('YYYY-MM-DD HH:mm:ss'),
-      isAddOn: false
+      isAddOn: false,
+      patients: [],
+      addOnIndex: -1
     }
   },
   setup () {
@@ -95,25 +95,48 @@ export default {
     }
   },
   created () {},
-  mounted () {},
+  mounted () {
+    axios.get('http://127.0.0.1:8002/api/get_latest_all')
+      .then(response =>{
+        return response.data
+      })
+      .then(data => {
+        console.log(data)
+        this.patients=data;
+        return data
+      })
+      .then(response => {
+        // this.dbDate = moment(response.birth_date, 'YYYY-MM-DD')
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  },
   unmounted () {},
   methods: {
     reRun() {
       this.clickTime = moment().format('YYYY-MM-DD HH:mm:ss'),
       window.location.reload()
     },
-    // addOn(pid) {
-    //   this.isAddOn = !this.isAddOn;
-    // }
+    addOn(pid) {
+    this.isAddOn = !this.isAddOn;
+    this.addOnIndex = this.patients.findIndex(patient => patient.pid === pid);
   }
+    },
+    computed: {
+      gender() {
+      return this.patients.sex === 1 ? 'F' : 'M'
+    }
+    }
   }
+
 
 </script>
 
 <style scoped>
 *{font-family: 'Nanum Gothic', sans-serif;}
 #top-wrap{
-  width: 100vw;
+  width: 100%;
   height: 50px;
 }
 #addpatient{
@@ -155,7 +178,7 @@ thead{
   font-weight: bold;
 }
 /* tbody tr:nth-child(2n){
-  background-color: #FFE2E2;
+  background-color: #F5FFFF;
 } */
 tbody tr{
   height: 50px;
@@ -183,6 +206,15 @@ input{
   margin-right: 10px;
   width: 70px;
 }
-
+a{
+  text-decoration: none;
+}
+a:visited { text-decoration: none;
+color: black; }
+a:hover { text-decoration: none;
+  color: black; }
+a:focus { text-decoration: none;
+  color: black; }
+a:hover, a:active { text-decoration: none;
+  color: black; }
 </style>
-
