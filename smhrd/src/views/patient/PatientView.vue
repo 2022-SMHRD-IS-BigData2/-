@@ -10,7 +10,7 @@
             <td>주민번호</td>
           </tr>
           <tr>
-            <td>{{ patients.p_name }}</td>
+            <td><li v-for="patient in patients" :key="patient.pid">{{ patient.p_name }}</li></td>
             <td>{{ diff }} / {{  patients.sex }}</td>
             <td>{{ patients.p_id }}</td>
             <td>{{ patients.birthdate }}</td>
@@ -78,16 +78,17 @@ export default {
     }
   },
   mounted() {
-    axios.get('http://127.0.0.1:8000/api/patients')
+    axios.get('http://127.0.0.1:8002/api/patients')
       .then(response =>{
         return response.data
       })
       .then(data => {
         console.log(data)
-        this.patients=data
+        this.patients=data;
+        return data
       })
       .then(response => {
-        this.dbDate = moment(response.patients.birth_date, 'YYYY-MM-DD')
+        // this.dbDate = moment(response.birth_date, 'YYYY-MM-DD')
       })
       .catch(error => {
         console.log(error)
