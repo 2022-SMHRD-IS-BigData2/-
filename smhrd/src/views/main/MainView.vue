@@ -32,11 +32,12 @@
         <!-- tbody for문 돌리기 10명 -->
         <tbody>
           <tr>
-            <td><input type="checkbox" style="width: 20px; height: 20px; cursor: pointer;" @click="addOn(patient.p_id)" /></td>
+            <td><input type="checkbox" style="width: 20px; height: 20px; cursor: pointer;"/></td>
+            <!-- @click="addOn(patient.p_id)" -->
             <td>
-            <router-link :to="{ name: 'PatientView', params: { pid: patients.p_id } }">
+            <!-- <router-link :to="{ name: 'PatientView', params: { pid: patients.p_id } }">
           {{ patients.p_id }}
-            </router-link>
+            </router-link> -->
             </td>
             <td>00</td>
             <td>00</td>
@@ -50,7 +51,8 @@
             <td>00</td>
             <td>00</td>
           </tr>
-          <tr class="hide" v-if="isAddOn">
+          <tr class="hide">
+            <!-- v-if="isAddOn" -->
             <td colspan="13">
              PID <input type="text" readonly> Name <input type="text" readonly>   HR <input type="text">   Temp <input type="text">   Resp <input type="text">  SBP <input type="text">   DBP <input type="text">   <button id="addbtn"> 추가 </button>
             </td>
@@ -101,9 +103,9 @@ export default {
       this.clickTime = moment().format('YYYY-MM-DD HH:mm:ss'),
       window.location.reload()
     },
-    addOn(pid) {
-      this.isAddOn = !this.isAddOn;
-    }
+    // addOn(pid) {
+    //   this.isAddOn = !this.isAddOn;
+    // }
     }
   }
 

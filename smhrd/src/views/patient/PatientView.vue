@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div>
+  <div id="wrap">
+    <div id="table">
       <table border="1" id="fulltable">
         <thead>
           <tr>
@@ -18,7 +18,7 @@
         </thead>
         <tbody>
           <tr>
-            <td>
+            <td align="center">
               <table border="0" id="smalltable">
                 <tr>
                   <td>HR</td>
@@ -47,9 +47,9 @@
         </tbody>
       </table>
     </div>
-    <div>
-      <div>현재 패혈증 점수</div>
-      <div>패혈증 그래프</div>
+    <div id="under">
+      <div id="score">현재 패혈증 점수</div>
+      <div id="graph">패혈증 그래프</div>
     </div>
   </div>
 </template>
@@ -97,8 +97,8 @@ export default {
 
 <style scoped>
 *{font-family: 'Nanum Gothic', sans-serif;}
-#fulltable{
-  width: 100%;
+/* #fulltable{
+  width: 95%;
   height: 50%;
   border-collapse : collapse;
 }
@@ -106,16 +106,45 @@ export default {
   text-align: center;
 }
 #comment{
-  width: 99%;
+  width: 95%;
   height: 100%;
   resize: none;
-  border: 2px solid #333;
+  border: none;
+  padding: 20px;
 }
 thead tr{
   height: 50px;
+} */
+/* #wrap {
+  width: 100vw;
+  height: 100vh;
+}
+template{
+  overflow-x:hidden; overflow-y:auto;
+}
+#table{
+  width: 100%;
+  height: 50%;
+}
+#under{
+  width: 100%;
+  height: 50%;
+}
+#score{
+  float: left;
+  width: 30%;
+  height: 100%;
+}
+#graph{
+  float: right;
+  width: 70%;
+  height: 100%;
 }
 #smalltable{
-}
+  width: 50%;
+  height: 100%;
+  text-align: center;
+} */
 </style>
 <!-- this.patients = response.data.patients -->
 
