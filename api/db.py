@@ -1,6 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
+import mysql
 # user_name = 'sepsis'
 # user_pwd = 'sepsis'
 # db_host = ''
@@ -63,7 +64,7 @@ class Database:
 
         # 커넥션 풀 설정
         self.pool = mysql.connector.pooling.MySQLConnectionPool(pool_name="mypool", pool_size=5, **db_config)
-        
+
     def execute(self, query):
         connection = self.pool.get_connection()
         cursor = connection.cursor(buffered=True, dictionary=True)
