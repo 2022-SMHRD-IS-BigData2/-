@@ -70,7 +70,7 @@ class Database:
         cursor = connection.cursor(buffered=True, dictionary=True)
 
         cursor.execute(query)
-        results = cursor.fetchall()
+        results = cursor.fetchall() if cursor else None
 
         cursor.close()
         connection.close()

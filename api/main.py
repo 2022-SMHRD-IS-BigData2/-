@@ -4,8 +4,8 @@ from DATABASE.schemas import Patient,Record
 from typing import List
 from starlette.middleware.cors import CORSMiddleware
 from db import session,Database
-from DATABASE.models import VitalRecordAll,PatientGeneralTable,VitalRecordLatestView,VitalRecordNowView
-from sqlalchemy import Boolean, Column, Integer, String, DateTime, ForeignKey
+from DATABASE.models import VitalRecordAll,PatientGeneralTable,VitalRecordNowView,VitalRecordNowView
+from sqlalchemy import Boolean, Column, Integer, String, DateTime, ForeignKey,text
 from sqlalchemy.orm import relationship
 import datetime
 from pydantic import BaseModel
@@ -17,10 +17,8 @@ import os
 
 sys.setrecursionlimit(10**7)
 
-# app = FastAPI(root_path=os.getcwd())
 app=FastAPI()
 
-# print(f"Root path: {app.root_path}")
 origins = [
     "http://localhost",
     "http://localhost:8002",
@@ -31,17 +29,7 @@ origins = [
     "*"
 ]
 
-# app = FastAPI()
 db=Database(app)
-# 현재 파일(main.py)의 경로에서 상위 경로인 sepsis/까지의 경로를 구합니다.
-# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-# # static 디렉토리의 경로를 구합니다.
-# STATIC_DIR = os.path.join(BASE_DIR, "static")
-
-# # static 디렉토리를 정적 파일 서빙 미들웨어에 등록합니다.
-# app.mount("/", StaticFiles(directory=STATIC_DIR, html=True), name="static")
-
 
 @app.on_event("startup")
 async def startup_event():
@@ -77,20 +65,13 @@ async def index(p_id:int):
 
 @app.post('/api/mk_patient')
 async def mk_patient(mk_patient:Patient):
-  temp=PatientGeneralTable()
-  temp.p_id=mk_patient.p_id
-  temp.birth_date=mk_patient.birth_date
-  temp.sex=mk_patient.sex
-  temp.emp_id=mk_patient.emp_id
-  temp.admin_date=mk_patient.admin_date
-  temp.p_name=mk_patient.p_name
-  if mk_patient.disch_date:
-    temp.disch_date=None
-  else:
-    temp.disch_date=mk_patient.disch_date
-  session.add(temp)
+  query = text(f"insert into patient_general (birth_date, sex, p_name, emp_id) values ('{mk_patient.birth_date}', {mk_patient.sex}, '{mk_patient.p_name}', {mk_patient.emp_id})")
+  session.execute(query)
   session.commit()
-  return mk_patient
+  query2="SELECT * FROM patient_general ORDER BY p_id DESC LIMIT 1"
+  patient=db.execute(query2)
+  session.close()
+  return patient
 
 @app.get('/api/record/{p_id}')
 async def p_record_all(p_id:int):
@@ -116,19 +97,21 @@ def model_predict(record:VitalRecordAll):
   record.sepsis_percent=per
   return record
 
+# input window(batch) 숫자 정해지면 insult랑 predict 따로 분리시켜야겠다
 @app.post("/api/input_record")
 async def input_record(record :Record):
   temp=VitalRecordAll()
-  temp.record_id=record.record_id
   temp.p_id=record.p_id
+  # temp.p_record_seq=record.p_record_seq
   temp.birth_date=record.birth_date
   temp.input_time=datetime.datetime.now()
-  temp.p_age=record.p_age
+  # temp.p_age=record.p_age
   temp.hr=record.hr
-  temp.p_temp=record.p_temp
+  temp.temp=record.p_temp
   temp.resp=record.resp
   temp.sbp=record.sbp
   temp.dbp=record.dbp
+  # temp.ICULOC = record.ICULOC
   temp.BaseExcess=record.BaseExcess
   temp.HCO3=record.HCO3
   temp.FiO2=record.FiO2
@@ -164,11 +147,12 @@ async def input_record(record :Record):
   # 모든 환자의 최근 데이터를 가져오자(뷰를 만들었음)
 @app.get('/api/get_latest_all')
 def get_latest_all():
-  record=session.query(VitalRecordLatestView).all()
+  record=session.query(VitalRecordNowView).all()
   session.close()
   return record
 
+# 모든 환자의 최근 데이터에서 한명의 환자 선택
 @app.get('/api/get_latest_all/{pid}')
 def get_latest_all(pid:int):
-  record=session.query(VitalRecordLatestView).filter(VitalRecordLatestView.pid==pid).all()
+  record=session.query(VitalRecordNowView).filter(VitalRecordNowView.pid==pid).all()
   return record

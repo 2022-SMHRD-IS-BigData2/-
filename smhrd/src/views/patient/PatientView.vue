@@ -72,7 +72,7 @@ export default {
   }
 },
   mounted() {
-    axios.get('http://127.0.0.1:8002/api/get_latest_all/'+ this.$route.params.pid)
+    axios.get('http://127.0.0.1:8002/api/get_latest_all/'+ this.$route.params.pid) //안되면 p_id 로 해보세요
       .then(response =>{
         return response.data
       })
