@@ -31,15 +31,14 @@
 
         <!-- tbody for문 돌리기 10명 -->
         <tbody>
-          <tr>
-            <td><input type="checkbox" style="width: 20px; height: 20px; cursor: pointer;"/></td>
-            <!-- @click="addOn(patient.p_id)" -->
+          <tr v-for="(patient, index) in patients" :key="index">
+            <td><input type="checkbox" style="width: 20px; height: 20px; cursor: pointer;" @click="addOn(patient.p_id)"/></td>
             <td>
-            <!-- <router-link :to="{ name: 'PatientView', params: { pid: patients.p_id } }">
-          {{ patients.p_id }}
-            </router-link> -->
+            <router-link :to="{ name: 'PatientView', params: { pid: patient.p_id } }">
+          {{ patient.p_id }}
+            </router-link>
             </td>
-            <td>00</td>
+            <td>{{ patient.p_name }}</td>
             <td>00</td>
             <td>00</td>
             <td>00</td>
@@ -96,7 +95,23 @@ export default {
     }
   },
   created () {},
-  mounted () {},
+  mounted () {
+    axios.get('http://127.0.0.1:8002/api/patients')
+      .then(response =>{
+        return response.data
+      })
+      .then(data => {
+        console.log(data)
+        this.patients=data;
+        return data
+      })
+      .then(response => {
+        // this.dbDate = moment(response.birth_date, 'YYYY-MM-DD')
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  },
   unmounted () {},
   methods: {
     reRun() {

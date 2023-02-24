@@ -3,10 +3,10 @@
     <div id="table">
       <table border="1" id="fulltable">
           <tr>
-            <td><li v-for="patient in patients" :key="patient.pid">{{ patient.p_name }}</li></td>
-            <td>{{ diff }} / {{  patients.sex }}</td>
-            <td>{{ patients.p_id }}</td>
-            <td>{{ patients.birthdate }}</td>
+            <td style="font-weight: bold;">이름</td>
+            <td>{{ patients.p_name }}</td>
+            <td style="font-weight: bold;">HR</td>
+            <td>00</td>
           </tr>
           <tr>
             <td style="font-weight: bold;">나이</td>
@@ -16,7 +16,7 @@
           </tr>
           <tr>
             <td style="font-weight: bold;">성별</td>
-            <td>{{  patients.sex }}</td>
+            <td>{{  gender }}</td>
             <td style="font-weight: bold;">Resp</td>
             <td>00</td>
           </tr>
@@ -65,7 +65,7 @@ export default {
     }
   },
   mounted() {
-    axios.get('http://127.0.0.1:8002/api/patients')
+    axios.get('http://127.0.0.1:8002/api/patients/'+ $route.params.id)
       .then(response =>{
         return response.data
       })
