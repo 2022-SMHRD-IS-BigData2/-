@@ -28,13 +28,15 @@
             <td style="width: 10%;">S-Score</td>
           </tr>
         </thead>
-
-        <div v-if="showAlert" class="alert" :class="alertClass">{{ alertMessage }}</div>
         <!-- tbody for문 돌리기 10명 -->
         <tbody>
           <tr>
             <td><input type="checkbox" style="width: 20px; height: 20px; cursor: pointer;" @click="addOn" /></td>
-            <td @click="copyCell('Cell1')"></td>
+            <td>
+              <router-link :to="{ name: 'PatientView', params: { pid: patients.pid } }">
+          {{ patients.pid }}
+            </router-link>
+            </td>
             <td>00</td>
             <td>00</td>
             <td>00</td>
@@ -54,8 +56,10 @@
         </tr>
 
         <tr>
-            <td><input type="checkbox" style="width: 20px; height: 20px; cursor: pointer;" @click="addOn" /></td>
-            <td @click="copyCell('Cell1')"></td>
+            <td><input type="checkbox" style="width: 20px; height: 20px; cursor: pointer;" @click="addOn(patient.p_id)" /></td>
+            <td><router-link :to="{ name: 'PatientView', params: { pid: patients.p_id } }">
+          {{ patients.p_id }}
+            </router-link></td>
             <td>00</td>
             <td>00</td>
             <td>00</td>
@@ -97,10 +101,7 @@ export default {
   data () {
     return {
       clickTime: moment().format('YYYY-MM-DD HH:mm:ss'),
-      isAddOn: false,
-      showAlert: false,
-      alertMessage: '',
-      alertClass: ''
+      isAddOn: false
     }
   },
   setup () {
@@ -122,28 +123,9 @@ export default {
       this.clickTime = moment().format('YYYY-MM-DD HH:mm:ss'),
       window.location.reload()
     },
-    addOn: function() {
-      this.isAddOn = !this.isAddOn
-    },
-    copyCell(content) {
-      const el = document.createElement('textarea');
-      el.value = content;
-      el.setAttribute('readonly', '');
-      el.style.position = 'absolute';
-      el.style.left = '-9999px';
-      document.body.appendChild(el);
-      el.select();
-      document.execCommand('copy');
-      document.body.removeChild(el);
-
-      this.showAlert = true;
-      this.alertMessage = `Copied: ${content}`;
-      this.alertClass = 'alert-success';
-
-      setTimeout(() => {
-        this.showAlert = false;
-      }, 700);
-    },
+    addOn(pid) {
+      this.isAddOn = !this.isAddOn;
+    }
   }
   }
 
@@ -193,11 +175,12 @@ thead{
   height: 70px;
   font-weight: bold;
 }
-tbody tr:nth-child(2n){
+/* tbody tr:nth-child(2n){
   background-color: #FFE2E2;
-}
+} */
 tbody tr{
   height: 50px;
+  border-bottom: 1px solid #ced6e0;
 }
 .hide{
   font-weight: 150px;
@@ -219,23 +202,8 @@ tbody tr{
 input{
   border: 2px solid #dfe6e9;
   margin-right: 10px;
+  width: 70px;
 }
 
-.alert {
-  position: fixed;
-  top: 10%;
-  left: 50%;
-  transform: translate(-50%, 100%);
-  z-index: 9999;
-  width: 300px;
-  padding: 12px;
-  border-radius: 4px;
-  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.5);
-  background-color: #dff0d8;
-  font-size: 14px;
-  line-height: 1.4;
-  text-align: center;
-  color: #333;
-}
 </style>
 

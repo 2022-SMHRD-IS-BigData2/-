@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <table border="1">
+      <table border="1" id="fulltable">
         <thead>
           <tr>
             <td>이름</td>
@@ -18,8 +18,8 @@
         </thead>
         <tbody>
           <tr>
-            <td colspan="2">
-              <table border="1">
+            <td>
+              <table border="0" id="smalltable">
                 <tr>
                   <td>HR</td>
                   <td>00</td>
@@ -42,7 +42,7 @@
                 </tr>
               </table>
             </td>
-            <td colspan="2"><textarea></textarea></td>
+            <td colspan="3"><textarea id="comment" rows="10"></textarea></td>
           </tr>
         </tbody>
       </table>
@@ -96,7 +96,26 @@ export default {
 </script>
 
 <style scoped>
-
+*{font-family: 'Nanum Gothic', sans-serif;}
+#fulltable{
+  width: 100%;
+  height: 50%;
+  border-collapse : collapse;
+}
+#fulltable thead{
+  text-align: center;
+}
+#comment{
+  width: 99%;
+  height: 100%;
+  resize: none;
+  border: 2px solid #333;
+}
+thead tr{
+  height: 50px;
+}
+#smalltable{
+}
 </style>
 <!-- this.patients = response.data.patients -->
 
