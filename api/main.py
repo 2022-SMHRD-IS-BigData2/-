@@ -17,7 +17,9 @@ import os
 
 sys.setrecursionlimit(10**7)
 
-app = FastAPI()
+app = FastAPI(root_path=os.getcwd())
+
+print(f"Root path: {app.root_path}")
 origins = [
     "http://localhost",
     "http://localhost:8002",
