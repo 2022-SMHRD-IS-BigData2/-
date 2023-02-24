@@ -115,7 +115,7 @@ export default {
 <style scoped>
 *{font-family: 'Nanum Gothic', sans-serif;}
 #top-wrap{
-  width: 100vw;
+  width: 100%;
   height: 50px;
 }
 #addpatient{
