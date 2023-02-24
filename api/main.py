@@ -9,7 +9,7 @@ from sqlalchemy import Boolean, Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 import datetime
 from pydantic import BaseModel
-from fastapi.staticfiles import StaticFiles
+# from fastapi.staticfiles import StaticFiles
 import random
 import json
 import sys
