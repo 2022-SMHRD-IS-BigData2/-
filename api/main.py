@@ -167,3 +167,8 @@ def get_latest_all():
   record=session.query(VitalRecordLatestView).all()
   session.close()
   return record
+
+@app.get('/api/get_latest_all/{pid}')
+def get_latest_all(pid:int):
+  record=session.query(VitalRecordLatestView).filter(VitalRecordLatestView.pid==pid).all()
+  return record
