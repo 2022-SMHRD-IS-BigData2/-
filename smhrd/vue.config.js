@@ -9,10 +9,25 @@ module.exports = defineConfig({
   runtimeCompiler: true,
   devServer: {
     // Write files to disk in dev mode, so FastAPI can serve the assets
-    port: 8000,
+    port: 8002,
     devMiddleware: {
       writeToDisk: true,
     },
     historyApiFallback: true
   },
 })
+module.exports = {
+  lintOnSave: false,
+  devServer: {
+    proxy: {
+      '^/api': {
+        target: 'http://localhost:8002',
+        changeOrigin: true,
+        logLevel: 'debug',
+        pathRewrite: {
+          '^/api': '/api'
+        }
+      }
+    }
+  }
+}

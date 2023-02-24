@@ -4,19 +4,20 @@
       <button id="back" @click="goBack"><i class="fa-solid fa-arrow-left fa-2x"></i></button>
     </div>
         <div id="nav">
-          <router-link to="/detected">Detected</router-link>
-          <router-link to="/">All patients</router-link>
+          <router-link to="/detected" id="detected">Detected</router-link>
+          <router-link to="/" id="all">All patients</router-link>
           <div id="line"></div>
         </div>
             <div id="wrap-time">
               <div id="search">
                 <span id="search-glass"><i class="fa-solid fa-magnifying-glass"></i></span>
-                <input type="search" id="searchbox" placeholder="환자 ID 혹은 이름 검색">
+                <input type="search" id="searchbox" placeholder="환자 ID 검색" v-on:keyup.enter="submit">
+                <button type="submit" id="src-btn">검색</button>
               </div>
               <div id="time">
                 {{ currentTime }}
               </div>
-           </div>
+          </div>
   </div>
   <hr>
 <router-view/>
@@ -47,12 +48,16 @@ export default {
     clearInterval(this.timer)
   }
 }
+
 </script>
 
 <style scoped>
 *{font-family: 'Nanum Gothic', sans-serif;}
+template{
+  overflow-x: hidden;
+}
 #header{
-  width: 100vw;
+  width: 100%;
   height: 100px;
 }
 #backward{
@@ -106,18 +111,32 @@ export default {
   background-color: transparent;
   cursor: pointer;
 }
-#nav a:hover{
+#nav #all:hover{
   text-decoration: underline;
   text-decoration-color: #74b9ff;
   text-underline-position: under;
   text-decoration-thickness: 5px;
 }
-#nav a.router-link-exact-active{
+#nav #all.router-link-exact-active{
   text-decoration: underline;
   text-decoration-color: #74b9ff;
   text-underline-position: under;
   text-decoration-thickness: 5px;
 }
+#nav #detected:hover{
+  text-decoration: underline;
+  text-decoration-color: #ff6b81;
+  text-underline-position: under;
+  text-decoration-thickness: 5px;
+}
+#nav #detected.router-link-exact-active{
+  text-decoration: underline;
+  text-decoration-color: #ff6b81;
+  text-underline-position: under;
+  text-decoration-thickness: 5px;
+}
+
+
 #searchbox{
   border: 2px solid #333;
   border-radius: 10px;
@@ -149,5 +168,16 @@ align-items: center;
   font-weight: bold;
   font-size: medium;
   color: #333;
+}
+#src-btn{
+  border: none;
+  background-color: #ced6e0;
+  font-weight: bold;
+  font-size: small;
+  width: 50px;
+  margin: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 5px;
 }
 </style>

@@ -1,25 +1,30 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import MainView from '../views/main/MainView.vue'
+import DetectedView from '../views/main/DetectedView.vue'
+import PatientView from '../views/patient/PatientView.vue'
+import VitalView from '../views/patient/VitalView.vue'
 
 const routes = [
   {
     path: '/',
     name: 'MainView',
-    component: () => import(/* webpackChunkName: "home" */ '../views/main/MainView.vue')
+    component: MainView
   },
   {
     path: '/detected',
     name: 'DetectedView',
-    component: () => import(/* webpackChunkName: "home", webpackPrefetch:true */ '../views/main/DetectedView.vue')
+    component: DetectedView
   },
   {
-    path: '/patient',
+    // path: '/patient/:pid'
+    path: '/patient/:pid',
     name: 'PatientView',
-    component: () => import(/* webpackChunkName: "home", webpackPrefetch:true */ '../views/patient/PatientView.vue')
+    component: PatientView
   },
   {
     path: '/vital',
     name: 'VitalView',
-    component: () => import(/* webpackChunkName: "home", webpackPrefetch:true */ '../views/patient/VitalView.vue')
+    component: VitalView
   },
   {
     path: '/addpatient',
@@ -30,6 +35,11 @@ const routes = [
     path: '/addvital',
     name: 'AddVital',
     component: () => import(/* webpackChunkName: "home" */ '../views/popups/AddVital.vue')
+  },
+  {
+    path: '/getAllPatient',
+    name: 'getAllPatient',
+    component: () => import(/* webpackChunkName: "home" */ '../views/patient/PatientView.vue')
   }
 ]
 
