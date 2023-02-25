@@ -4,7 +4,7 @@ from DATABASE.schemas import Patient,Record
 from typing import List
 from starlette.middleware.cors import CORSMiddleware
 from db import session,Database
-from DATABASE.models import VitalRecordAll,PatientGeneralTable,VitalRecordNowView,VitalRecordNowView
+from DATABASE.models import VitalRecordAll,PatientGeneralTable,VitalRecordNowView,VitalRecordNowView,NowViewSepsis
 from sqlalchemy import Boolean, Column, Integer, String, DateTime, ForeignKey,text
 from sqlalchemy.orm import relationship
 import datetime
@@ -111,7 +111,7 @@ async def input_record(record :Record):
   temp.resp=record.resp
   temp.sbp=record.sbp
   temp.dbp=record.dbp
-  # temp.ICULOC = record.ICULOC
+  temp.ICULOC = record.ICULOC
   temp.BaseExcess=record.BaseExcess
   temp.HCO3=record.HCO3
   temp.FiO2=record.FiO2
@@ -146,13 +146,19 @@ async def input_record(record :Record):
 
   # 모든 환자의 최근 데이터를 가져오자(뷰를 만들었음)
 @app.get('/api/get_latest_all')
-def get_latest_all():
+async def get_latest_all():
   record=session.query(VitalRecordNowView).all()
   session.close()
   return record
 
 # 모든 환자의 최근 데이터에서 한명의 환자 선택
 @app.get('/api/get_latest_all/{pid}')
-def get_latest_all(pid:int):
+async def get_latest_all(pid:int):
   record=session.query(VitalRecordNowView).filter(VitalRecordNowView.pid==pid).all()
   return record
+
+# sepsis 환자만 가져오기
+@app.get('/api/get_latest_sepsis_all')
+async def get_latest_sepsis_all():
+  sepsis=session.query(NowViewSepsis).all()
+  return sepsis

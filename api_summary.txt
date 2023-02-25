@@ -1,0 +1,29 @@
+환자만들기(return : patient_general 생성된 환자정보)
+url : api/mk_patient(patient)
+patient
+birth_date : date(yyyy-mm-dd)
+sex : int(0,1)
+emp_id : int
+admin_date : datetime(yyyy-mm-dd hh:mm:ss)
+
+
+모든 환자 불러오기(return : list(patient_general) 모든 환자 정보)
+ulr : api/patients 
+
+환자 한명 불러오기(return : patient_general p_id 검색된 환자 정보)
+url : api/patients/p_id
+
+환자 한명의 모든 기록 불러오기(return : record_all_view 형식의 환자 한명 모든정보)
+url : record/p_id
+
+모든 환자의 모든 기록(return : record_all_view 형식의 모든 환자 모든 정보)
+url : all_from_view
+
+한명의 환자의 최근 정보(return : record_all_view 형식의 선택한 환자의 최근 하나의 정보)
+url : get_latest_all/pid
+
+모든 환자의 최근 정보(return : record_all_view형식의 모든 환자 최근 정보)
+url : get_latest_all
+
+모든 패혈증 환자의 최근 정보(return : record_all_view형식의 모든 패혈증 환자 최근 정보)
+url : get_latest_sepsis_all 

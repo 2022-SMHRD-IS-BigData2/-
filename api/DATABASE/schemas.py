@@ -42,7 +42,7 @@ class Record(BaseModel):
   resp: int
   sbp: int
   dbp: int
-  # ICULOC : int
+  ICULOC : int
   BaseExcess:float
   HCO3:float
   FiO2:float
