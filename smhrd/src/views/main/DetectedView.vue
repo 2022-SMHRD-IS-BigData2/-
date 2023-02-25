@@ -39,7 +39,7 @@
             </router-link>
             </td>
             <td>{{ patient.p_name }}</td>
-            <td>{{ patient.age }}</td>
+            <td>{{ patient.p_age }}</td>
             <td>{{ gender }}</td>
             <td>{{ patient.hr }}</td>
             <td>{{ patient.temp }}</td>

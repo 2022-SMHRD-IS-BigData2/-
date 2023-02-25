@@ -10,7 +10,7 @@
           </tr>
           <tr>
             <td style="font-weight: bold;">나이</td>
-            <td>{{ patients.age }}</td>
+            <td>{{ patients.p_age }}</td>
             <td style="font-weight: bold;">Temp</td>
             <td>{{patients.temp}}</td>
           </tr>
@@ -35,30 +35,33 @@
       </table>
     </div>
     <div id="under">
-      <div id="score">현재 패혈증 점수</div>
-      <div id="graph">패혈증 그래프</div>
+      <div id="score">
+        <span id="real-score">90</span>
+        <span id="scoreup">
+          <i class="fa-solid fa-caret-up"></i>00
+          <i class="fa-solid fa-caret-down"></i>00
+        </span>
+      </div>
+      <div id="graph">
+        <Chart />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
+import Chart from '../../components/Chart.vue'
 
 export default {
   data() {
     return {
       patients: [],
-      dbDate: null,
-      pid: '',
-      p_name: '',
-      age:'',
-      birth_date: '',
-      hr: '',
-      temp: '',
-      resp: '',
-      sbp: '',
-      dbp: ''
+      dbDate: null
     };
+  },
+  components: {
+    Chart,
   },
   computed: {
     gender() {
@@ -142,6 +145,20 @@ thead tr{
   height: 100%;
   border: 3px solid #333;
   margin-left: 50px;
+  text-align: center;
+  position: relative;
+}
+#real-score{
+  position: absolute;
+    left: 30%; top: 20%;
+    display: inline-block;
+    font-size: 100px;
+}
+#scoreup{
+  position: absolute;
+    left: 30%; top: 70%;
+    display: inline-block;
+    font-size: 30px;
 }
 #graph{
   float: right;
@@ -154,6 +171,11 @@ thead tr{
   width: 50%;
   height: 100%;
   text-align: center;
+}
+canvas{
+  margin: 0 auto;
+  height: 100%;
+  width: 100%;
 }
 </style>
 <!-- this.patients = response.data.patients -->
