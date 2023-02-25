@@ -24,6 +24,8 @@ url : get_latest_all/pid
 
 모든 환자의 최근 정보(return : record_all_view형식의 모든 환자 최근 정보)
 url : get_latest_all
+(url : all_from_view 쓰면 5명 다나오는데, get_latest_all 쓰면 정철씨가안나와....)
+
 
 모든 패혈증 환자의 최근 정보(return : record_all_view형식의 모든 패혈증 환자 최근 정보)
 url : get_latest_sepsis_all 
