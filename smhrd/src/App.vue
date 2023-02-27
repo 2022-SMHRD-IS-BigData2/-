@@ -179,5 +179,6 @@ align-items: center;
   border-radius: 5px;
   cursor: pointer;
   padding: 5px;
+  box-shadow: 1px 1px 2px;
 }
 </style>

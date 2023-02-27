@@ -6,7 +6,7 @@
           <thead>
             <tr>
               <td>PID</td>
-              <td>{{ patients }}</td>
+              <td>{{ patients[0].p_id }}</td>
               <td>Name</td>
               <td>00</td>
               <td>Age</td>
@@ -28,7 +28,7 @@
       <div id="tablewrap">
       <table border="1" id="realtable">
         <thead>
-          <tr>
+          <tr v-for="(patient, index) in patients" :key="index">
             <td style="width: 25%;">Time</td>
             <td style="width: 15%;">HR</td>
             <td style="width: 15%;">Temp</td>
@@ -60,7 +60,7 @@ export default {
   components: {},
   data () {
     return {
-      sampleData: ''
+      patients: []
     }
   },
   setup () {
@@ -152,6 +152,7 @@ table thead{
   background-color: #ced6e0;
   font-weight: bold;
   cursor: pointer;
+  box-shadow: 1px 1px 2px;
 }
 #realtable{
   margin-top: 50px;

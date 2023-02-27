@@ -183,6 +183,7 @@ export default {
   padding-left: 20px;
   border-radius: 5%;
   cursor: pointer;
+  box-shadow: 1px 1px 2px;
 }
 table{
   width: 100%;
@@ -217,6 +218,7 @@ tbody tr{
   padding-right: 10px;
   padding-left: 10px;
   border-radius: 5%;
+  box-shadow: 1px 1px 2px;
 }
 
 input{

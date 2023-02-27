@@ -19,25 +19,27 @@
       </tr>
       <tr>
         <td>HR</td>
-        <td><input type="text"></td>
+        <td><input type="number"></td>
       </tr>
       <tr>
         <td>Temp</td>
-        <td><input type="text"></td>
+        <td><input type="number"></td>
       </tr>
       <tr>
         <td>Resp</td>
-        <td><input type="text"></td>
+        <td><input type="number"></td>
       </tr>
       <tr>
         <td>SBP</td>
-        <td><input type="text"></td>
+        <td><input type="number"></td>
       </tr>
       <tr>
         <td>DBP</td>
-        <td><input type="text"></td>
+        <td><input type="number"></td>
       </tr>
     </table>
+    <button type="submit" class="btn">저장</button>
+    <button class="btn" @click="closeWindow">취소</button>
   </div>
 </template>
 <script>
@@ -52,7 +54,11 @@ export default {
   created () {},
   mounted () {},
   unmounted () {},
-  methods: {}
+  methods: {
+    closeWindow() {
+        window.close();
+  }
+  }
 }
 </script>
 <style>
@@ -68,10 +74,29 @@ table{
   border-collapse: collapse;
   width: 100%;
   text-align: center;
-  height: 100%;
+  height: 60%;
 }
 table tr td{
-  height: 50px;
+  height: 40px;
   font-weight: bold;
+}
+.btn{
+  padding: 3px 7px 3px 7px;
+  margin: 20px 20px 10px 20px;
+  font-weight: bold;
+  border: none;
+  background-color: #ced6e0;
+  box-shadow: 1px 1px 2px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+#wrap-box{
+  text-align: center;
+}
+input{
+  border: 0;
+}
+input:focus{
+  outline: none;
 }
 </style>
