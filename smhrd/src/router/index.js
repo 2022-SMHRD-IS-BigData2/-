@@ -22,7 +22,7 @@ const routes = [
     component: PatientView
   },
   {
-    path: '/vital',
+    path: '/vital/:pid',
     name: 'VitalView',
     component: VitalView
   },

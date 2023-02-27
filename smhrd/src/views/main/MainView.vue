@@ -31,7 +31,7 @@
         <!-- tbody for문 돌리기 10명 -->
         <tbody   v-for="(patient, index) in patients" :key="index">
           <tr>
-            <td><input type="checkbox" style="width: 20px; height: 20px; cursor: pointer;" @click="addOn(patient.pid), selectPatient(patient)"/></td>
+            <td><input type="checkbox" style="width: 20px; height: 20px; cursor: pointer;" @click="addOn(index)"/></td>
             <td>{{ patient.input_time }}</td>
             <td>
             <router-link :to="{ name: 'PatientView', params: { pid: patient.pid } }">
@@ -40,7 +40,7 @@
             </td>
             <td>{{ patient.p_name }}</td>
             <td>{{ patient.p_age }}</td>
-            <td>{{ gender }}</td>
+            <td>{{  gender[index] }}</td>
             <td>{{ patient.hr }}</td>
             <td>{{ patient.temp }}</td>
             <td>{{ patient.resp }}</td>
@@ -48,9 +48,9 @@
             <td>{{ patient.dbp }}</td>
             <td>{{ patient.sepsis_percent }}</td>
           </tr>
-          <tr v-if="isAddOn && addOnIndex === index">
+          <tr v-if="patient.isAddOn">
             <td colspan="13">
-             PID <input type="text" readonly v-model="selectedPatient.pid" > Name <input type="text" readonly v-model="selectedPatient.p_name">   HR <input type="text">   Temp <input type="text">   Resp <input type="text">  SBP <input type="text">   DBP <input type="text">   <button type="submit" id="addbtn" @click="detailAdd"> 추가 </button>
+             PID <input type="text" readonly v-model="patient.pid" > Name <input type="text" readonly v-model="patient.p_name">   HR <input type="number">   Temp <input type="number">   Resp <input type="number">  SBP <input type="number">   DBP <input type="number">   <button type="submit" id="addbtn" @click="detailAdd"> 추가 </button>
             </td>
          </tr>
         </tbody>
@@ -68,7 +68,6 @@
 // 아래 페이징 번호 가져와서 구현 https://junhyunny.github.io/spring-boot/vue.js/spring-boot-vue-js-paging-table/
 // tbody 환자 10명만 나오게 for문 돌리기 >2페이지 넘어가면 그다음 환자부터
 // 환자 추가 버튼 누르고 정보 입력하면 정보 받아와서 반영
-// 체크박스 눌렀을때 빠른정보 입력 기능 추가
 
 import moment from 'moment'
 import axios from 'axios'
@@ -81,9 +80,8 @@ export default {
       isAddOn: false,
       patients: [],
       addOnIndex: -1,
-      selectedPatient: { // 선택한 환자 정보
-      pid: '',
-      p_name: ''}
+    selectedPatients: [],
+    selectedPatient: null
     }
   },
   setup () {
@@ -99,13 +97,13 @@ export default {
   },
   created () {},
   mounted () {
-    axios.get('http://127.0.0.1:8002/api/get_latest_all')
+    axios.get('http://127.0.0.1:8002/api/all_from_view')
       .then(response =>{
         return response.data
       })
       .then(data => {
         console.log(data)
-        this.patients=data;
+        this.patients=data.data;
         return data
       })
       .then(response => {
@@ -121,22 +119,32 @@ export default {
       this.clickTime = moment().format('YYYY-MM-DD HH:mm:ss'),
       window.location.reload()
     },
-    addOn(pid) {
-    this.isAddOn = !this.isAddOn;
-    this.addOnIndex = this.patients.findIndex(patient => patient.pid === pid);
-  },
-  selectPatient(patient) {
-    this.selectedPatient.pid = patient.pid;
-    this.selectedPatient.p_name = patient.p_name;
-    },
-  detailAdd(){
-    this.isAddOn = false;
+    addOn(index) {
+  const patient = this.patients[index];
+  if (patient) {
+    if (!patient.isAddOn) {
+      this.selectedPatient = {}; // 추가 입력 행이 닫힌 경우, 선택한 환자 정보 초기화
+    }
+    patient.isAddOn = !patient.isAddOn;
+    if (patient.isAddOn) {
+      this.selectPatient(patient, index);
+    }
   }
+},
+  selectPatient(patient, index) {
+    if (!patient) return;
+    this.selectedPatient = {
+      pid: patient.pid,
+      p_name: patient.p_name,
+      index: index // 선택된 환자의 인덱스도 함께 저장
+    };
+  }
+
   },
     computed: {
       gender() {
-      return this.patients.sex === 1 ? 'F' : 'M'
-    }
+    return this.patients.map(patient => patient.sex === 1 ? 'F' : 'M');
+  }
     }
   }
 
@@ -216,8 +224,9 @@ input{
   margin-right: 10px;
   width: 70px;
 }
-a{
+tbody tr td a{
   text-decoration: none;
+  color: black;
 }
 a:visited { text-decoration: none;
 color: black; }

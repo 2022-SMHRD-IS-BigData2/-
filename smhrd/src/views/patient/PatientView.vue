@@ -5,42 +5,58 @@
           <tr>
             <td style="font-weight: bold;">이름</td>
             <td>{{ patients.p_name }}</td>
-            <td style="font-weight: bold;">HR</td>
+            <td style="font-weight: bold;">
+              <router-link v-if="typeof patients.pid !== 'undefined'"
+             v-bind:to="{ name: 'VitalView', params: { pid: patients.pid } }">
+          HR
+            </router-link></td>
             <td>{{ patients.hr }}</td>
           </tr>
           <tr>
             <td style="font-weight: bold;">나이</td>
             <td>{{ patients.p_age }}</td>
-            <td style="font-weight: bold;">Temp</td>
+            <td style="font-weight: bold;"><router-link v-if="typeof patients.pid !== 'undefined'"
+             v-bind:to="{ name: 'VitalView', params: { pid: patients.pid } }">
+          Temp
+            </router-link></td>
             <td>{{patients.temp}}</td>
           </tr>
           <tr>
             <td style="font-weight: bold;">성별</td>
             <td>{{ gender }}</td>
-            <td style="font-weight: bold;">Resp</td>
+            <td style="font-weight: bold;"><router-link v-if="typeof patients.pid !== 'undefined'"
+             v-bind:to="{ name: 'VitalView', params: { pid: patients.pid } }">
+          Resp
+            </router-link></td>
             <td>{{ patients.resp }}</td>
           </tr>
           <tr>
             <td style="font-weight: bold;">환자번호</td>
             <td>{{ patients.pid }}</td>
-            <td style="font-weight: bold;">SBP</td>
+            <td style="font-weight: bold;"><router-link v-if="typeof patients.pid !== 'undefined'"
+             v-bind:to="{ name: 'VitalView', params: { pid: patients.pid } }">
+          SBP
+            </router-link></td>
             <td>{{ patients.sbp }}</td>
           </tr>
           <tr>
             <td style="font-weight: bold;">생년월일</td>
             <td>{{ patients.birth_date }}</td>
-            <td style="font-weight: bold;">DBP</td>
+            <td style="font-weight: bold;"><router-link v-if="typeof patients.pid !== 'undefined'"
+             v-bind:to="{ name: 'VitalView', params: { pid: patients.pid } }">
+          DBP
+            </router-link></td>
             <td>{{ patients.dbp }}</td>
           </tr>
       </table>
     </div>
     <div id="under">
       <div id="score">
-        <span id="real-score">90</span>
-        <span id="scoreup">
+        <div id="real-score">90</div>
+        <div id="scoreup">
           <i class="fa-solid fa-caret-up"></i>00
-          <i class="fa-solid fa-caret-down"></i>00
-        </span>
+          <!-- <i class="fa-solid fa-caret-down"></i>00 -->
+        </div>
       </div>
       <div id="graph">
         <Chart />
@@ -52,6 +68,7 @@
 <script>
 import axios from 'axios'
 import Chart from '../../components/Chart.vue'
+import { useRouter } from 'vue-router'
 
 export default {
   data() {
@@ -62,6 +79,9 @@ export default {
   },
   components: {
     Chart,
+  },
+  setup () {
+    const router = useRouter()
   },
   computed: {
     gender() {
@@ -149,16 +169,18 @@ thead tr{
   position: relative;
 }
 #real-score{
-  position: absolute;
-    left: 30%; top: 20%;
     display: inline-block;
     font-size: 100px;
+    height: 50%;
+    width: 100%;
+    padding-top: 50px;
 }
 #scoreup{
-  position: absolute;
-    left: 30%; top: 70%;
     display: inline-block;
     font-size: 30px;
+    height: 50%;
+    width: 100%;
+
 }
 #graph{
   float: right;
@@ -177,6 +199,18 @@ canvas{
   height: 100%;
   width: 100%;
 }
+a{
+  text-decoration: none;
+  color: black;
+}
+a:visited { text-decoration: none;
+color: black; }
+a:hover { text-decoration: none;
+  color: black; }
+a:focus { text-decoration: none;
+  color: black; }
+a:hover, a:active { text-decoration: none;
+  color: black; }
 </style>
 <!-- this.patients = response.data.patients -->
 

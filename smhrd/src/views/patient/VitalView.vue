@@ -6,7 +6,7 @@
           <thead>
             <tr>
               <td>PID</td>
-              <td>00</td>
+              <td>{{ patients }}</td>
               <td>Name</td>
               <td>00</td>
               <td>Age</td>
@@ -55,6 +55,7 @@
 </template>
 <script>
 import { useRouter } from 'vue-router'
+import axios from 'axios'
 export default {
   components: {},
   data () {
@@ -74,7 +75,23 @@ export default {
     }
   },
   created () {},
-  mounted () {},
+  mounted() {
+    axios.get('http://127.0.0.1:8002/api/record/'+ this.$route.params.pid) //안되면 p_id 로 해보세요
+      .then(response =>{
+        return response.data
+      })
+      .then(data => {
+        console.log(data)
+        this.patients=data;
+        return data
+      })
+      .then(response => {
+        // this.dbDate = moment(response.birth_date, 'YYYY-MM-DD')
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  },
   unmounted () {},
   methods: {}
 }
