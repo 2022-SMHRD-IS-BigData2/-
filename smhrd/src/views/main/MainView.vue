@@ -185,6 +185,9 @@ export default {
   cursor: pointer;
   box-shadow: 1px 1px 2px;
 }
+.btn:active{
+  box-shadow: none;
+}
 table{
   width: 100%;
   text-align: center;
@@ -219,6 +222,10 @@ tbody tr{
   padding-left: 10px;
   border-radius: 5%;
   box-shadow: 1px 1px 2px;
+}
+
+#addbtn:active{
+  box-shadow: none;
 }
 
 input{

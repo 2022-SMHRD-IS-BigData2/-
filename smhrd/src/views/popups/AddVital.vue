@@ -87,6 +87,9 @@ table tr td{
   border-radius: 5px;
   cursor: pointer;
 }
+.btn:active{
+  box-shadow: none;
+}
 #wrap-box{
   text-align: center;
 }

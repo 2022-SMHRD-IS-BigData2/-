@@ -141,6 +141,9 @@ table thead{
   cursor: pointer;
   box-shadow: 1px 1px 2px;
 }
+#addmore:active{
+  box-shadow: none;
+}
 #src-date{
   padding: 5px 10px 5px 10px;
   border: 2px solid #ced6e0;
@@ -155,6 +158,9 @@ table thead{
   font-weight: bold;
   cursor: pointer;
   box-shadow: 1px 1px 2px;
+}
+#submit:active{
+  box-shadow: none;
 }
 #realtable{
   margin-top: 50px;

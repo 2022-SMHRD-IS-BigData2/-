@@ -181,4 +181,7 @@ align-items: center;
   padding: 5px;
   box-shadow: 1px 1px 2px;
 }
+#src-btn:active{
+  box-shadow: none;
+}
 </style>
