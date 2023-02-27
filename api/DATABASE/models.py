@@ -264,7 +264,7 @@ class NowViewSepsis(Base):
 
 
 class AllPatientRecordView(Base):
-  __tablename__='all_patient_vital_record_view'
+  __tablename__='all_patients_vital_record_view'
   pid = Column(INT)
   birth_date = Column(DATE,nullable=False)
   sex=Column(INT,nullable=False,)
