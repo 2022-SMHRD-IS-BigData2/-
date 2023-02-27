@@ -4,7 +4,7 @@ from DATABASE.schemas import Patient,Record
 from typing import List
 from starlette.middleware.cors import CORSMiddleware
 from db import session,Database
-from DATABASE.models import VitalRecordAll,PatientGeneralTable,VitalRecordNowView,VitalRecordNowView,NowViewSepsis
+from DATABASE.models import VitalRecordAll,PatientGeneralTable,VitalRecordNowView,VitalRecordNowView,NowViewSepsis,AllPatientRecordView
 from sqlalchemy import Boolean, Column, Integer, String, DateTime, ForeignKey,text
 from sqlalchemy.orm import relationship
 import datetime
@@ -155,10 +155,24 @@ async def get_latest_all():
 @app.get('/api/get_latest_all/{pid}')
 async def get_latest_all(pid:int):
   record=session.query(VitalRecordNowView).filter(VitalRecordNowView.pid==pid).all()
+  session.close()
   return record
 
 # sepsis 환자만 가져오기
 @app.get('/api/get_latest_sepsis_all')
 async def get_latest_sepsis_all():
   sepsis=session.query(NowViewSepsis).all()
+  session.close()
   return sepsis
+
+@app.get('/api/get_all_record')
+async def get_all_record():
+  record=session.query(AllPatientRecordView).all()
+  session.close
+  return record
+
+@app.get('/api/get_select_date?pid={pid}&input_time={date}')
+async def get_select_date(pid:int,date:datetime.date):
+  query="SELECT * FROM all_patients_vital_record_viewWHERE DATE(input_time)=DATE('{date}') AND pid={pid}"
+  record=db.execute(query)
+  return record
