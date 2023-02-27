@@ -76,7 +76,7 @@ async def mk_patient(mk_patient:Patient):
 
 @app.get('/api/record/{p_id}')
 async def p_record_all(p_id:int):
-  p_record=session.query(VitalRecordAll).filter(VitalRecordAll.p_id==p_id).all()
+  p_record=session.query(AllPatientRecordView).filter(AllPatientRecordView.pid==p_id).all()
   session.close()
   return p_record
 
@@ -175,7 +175,7 @@ async def get_all_record():
 
 @app.get('/api/get_select_date?pid={pid}&input_time={date}')
 async def get_select_date(pid:int,date:datetime.date):
-  query="SELECT * FROM all_patients_vital_record_viewWHERE DATE(input_time)=DATE('{date}') AND pid={pid}"
+  query="SELECT * FROM all_patients_vital_record_view WHERE DATE(input_time)=DATE('{date}') AND pid={pid}"
   record=db.execute(query)
   session.close()
   return record
