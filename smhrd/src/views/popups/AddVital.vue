@@ -67,7 +67,7 @@ hr{
   display: none;
 }
 table{
-  border: 3px solid #333;
+  border: 2px solid #333;
   border-collapse: collapse;
   width: 100%;
   text-align: center;

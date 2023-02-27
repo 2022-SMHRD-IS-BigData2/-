@@ -6,8 +6,7 @@
             <td style="font-weight: bold; background-color: #DFF2F5;">이름</td>
             <td>{{ patients.p_name }}</td>
             <td style="font-weight: bold; background-color: #DFF2F5;">
-              <router-link v-if="typeof patients.pid !== 'undefined'"
-             v-bind:to="{ name: 'VitalView', params: { pid: patients.pid } }">
+              <router-link v-if="typeof patients.pid !== 'undefined'" v-bind:to="{ name: 'VitalView', params: { pid: patients.pid } }">
           HR
             </router-link></td>
             <td>{{ patients.hr }}</td>
@@ -15,8 +14,8 @@
           <tr>
             <td style="font-weight: bold; background-color: #DFF2F5;">나이</td>
             <td>{{ patients.p_age }}</td>
-            <td style="font-weight: bold; background-color: #DFF2F5;"><router-link v-if="typeof patients.pid !== 'undefined'"
-             v-bind:to="{ name: 'VitalView', params: { pid: patients.pid } }">
+            <td style="font-weight: bold; background-color: #DFF2F5;">
+            <router-link v-if="typeof patients.pid !== 'undefined'" v-bind:to="{ name: 'VitalView', params: { pid: patients.pid } }">
           Temp
             </router-link></td>
             <td>{{patients.temp}}</td>
@@ -131,7 +130,7 @@ export default {
   margin-left: auto;
   margin-right: auto;
   font-size: large;
-  border: 3px solid #333;
+  border: 2px solid #333;
   box-shadow: 2px 2px 4px #D7D7D7;
 }
 #fulltable tr td{
@@ -168,21 +167,22 @@ thead tr{
   float: left;
   width: 25%;
   height: 100%;
-  border: 3px solid #333;
+  border: 2px solid #333;
   margin-left: 50px;
   text-align: center;
   position: relative;
 }
+
 #real-score{
     display: inline-block;
-    font-size: 100px;
+    font-size: 150px;
     height: 50%;
     width: 100%;
     padding-top: 50px;
 }
 #scoreup{
     display: inline-block;
-    font-size: 30px;
+    font-size: 50px;
     height: 50%;
     width: 100%;
 
@@ -191,7 +191,7 @@ thead tr{
   float: right;
   width: 65%;
   height: 100%;
-  border: 3px solid #333;
+  border: 2px solid #333;
   margin-right: 50px;
 }
 #smalltable{
