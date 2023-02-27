@@ -22,6 +22,7 @@ app=FastAPI()
 origins = [
     "http://localhost",
     "http://localhost:8002",
+    "http://localhost:8081",
     "http://localhost:8000",
     "http://localhost:3000",
     "http://localhost:8087",
@@ -90,6 +91,15 @@ async def get_view():
 
   return {"data": data}
 
+@app.get("/api/data")
+async def get_data(limit: int = 10, page: int = 1):
+    offset = (page - 1) * limit
+    query = text(f"SELECT * FROM vital_record_now_view LIMIT :limit OFFSET :offset")
+    result = session.execute(query, {"limit": limit, "offset": offset})
+    data = [dict(row) for row in result]
+    count = session.execute(text("SELECT COUNT(*) FROM vital_record_now_view")).fetchone()[0]
+    return {"data": data, "count": count}
+
 def model_predict(record:VitalRecordAll):
   per=round(random.random()*100,2)
   if per>50:
@@ -152,6 +162,7 @@ async def get_latest_all():
   record=session.query(VitalRecordNowView).all()
   session.close()
   return record
+
 
 # 모든 환자의 최근 데이터에서 한명의 환자 선택
 @app.get('/api/get_latest_all/{pid}')
