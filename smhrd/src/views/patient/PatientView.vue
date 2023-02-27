@@ -119,7 +119,7 @@ export default {
 </script>
 
 <style scoped>
-*{font-family: 'Nanum Gothic', sans-serif;}
+*{font-family: 'Do Hyeon', sans-serif;}
 #fulltable{
   width: 80%;
   height: 100%;

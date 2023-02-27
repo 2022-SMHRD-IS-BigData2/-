@@ -62,7 +62,7 @@ export default {
 }
 </script>
 <style>
-*{font-family: 'Nanum Gothic', sans-serif;}
+*{font-family: 'Do Hyeon', sans-serif;}
 #header{
   display: none;
 }
