@@ -60,7 +60,8 @@ export default {
   components: {},
   data () {
     return {
-      patients: []
+      patients: [],
+
     }
   },
   setup () {

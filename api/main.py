@@ -4,7 +4,7 @@ from DATABASE.schemas import Patient,Record
 from typing import List
 from starlette.middleware.cors import CORSMiddleware
 from db import session,Database
-from DATABASE.models import VitalRecordAll,PatientGeneralTable,VitalRecordNowView,VitalRecordNowView,NowViewSepsis
+from DATABASE.models import VitalRecordAll,PatientGeneralTable,VitalRecordNowView,VitalRecordNowView,NowViewSepsis,AllPatientRecordView
 from sqlalchemy import Boolean, Column, Integer, String, DateTime, ForeignKey,text
 from sqlalchemy.orm import relationship
 import datetime
@@ -53,12 +53,13 @@ app.add_middleware(
 @app.get('/api/patients')
 async def index():
   patients=session.query(PatientGeneralTable).all()
-
+  session.close()
   return patients
 
 @app.get('/api/patients/{p_id}')
 async def index(p_id:int):
   one_patient=session.query(PatientGeneralTable).filter(PatientGeneralTable.p_id==p_id).first()
+  session.close()
   return one_patient
 
 
@@ -75,7 +76,8 @@ async def mk_patient(mk_patient:Patient):
 
 @app.get('/api/record/{p_id}')
 async def p_record_all(p_id:int):
-  p_record=session.query(VitalRecordAll).filter(VitalRecordAll.p_id==p_id).all()
+  p_record=session.query(AllPatientRecordView).filter(AllPatientRecordView.pid==p_id).all()
+  session.close()
   return p_record
 
 @app.get("/api/all_from_view")
@@ -155,10 +157,25 @@ async def get_latest_all():
 @app.get('/api/get_latest_all/{pid}')
 async def get_latest_all(pid:int):
   record=session.query(VitalRecordNowView).filter(VitalRecordNowView.pid==pid).all()
+  session.close()
   return record
 
 # sepsis 환자만 가져오기
 @app.get('/api/get_latest_sepsis_all')
 async def get_latest_sepsis_all():
   sepsis=session.query(NowViewSepsis).all()
+  session.close()
   return sepsis
+
+@app.get('/api/get_all_record')
+async def get_all_record():
+  record=session.query(AllPatientRecordView).all()
+  session.close()
+  return record
+
+@app.get('/api/get_select_date?pid={pid}&input_time={date}')
+async def get_select_date(pid:int,date:datetime.date):
+  query="SELECT * FROM all_patients_vital_record_view WHERE DATE(input_time)=DATE('{date}') AND pid={pid}"
+  record=db.execute(query)
+  session.close()
+  return record
