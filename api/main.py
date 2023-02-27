@@ -168,7 +168,7 @@ async def get_latest_sepsis_all():
 @app.get('/api/get_all_record')
 async def get_all_record():
   record=session.query(AllPatientRecordView).all()
-  session.close
+  session.close()
   return record
 
 @app.get('/api/get_select_date?pid={pid}&input_time={date}')
