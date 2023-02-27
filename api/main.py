@@ -53,12 +53,13 @@ app.add_middleware(
 @app.get('/api/patients')
 async def index():
   patients=session.query(PatientGeneralTable).all()
-
+  session.close()
   return patients
 
 @app.get('/api/patients/{p_id}')
 async def index(p_id:int):
   one_patient=session.query(PatientGeneralTable).filter(PatientGeneralTable.p_id==p_id).first()
+  session.close()
   return one_patient
 
 
@@ -76,6 +77,7 @@ async def mk_patient(mk_patient:Patient):
 @app.get('/api/record/{p_id}')
 async def p_record_all(p_id:int):
   p_record=session.query(VitalRecordAll).filter(VitalRecordAll.p_id==p_id).all()
+  session.close()
   return p_record
 
 @app.get("/api/all_from_view")
@@ -175,4 +177,5 @@ async def get_all_record():
 async def get_select_date(pid:int,date:datetime.date):
   query="SELECT * FROM all_patients_vital_record_viewWHERE DATE(input_time)=DATE('{date}') AND pid={pid}"
   record=db.execute(query)
+  session.close()
   return record

@@ -17,7 +17,7 @@ url : api/patients/p_id
 url : record/p_id
 
 모든 환자의 모든 기록(return : record_all_view 형식의 모든 환자 모든 정보)
-url : all_from_view
+url : get_all_record *2월 27일 수정
 
 한명의 환자의 최근 정보(return : record_all_view 형식의 선택한 환자의 최근 하나의 정보)
 url : get_latest_all/pid
@@ -29,3 +29,6 @@ url : get_latest_all
 
 모든 패혈증 환자의 최근 정보(return : record_all_view형식의 모든 패혈증 환자 최근 정보)
 url : get_latest_sepsis_all 
+
+선택한 환자의 선택한 날짜의 모든 레코드(return : record_all_view 형식의 해당 환자 해당 날짜 정보)
+url : get_select_date?pid={pid}&input_time={date}
