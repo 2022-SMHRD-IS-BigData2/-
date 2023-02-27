@@ -52,7 +52,7 @@ export default {
 </script>
 
 <style scoped>
-*{font-family: 'Nanum Gothic', sans-serif;}
+*{font-family: 'Do Hyeon', sans-serif;}
 template{
   overflow-x: hidden;
 }
@@ -179,5 +179,9 @@ align-items: center;
   border-radius: 5px;
   cursor: pointer;
   padding: 5px;
+  box-shadow: 1px 1px 2px;
+}
+#src-btn:active{
+  box-shadow: none;
 }
 </style>

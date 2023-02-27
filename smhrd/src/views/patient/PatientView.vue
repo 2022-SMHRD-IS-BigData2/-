@@ -3,46 +3,45 @@
     <div id="table">
       <table border="1" id="fulltable">
           <tr>
-            <td style="font-weight: bold;">이름</td>
+            <td style="font-weight: bold; background-color: #DFF2F5;">이름</td>
             <td>{{ patients.p_name }}</td>
-            <td style="font-weight: bold;">
-              <router-link v-if="typeof patients.pid !== 'undefined'"
-             v-bind:to="{ name: 'VitalView', params: { pid: patients.pid } }">
+            <td style="font-weight: bold; background-color: #DFF2F5;">
+              <router-link v-if="typeof patients.pid !== 'undefined'" v-bind:to="{ name: 'VitalView', params: { pid: patients.pid } }">
           HR
             </router-link></td>
             <td>{{ patients.hr }}</td>
           </tr>
           <tr>
-            <td style="font-weight: bold;">나이</td>
+            <td style="font-weight: bold; background-color: #DFF2F5;">나이</td>
             <td>{{ patients.p_age }}</td>
-            <td style="font-weight: bold;"><router-link v-if="typeof patients.pid !== 'undefined'"
-             v-bind:to="{ name: 'VitalView', params: { pid: patients.pid } }">
+            <td style="font-weight: bold; background-color: #DFF2F5;">
+            <router-link v-if="typeof patients.pid !== 'undefined'" v-bind:to="{ name: 'VitalView', params: { pid: patients.pid } }">
           Temp
             </router-link></td>
             <td>{{patients.temp}}</td>
           </tr>
           <tr>
-            <td style="font-weight: bold;">성별</td>
+            <td style="font-weight: bold; background-color: #DFF2F5;">성별</td>
             <td>{{ gender }}</td>
-            <td style="font-weight: bold;"><router-link v-if="typeof patients.pid !== 'undefined'"
+            <td style="font-weight: bold; background-color: #DFF2F5;"><router-link v-if="typeof patients.pid !== 'undefined'"
              v-bind:to="{ name: 'VitalView', params: { pid: patients.pid } }">
           Resp
             </router-link></td>
             <td>{{ patients.resp }}</td>
           </tr>
           <tr>
-            <td style="font-weight: bold;">환자번호</td>
+            <td style="font-weight: bold; background-color: #DFF2F5;">환자번호</td>
             <td>{{ patients.pid }}</td>
-            <td style="font-weight: bold;"><router-link v-if="typeof patients.pid !== 'undefined'"
+            <td style="font-weight: bold; background-color: #DFF2F5;"><router-link v-if="typeof patients.pid !== 'undefined'"
              v-bind:to="{ name: 'VitalView', params: { pid: patients.pid } }">
           SBP
             </router-link></td>
             <td>{{ patients.sbp }}</td>
           </tr>
           <tr>
-            <td style="font-weight: bold;">생년월일</td>
+            <td style="font-weight: bold; background-color: #DFF2F5;">생년월일</td>
             <td>{{ patients.birth_date }}</td>
-            <td style="font-weight: bold;"><router-link v-if="typeof patients.pid !== 'undefined'"
+            <td style="font-weight: bold; background-color: #DFF2F5;"><router-link v-if="typeof patients.pid !== 'undefined'"
              v-bind:to="{ name: 'VitalView', params: { pid: patients.pid } }">
           DBP
             </router-link></td>
@@ -51,8 +50,8 @@
       </table>
     </div>
     <div id="under">
-      <div id="score">
-        <div id="real-score">90</div>
+      <div id="score" :style="{'background-color': bgColor}">
+        <div id="real-score">{{ number }}</div>
         <div id="scoreup">
           <i class="fa-solid fa-caret-up"></i>00
           <!-- <i class="fa-solid fa-caret-down"></i>00 -->
@@ -74,7 +73,8 @@ export default {
   data() {
     return {
       patients: [],
-      dbDate: null
+      dbDate: null,
+      number: 85
     };
   },
   components: {
@@ -86,6 +86,9 @@ export default {
   computed: {
     gender() {
       return this.patients.sex === 1 ? 'F' : 'M'
+    },
+    bgColor() {
+      return this.number >= 80 ? '#fab1a0' : '#CDF9FF';
     }
   },
   methods: {
@@ -116,7 +119,7 @@ export default {
 </script>
 
 <style scoped>
-*{font-family: 'Nanum Gothic', sans-serif;}
+*{font-family: 'Do Hyeon', sans-serif;}
 #fulltable{
   width: 80%;
   height: 100%;
@@ -127,7 +130,8 @@ export default {
   margin-left: auto;
   margin-right: auto;
   font-size: large;
-  border: 3px solid #333;
+  border: 2px solid #333;
+  box-shadow: 2px 2px 4px #D7D7D7;
 }
 #fulltable tr td{
   width: 25%;
@@ -163,21 +167,22 @@ thead tr{
   float: left;
   width: 25%;
   height: 100%;
-  border: 3px solid #333;
+  border: 2px solid #333;
   margin-left: 50px;
   text-align: center;
   position: relative;
 }
+
 #real-score{
     display: inline-block;
-    font-size: 100px;
+    font-size: 150px;
     height: 50%;
     width: 100%;
     padding-top: 50px;
 }
 #scoreup{
     display: inline-block;
-    font-size: 30px;
+    font-size: 50px;
     height: 50%;
     width: 100%;
 
@@ -186,7 +191,7 @@ thead tr{
   float: right;
   width: 65%;
   height: 100%;
-  border: 3px solid #333;
+  border: 2px solid #333;
   margin-right: 50px;
 }
 #smalltable{
@@ -206,7 +211,8 @@ a{
 a:visited { text-decoration: none;
 color: black; }
 a:hover { text-decoration: none;
-  color: black; }
+  color: black;
+cursor: pointer; }
 a:focus { text-decoration: none;
   color: black; }
 a:hover, a:active { text-decoration: none;

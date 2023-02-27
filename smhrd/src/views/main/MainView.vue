@@ -152,7 +152,7 @@ export default {
 </script>
 
 <style scoped>
-*{font-family: 'Nanum Gothic', sans-serif;}
+*{font-family: 'Do Hyeon', sans-serif;}
 #top-wrap{
   width: 100%;
   height: 50px;
@@ -183,6 +183,10 @@ export default {
   padding-left: 20px;
   border-radius: 5%;
   cursor: pointer;
+  box-shadow: 1px 1px 2px;
+}
+.btn:active{
+  box-shadow: none;
 }
 table{
   width: 100%;
@@ -217,6 +221,11 @@ tbody tr{
   padding-right: 10px;
   padding-left: 10px;
   border-radius: 5%;
+  box-shadow: 1px 1px 2px;
+}
+
+#addbtn:active{
+  box-shadow: none;
 }
 
 input{
