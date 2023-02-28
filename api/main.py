@@ -210,27 +210,47 @@ async def get_select_date(pid:int,date:str):
   return record
 
 
+
 @app.get('/api/get_search_data')
-async def get_search_patient(url: str = '', search_str: str = '', limit: int = 10, page: int = 1):
-    # URL 매개변수에서 검색어와 테이블명을 가져옴
-  offset = (page - 1) * limit
+async def get_search_patient(url: str = '', search_str: str = ''):
   search_str = f"%{search_str}%" # 검색 문자열 앞뒤에 % 추가
   query = None
   count = None
   data=[]
-  print(url)
-  # 테이블명에 따라 적절한 쿼리를 생성
   if url == '/':
-      query = text(f"SELECT * FROM vital_record_now_view WHERE (pid LIKE :search_str OR name LIKE :search_str) LIMIT :limit OFFSET :offset")
-      count = session.execute(text("SELECT COUNT(*) FROM patient_general WHERE (pid LIKE :search_str OR name LIKE :search_str)"), {"search_str": search_str}).fetchone()[0]
+      query = text(f"SELECT * FROM vital_record_now_view WHERE (pid LIKE :search_str OR name LIKE :search_str)")
   elif url == '/detected':
-      query = text(f"SELECT * FROM now_view_sepsis WHERE (pid LIKE :search_str OR name LIKE :search_str) LIMIT :limit OFFSET :offset")
-      count = session.execute(text("SELECT COUNT(*) FROM now_view_sepsis WHERE (pid LIKE :search_str OR name LIKE :search_str)"), {"search_str": search_str}).fetchone()[0]
-  
+      query = text(f"SELECT * FROM now_view_sepsis WHERE (pid LIKE :search_str OR name LIKE :search_str)")
   # 검색 수행
   if query is not None:
-      result = session.execute(query, {"search_str": search_str, "limit": limit, "offset": offset}).all()
+      result = session.execute(query, {"search_str": search_str}).all()
       data = [dict(row) for row in result]
   else:
       data = []
-  return {"data": data, "count": count, "page": {"page": page, "limit": limit}}
+  return {"data": data, "count": len(data)}
+
+
+# @app.get('/api/get_search_data')
+# async def get_search_patient(url: str = '', search_str: str = '', limit: int = 10, page: int = 1):
+#     # URL 매개변수에서 검색어와 테이블명을 가져옴
+#   offset = (page - 1) * limit
+#   search_str = f"%{search_str}%" # 검색 문자열 앞뒤에 % 추가
+#   query = None
+#   count = None
+#   data=[]
+#   print(url)
+#   # 테이블명에 따라 적절한 쿼리를 생성
+#   if url == '/':
+#       query = text(f"SELECT * FROM vital_record_now_view WHERE (pid LIKE :search_str OR name LIKE :search_str) LIMIT :limit OFFSET :offset")
+#       count = session.execute(text("SELECT COUNT(*) FROM patient_general WHERE (pid LIKE :search_str OR name LIKE :search_str)"), {"search_str": search_str}).fetchone()[0]
+#   elif url == '/detected':
+#       query = text(f"SELECT * FROM now_view_sepsis WHERE (pid LIKE :search_str OR name LIKE :search_str) LIMIT :limit OFFSET :offset")
+#       count = session.execute(text("SELECT COUNT(*) FROM now_view_sepsis WHERE (pid LIKE :search_str OR name LIKE :search_str)"), {"search_str": search_str}).fetchone()[0]
+  
+#   # 검색 수행
+#   if query is not None:
+#       result = session.execute(query, {"search_str": search_str, "limit": limit, "offset": offset}).all()
+#       data = [dict(row) for row in result]
+#   else:
+#       data = []
+#   return {"data": data, "count": count, "page": {"page": page, "limit": limit}}
