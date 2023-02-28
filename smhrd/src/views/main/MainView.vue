@@ -103,6 +103,7 @@ export default {
       selectedPatients: [],
       selectedPatient: null,
       count: 0,
+      perPage:10,
       currentPage:1,
       page: {
                 page: 0,
