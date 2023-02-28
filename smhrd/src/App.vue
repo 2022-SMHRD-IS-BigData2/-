@@ -11,8 +11,8 @@
             <div id="wrap-time">
               <div id="search">
                 <span id="search-glass"><i class="fa-solid fa-magnifying-glass"></i></span>
-                <input type="search" id="searchbox" placeholder="환자 ID or 이름 검색" v-on:input="submit">
-                <button type="submit" id="src-btn">검색</button>
+                <input type="search" id="searchbox" placeholder="환자 ID or 이름 검색" v-model="searchQuery" @input="onSearch">
+                <button type="button" @click="onSearch" id="src-btn">검색</button>
               </div>
               <div id="time">
                 {{ currentTime }}
@@ -24,19 +24,69 @@
 </template>
 
 <script>
-import moment from 'moment'
+import { thisTypeAnnotation } from '@babel/types'
+import moment from 'moment';
+import axios from 'axios';
 
 export default {
   data () {
     return {
-      currentTime: ''
+      currentTime: '',
+      searchData: [],
+      url:'',
+      currentPage:1,
+      searchQuery: '',
+      pageSize: 10
     }
+  },
+  created(){
+    this.url = this.$route.path;
+    this.fetchData();
   },
   methods: {
     goBack () {
       this.$router.go(-1)
-    }
+    },
+    async onSearch() {
+      this.url = this.$route.path;
+      console.log(this.url);
+      // 검색어와 페이지 정보를 검색 API에 전달
+      const result = await axios.get("http://127.0.0.1:8002/api/get_search_data", {
+        params: {
+          url: this.url,
+          search_str: this.searchQuery,
+          limit: this.pageSize,
+          page: this.currentPage
+        }
+      });
+      // 검색 결과 데이터와 페이징 정보를 searchData에 저장
+      this.searchData = result.data;
+      console.log(this.searchData);
+    },async fetchData() {
+        if (this.searchData.length) {
+          // 검색 결과가 있는 경우 searchData 사용
+          this.data = this.searchData.data;
+          // this.total = this.searchData.count;
+        } else {
+          // 검색 결과가 없는 경우 현재 페이지의 모든 데이터 사용
+          const result = await axios.get("http://127.0.0.1:8002/api/data", {
+            params: {
+              url: this.url,
+              limit: this.pageSize,
+              page: this.currentPage
+            }
+          });
+          this.data = result.data.data;
+          this.total = result.data.count;
+        }
+      },
+      updateSearchQuery() {
+  // 검색어가 변경될 때 searchData 초기화
+        this.searchData = [];
+        this.searchQuery = '';
+      },
   },
+  // 검색 결과 데이터와 페이징 정보를 searchData에 저장
   mounted () {
     this.moment = moment // moment 함수를 this에 할당합니다.
 
