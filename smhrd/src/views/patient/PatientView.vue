@@ -85,8 +85,7 @@ export default {
   data() {
     return {
       patients: [],
-      dbDate: null,
-      number: 85
+      dbDate: null
     };
   },
   components: {
@@ -107,7 +106,7 @@ export default {
       return this.patients.sex === 1 ? 'F' : 'M'
     },
     bgColor() {
-      return this.sepsis_percent >= 80 ? '#fab1a0' : '#85E9A7';
+      return this.patients.sepsis_percent >= 80 ? '#fab1a0' : '#85E9A7';
     }
   },
   methods: {
@@ -117,15 +116,22 @@ export default {
   }
 },
   mounted() {
-    axios.get('http://127.0.0.1:8002/api/get_latest_all/'+ this.$route.params.pid) //안되면 p_id 로 해보세요
+    axios.all([axios.get('http://127.0.0.1:8002/api/get_latest_all/'+ this.$route.params.pid)
+    ,axios.get("http://127.0.0.1:8002/api/get_select_date?pid=" + this.$route.params.pid +"&input_time=" + this.route.params.pid)])
+    .then(
+      axios.spread((res1, res2) => {
+        this.patients = res1.data[0];
+        return data
+      })
+    )
       .then(response =>{
         return response.data
       })
-      .then(data => {
-        console.log(data[0])
-        this.patients=data[0];
-        return data
-      })
+      // .then(data => {
+      //   console.log(data[0])
+      //   this.patients=data[0];
+      //   return data
+      // })
       .then(response => {
         // this.dbDate = moment(response.birth_date, 'YYYY-MM-DD')
       })

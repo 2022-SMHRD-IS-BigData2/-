@@ -132,7 +132,7 @@ export default {
     }
   },
   mounted () {
-    axios.all([axios.get("http://127.0.0.1:8002/api/data"),axios.get("http://127.0.0.1:8002/api/get_latest_sepsis_all")])
+    axios.all([axios.get("http://127.0.0.1:8002/api/data"),axios.get("http://127.0.0.1:8002/api/get_latest_sepsis_percent")])
     .then(
       axios.spread((res1, res2) => {
         this.patients = res2.data;
