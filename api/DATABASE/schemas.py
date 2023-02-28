@@ -5,24 +5,24 @@ from sqlalchemy.orm import relationship
 from typing import Union
 
 class Patient(BaseModel):
-  p_id : int
+  pid : int
   birth_date: datetime.date
   sex : int
-  p_age : int
-  p_name : str
+  age : int
+  name : str
   emp_id : int
   admin_date : datetime.datetime=datetime.datetime.now()
   disch_date: datetime.datetime=None
 
 class RecordNormal(BaseModel):
-  p_id : int
+  pid : int
   p_record_seq : int
   birth_date :datetime.date
   input_time : datetime.datetime
   sex :int
-  p_age: int
+  age: int
   hr: int
-  p_temp: float
+  temp: float
   resp: int
   sbp: int
   dbp: int
@@ -31,14 +31,14 @@ class RecordNormal(BaseModel):
   sepsis_percent:float
 
 class Record(BaseModel):
-  p_id : int
+  pid : int
   # p_record_seq : int
   birth_date :datetime.date
   input_time : datetime.datetime
   sex: int
   # p_age: int
   hr: int
-  p_temp: float
+  temp: float
   resp: int
   sbp: int
   dbp: int
@@ -70,11 +70,11 @@ class Record(BaseModel):
   sepsis_percent:float
 
 class Record_v(BaseModel):
-  p_id : int
+  pid : int
   p_record_seq : int
   birth_date: datetime.date
-  p_name : str
-  p_age: int
+  name : str
+  age: int
   sex : int
   emp_id : int
   admin_date : datetime.datetime=datetime.datetime.now()
@@ -113,9 +113,9 @@ class Record_v(BaseModel):
   sepsis_percent:float
 
 class Record_for_Predict:
-  p_id : int
+  pid : int
   p_record_seq : int
-  p_age : int
+  age : int
   hr: int
   temp: float
   resp: int
@@ -125,7 +125,7 @@ class Record_for_Predict:
 
 
 class Lab_Data:
-  p_id : int
+  pid : int
   p_record_seq : int
   lab_record_seq: int
   BaseExcess:float
