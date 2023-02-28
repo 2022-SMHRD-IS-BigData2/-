@@ -23,7 +23,7 @@
             <td style="width: 5%;">Temp</td>
             <td style="width: 5%;">Resp</td>
             <td style="width: 5%;">SBP</td>
-            <td style="width: 5%;">DBP</td>
+            <td style="width: 5%;">{{ currentDate }}</td>
             <td style="width: 15%;">Sepsis-Score</td>
           </tr>
         </thead>
@@ -34,7 +34,7 @@
             <td><input type="checkbox" style="width: 20px; height: 20px; cursor: pointer;" @click="addOn(index)"/></td>
             <td>{{ patient.input_time }}</td>
             <td>
-            <router-link :to="{ name: 'PatientView', params: { pid: patient.pid, date: currentDate } }">
+            <router-link :to="{ name: 'PatientView', params: { pid: patient.pid, date: patient.input_time.slice(0, 10) } }">
           {{ patient.pid }}
             </router-link>
             </td>
@@ -145,17 +145,10 @@ export default {
         this.page=data.page;
         return data
       })
-      .then(response => {
-        // this.dbDate = moment(response.birth_date, 'YYYY-MM-DD')
-      })
       .catch(error => {
         console.log(error)
       })
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, "0");
-    const day = String(now.getDate()).padStart(2, "0");
-    this.currentDate = `${year}-${month}-${day}`;
+
   },
   unmounted () {},
   methods: {
@@ -175,6 +168,7 @@ export default {
     }
   }
 },
+
   selectPatient(patient, index) {
     if (!patient) return;
     this.selectedPatient = {

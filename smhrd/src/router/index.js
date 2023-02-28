@@ -15,8 +15,8 @@ const routes = [
     component: DetectedView
   },
   {
-    // path: '/patient/:pid'
-    path: '/patient/:pid/:date',
+    // path: '/patient/:pid',
+    path: '/patient/:pid/:date?',
     name: 'PatientView',
     component: PatientView
   },
