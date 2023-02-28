@@ -9,11 +9,11 @@ import datetime
 
 class PatientGeneralTable(Base):
   __tablename__='patient_general'
-  p_id = Column(INT, primary_key=True, autoincrement=True)
+  pid = Column(INT, primary_key=True, autoincrement=True)
   birth_date = Column(DATE,nullable=False)
   sex=Column(INT,nullable=False)
-  p_age=Column(INT,nullable=False)
-  p_name=Column(String(50),nullable=False)
+  age=Column(INT,nullable=False)
+  name=Column(String(50),nullable=False)
   emp_id=Column(INT,nullable=False)
   admin_date=Column(DATETIME, nullable=False)
   disch_date=Column(DATETIME,nullable=True)
@@ -24,12 +24,12 @@ class PatientGeneralTable(Base):
 
 class VitalRecordNormal(Base):
   __tablename__ = 'vital_record_normal'
-  p_id=Column(INT,ForeignKey('patient_general.p_id'),primary_key=True)
+  pid=Column(INT,ForeignKey('patient_general.pid'),primary_key=True)
   p_record_seq = Column(INT, primary_key=True)
   birth_date=Column(DATE,nullable=False)
   input_time=Column(DATETIME,nullable=False)
   sex=Column(INT,nullable=False)
-  p_age=Column(INT,nullable=False)
+  age=Column(INT,nullable=False)
   hr=Column(INT,nullable=False)
   temp=Column(FLOAT,nullable=False)
   resp=Column(INT,nullable=False)
@@ -41,16 +41,16 @@ class VitalRecordNormal(Base):
   sepsis_percent=Column(FLOAT,nullable=True,default=None)
   
   patient_general = relationship("PatientGeneralTable", back_populates="vital_record_normal")
-  lab_data_record = relationship("LabDataRecord", primaryjoin="VitalRecordNormal.p_id == LabDataRecord.p_id")
+  lab_data_record = relationship("LabDataRecord", primaryjoin="VitalRecordNormal.pid == LabDataRecord.pid")
 
 class VitalRecordAll(Base):
   __tablename__ = 'vital_record_all'
-  p_id=Column(INT,ForeignKey('patient_general.p_id'),primary_key=True)
+  pid=Column(INT,ForeignKey('patient_general.pid'),primary_key=True)
   p_record_seq = Column(INT, primary_key=True)
   birth_date=Column(DATE,nullable=False)
   input_time=Column(DATETIME,nullable=False)
   sex=Column(INT,nullable=False)
-  p_age=Column(INT,nullable=False)
+  age=Column(INT,nullable=False)
   hr=Column(INT,nullable=False)
   temp=Column(FLOAT,nullable=False)
   resp=Column(INT,nullable=False)
@@ -90,7 +90,7 @@ class VitalRecordAll(Base):
 
 class LabDataRecord(Base):
   __tablename__='lab_data_record'
-  p_id=Column(INT,ForeignKey('vital_record_normal.p_id'),primary_key=True,)
+  pid=Column(INT,ForeignKey('vital_record_normal.pid'),primary_key=True,)
   p_record_seq = Column(INT,ForeignKey('vital_record_normal.p_record_seq'),primary_key=True)
   lab_record_seq=Column(INT,primary_key=True)
   BaseExcess=Column(FLOAT,nullable=True,default=None)
@@ -118,7 +118,7 @@ class LabDataRecord(Base):
   Fibrinogen=Column(FLOAT,nullable=True,default=None)
   Platelets=Column(FLOAT,nullable=True,default=None)
 
-  vital_record_normal=relationship('VitalRecordNormal', back_populates='lab_data_record', primaryjoin="and_(LabDataRecord.p_id==VitalRecordNormal.p_id, LabDataRecord.p_record_seq==VitalRecordNormal.p_record_seq)")
+  vital_record_normal=relationship('VitalRecordNormal', back_populates='lab_data_record', primaryjoin="and_(LabDataRecord.pid==VitalRecordNormal.pid, LabDataRecord.p_record_seq==VitalRecordNormal.p_record_seq)")
 
 
 
@@ -127,8 +127,8 @@ class VitalRecordAllView(Base):
   pid = Column(INT)
   birth_date = Column(DATE,nullable=False)
   sex=Column(INT,nullable=False,)
-  p_name=Column(String(50),nullable=False)
-  p_age=Column(INT,nullable=False)
+  name=Column(String(50),nullable=False)
+  age=Column(INT,nullable=False)
   emp_id=Column(INT,nullable=False)
   admin_date=Column(DATETIME, nullable=False)
   disch_date=Column(DATETIME,nullable=True)
@@ -174,8 +174,8 @@ class VitalRecordNowView(Base):
   pid = Column(INT)
   birth_date = Column(DATE,nullable=False)
   sex=Column(INT,nullable=False,)
-  p_age=Column(INT,nullable=False)
-  p_name=Column(String(50),nullable=False)
+  age=Column(INT,nullable=False)
+  name=Column(String(50),nullable=False)
   emp_id=Column(INT,nullable=False)
   admin_date=Column(DATETIME, nullable=False)
   disch_date=Column(DATETIME,nullable=True)
@@ -221,8 +221,8 @@ class NowViewSepsis(Base):
   pid = Column(INT)
   birth_date = Column(DATE,nullable=False)
   sex=Column(INT,nullable=False,)
-  p_age=Column(INT,nullable=False)
-  p_name=Column(String(50),nullable=False)
+  age=Column(INT,nullable=False)
+  name=Column(String(50),nullable=False)
   emp_id=Column(INT,nullable=False)
   admin_date=Column(DATETIME, nullable=False)
   disch_date=Column(DATETIME,nullable=True)
@@ -268,8 +268,8 @@ class AllPatientRecordView(Base):
   pid = Column(INT)
   birth_date = Column(DATE,nullable=False)
   sex=Column(INT,nullable=False,)
-  p_age=Column(INT,nullable=False)
-  p_name=Column(String(50),nullable=False)
+  age=Column(INT,nullable=False)
+  name=Column(String(50),nullable=False)
   emp_id=Column(INT,nullable=False)
   admin_date=Column(DATETIME, nullable=False)
   disch_date=Column(DATETIME,nullable=True)
