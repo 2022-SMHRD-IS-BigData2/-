@@ -98,8 +98,7 @@ async def get_view():
 async def get_data(limit: int = 10, page: int = 1):
     offset = (page - 1) * limit
     query = text(f"SELECT * FROM vital_record_now_view LIMIT :limit OFFSET :offset")
-    result = session.execute(query, {"limit": limit, "offset": offset})
-    data = [dict(row) for row in result]
+    data = session.execute(query, {"limit": limit, "offset": offset})
     count = session.execute(text("SELECT COUNT(*) FROM vital_record_now_view")).fetchone()[0]
     return {"data": data, "count": count,'page':{'page':1,'limit':10}}
 
@@ -174,22 +173,21 @@ async def get_latest_all(pid:int):
   session.close()
   return record
 
-# sepsis 환자만 가져오기
+# sepsis 환자만 가져오기/페이징 들어갔음
 @app.get('/api/get_latest_sepsis_all')
 async def get_latest_sepsis_all(limit: int = 10, page: int = 1):
   offset = (page - 1) * limit
   query = text(f"SELECT * FROM now_view_sepsis LIMIT :limit OFFSET :offset")
-  result = session.execute(query, {"limit": limit, "offset": offset}).all()
-  data = [dict(row) for row in result]
+  data = session.execute(query, {"limit": limit, "offset": offset}).all()
   count = session.execute(text("SELECT COUNT(*) FROM now_view_sepsis")).fetchone()[0]
   return {"data": data, "count": count,'page':{'page':1,'limit':10}}
 
+# sepsis 위험확률 80프로 넘는것만 / 페이징 들어갔음
 @app.get('/api/get_latest_sepsis_percent')
 async def get_latest_sepsis_percent(limit: int = 10, page: int = 1):
   offset = (page - 1) * limit
   query = text(f"SELECT * FROM vital_record_now_view where sepsis_percent>=80 LIMIT :limit OFFSET :offset")
-  result = session.execute(query, {"limit": limit, "offset": offset}).all()
-  data = [dict(row) for row in result]
+  data = session.execute(query, {"limit": limit, "offset": offset}).all()
   count = session.execute(text("SELECT COUNT(*) FROM vital_record_now_view where sepsis_percent>=80")).fetchone()[0]
   return {"data": data, "count": count,'page':{'page':1,'limit':10}}
 
