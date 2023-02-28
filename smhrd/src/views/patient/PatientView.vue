@@ -3,8 +3,8 @@
     <div id="table">
       <div id="right">
         <button @click="AddVital" id="addmore">정보추가</button>
-        <input type="date" id="src-date">
-        <button id="submit">확인</button>
+        <input type="date" id="src-date" v-model="selectedDate">
+        <button id="submit" type="submit" @click="chooseDate">확인</button>
       </div>
       <div id="table-wrap">
       <table id="fulltable">
@@ -44,7 +44,12 @@
     <div id="under">
 
     <div id="body">
-      <div id="leftarrow"><i class="fa-solid fa-left-long fa-3x" style="color: #ced6e0;"></i></div>
+      <div id="leftarrow">
+
+        <a :href="$router.resolve({ name: 'PatientView', params: { pid: this.$route.params.pid, date: yesterday } }).href">
+          <i class="fa-solid fa-left-long fa-3x" style="color: #ced6e0;" ></i></a>
+
+      </div>
       <div id="tablewrap">
       <table id="realtable">
         <thead>
@@ -70,30 +75,37 @@
             <td>{{ vs.input_time}}</td>
             <td>{{ vs. hr }}</td>
             <td>{{ vs.temp }}</td>
-            <td>{{ vs. resp}}</td>
+            <td>{{ vs.resp }}</td>
             <td>{{ vs.sbp }}</td>
             <td>{{ vs.dbp}}</td>
           </tr>
         </tbody>
       </table>
     </div>
-      <div id="rightarrow"><i class="fa-solid fa-right-long fa-3x" style="color: #ced6e0;"></i></div>
+      <div id="rightarrow">
+        <a :href="$router.resolve({ name: 'PatientView', params: { pid: this.$route.params.pid, date: tomorrow } }).href">
+          <i class="fa-solid fa-right-long fa-3x" style="color: #ced6e0;"></i></a></div>
     </div>
     </div>
   </div>
+  <router-view :key="$route.fullPath"></router-view>
 </template>
 
 <script>
 import axios from 'axios'
 import Chart from '../../components/Chart.vue'
 import { useRouter } from 'vue-router'
+import moment from 'moment'
 
 
 export default {
   data() {
     return {
       patients: [],
-      dbDate: null
+      dbDate: null,
+      all: [],
+      selectedDate: this.$route.params.date,
+      currentDate: this.$route.params.date
     };
   },
   components: {
@@ -115,12 +127,20 @@ export default {
     },
     bgColor() {
       return this.patients.sepsis_percent >= 80 ? '#fab1a0' : '#85E9A7';
+    },
+    tomorrow(){
+      return moment(this.currentDate).add(1, 'day').format('YYYY-MM-DD');
+    },
+    yesterday(){
+      return moment(this.currentDate).subtract(1, 'day').format('YYYY-MM-DD');
     }
   },
   methods: {
     getPatientName() {
       const result = this.patients.filter( patient => patient.pid  === this.$route.params.pid );
-
+  },
+  chooseDate() {
+    router.push({name: 'PatientView', params: { pid: this.$route.params.pid, date: this.selectedDate }})
   }
 },
   mounted() {
@@ -132,7 +152,7 @@ export default {
         console.log(res2.data);
         this.patients = res1.data[0];
         this.all = res2.data;
-        return data
+        return data();
       })
     )
       .then(response =>{
@@ -299,19 +319,24 @@ a:hover, a:active { text-decoration: none;
 #tablewrap{
   display: inline-block;
   width: 80%;
+  height: 100%;
 }
 #body{
   width: 100%;
+  height: 60%;
 }
 #leftarrow{
 width: 10%;
 display: inline-block;
 text-align: center;
+height: 100%;
 }
 #rightarrow{
   width: 10%;
 display: inline-block;
 text-align: center;
+height: 100%;
+
 }
 </style>
 <!-- this.patients = response.data.patients -->

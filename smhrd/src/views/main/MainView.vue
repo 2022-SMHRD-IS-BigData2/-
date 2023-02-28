@@ -23,7 +23,7 @@
             <td style="width: 5%;">Temp</td>
             <td style="width: 5%;">Resp</td>
             <td style="width: 5%;">SBP</td>
-            <td style="width: 5%;">{{ currentDate }}</td>
+            <td style="width: 5%;">DBP</td>
             <td style="width: 15%;">Sepsis-Score</td>
           </tr>
         </thead>
