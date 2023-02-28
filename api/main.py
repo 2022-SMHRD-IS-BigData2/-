@@ -100,6 +100,7 @@ async def get_data(limit: int = 10, page: int = 1):
     query = text(f"SELECT * FROM vital_record_now_view LIMIT :limit OFFSET :offset")
     data = session.execute(query, {"limit": limit, "offset": offset})
     count = session.execute(text("SELECT COUNT(*) FROM vital_record_now_view")).fetchone()[0]
+    session.close()
     return {"data": data, "count": count,'page':{'page':1,'limit':10}}
 
 def model_predict(record:VitalRecordAll):
@@ -180,6 +181,7 @@ async def get_latest_sepsis_all(limit: int = 10, page: int = 1):
   query = text(f"SELECT * FROM now_view_sepsis LIMIT :limit OFFSET :offset")
   data = session.execute(query, {"limit": limit, "offset": offset}).all()
   count = session.execute(text("SELECT COUNT(*) FROM now_view_sepsis")).fetchone()[0]
+  session.close()
   return {"data": data, "count": count,'page':{'page':1,'limit':10}}
 
 # sepsis 위험확률 80프로 넘는것만 / 페이징 들어갔음
@@ -189,6 +191,7 @@ async def get_latest_sepsis_percent(limit: int = 10, page: int = 1):
   query = text(f"SELECT * FROM vital_record_now_view where sepsis_percent>=80 LIMIT :limit OFFSET :offset")
   data = session.execute(query, {"limit": limit, "offset": offset}).all()
   count = session.execute(text("SELECT COUNT(*) FROM vital_record_now_view where sepsis_percent>=80")).fetchone()[0]
+  session.close()
   return {"data": data, "count": count,'page':{'page':1,'limit':10}}
 
 @app.get('/api/get_all_record')
@@ -205,6 +208,11 @@ async def get_select_date(pid:int,date:str):
   return record
 
 @app.get('/api/get_search_patient')
-async def get_search_patient(str:str):
-  query=text(f"select * from VitalRecordNowView where pid like '%{str}%' or name like '%{str}%'")
-  return "a"
+async def get_search_patient(search_str: str, limit: int = 10, page: int = 1):
+  offset = (page - 1) * limit
+  query = text(f"SELECT * FROM vital_record_now_view WHERE (pid LIKE :search_str OR name LIKE :search_str) LIMIT :limit OFFSET :offset")
+  search_str = f"%{search_str}%"  # 검색 문자열 앞뒤에 % 추가
+  data = session.execute(query, {"search_str": search_str, "limit": limit, "offset": offset}).all()
+  count = session.execute(text("SELECT COUNT(*) FROM vital_record_now_view WHERE pid LIKE :search_str OR name LIKE :search_str"), {"search_str": search_str}).fetchone()[0]
+  session.close()
+  return {"data": data, "count": count, "page": {"page": page, "limit": limit}}
