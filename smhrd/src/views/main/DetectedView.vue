@@ -103,12 +103,13 @@ export default {
       selectedPatients: [],
       selectedPatient: null,
       count: 0,
+      perPage:10,
+      pages:[],
       currentPage:1,
       page: {
                 page: 0,
                 limit: 10,
       },
-      pages:[],
       searchTerm: '',
       pageSearchTerm: ''
     }
@@ -132,18 +133,16 @@ export default {
     }
   },
   mounted () {
-    axios.all([axios.get("http://127.0.0.1:8002/api/data"),axios.get("http://127.0.0.1:8002/api/get_latest_sepsis_percent")])
-    .then(
-      axios.spread((res1, res2) => {
-        this.patients = res2.data;
-        this.count = res1.count;
-        this.page = res1.page;
-        return data
-      })
-    )
-      .then(response =>{
-        return response.data
-      })
+    axios.get("http://127.0.0.1:8002/api/get_latest_sepsis_percent")
+    .then(res => {
+      return res.data
+    })
+    .then(data => {
+      this.patients = data.data;
+      this.count = data.count;
+      this.page = data.page;
+      return data
+    })
       // .then(data => {
       //   console.log(data)
       //   this.patients=data.data;
@@ -151,9 +150,7 @@ export default {
       //   this.page=data.page;
       //   return data
       // })
-      .then(response => {
         // this.dbDate = moment(response.birth_date, 'YYYY-MM-DD')
-      })
       .catch(error => {
         console.log(error)
       })
@@ -188,7 +185,7 @@ export default {
       if (page < 1 || page > this.pageCount || page === this.currentPage) {
         return;
       }
-      const response = await axios.get('http://127.0.0.1:8002/api/data', {
+      const response = await axios.get('http://127.0.0.1:8002/api/get_latest_sepsis_percent', {
         params: {
           limit: this.perPage,
           page: page
