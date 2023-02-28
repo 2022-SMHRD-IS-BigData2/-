@@ -190,3 +190,7 @@ async def get_select_date(pid:int,date:datetime.date):
   record=db.execute(query)
   session.close()
   return record
+
+@app.get('/api/get_search_patient')
+async def get_search_patient(str:str):
+   

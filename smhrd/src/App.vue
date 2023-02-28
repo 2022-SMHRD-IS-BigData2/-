@@ -11,7 +11,7 @@
             <div id="wrap-time">
               <div id="search">
                 <span id="search-glass"><i class="fa-solid fa-magnifying-glass"></i></span>
-                <input type="search" id="searchbox" placeholder="환자 ID 검색" v-on:keyup.enter="submit">
+                <input type="search" id="searchbox" placeholder="환자 ID 검색" v-on:input="submit">
                 <button type="submit" id="src-btn">검색</button>
               </div>
               <div id="time">
