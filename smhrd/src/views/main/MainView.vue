@@ -76,8 +76,8 @@
         </li>
       </ul>
       <div class="page-search-container">
-        <input type="text" v-model="pageSearchTerm" placeholder="Search page...">
-        <button @click="goToPage">Go</button>
+        <input type="text" v-model="pageSearchTerm" placeholder="Search page" id="page-src">
+        <button @click="goToPage" id="page-btn">Go</button>
       </div>
     </div>
   </div>
@@ -339,7 +339,7 @@ a:hover, a:active { text-decoration: none;
     padding: 0px;
 
     /* 드래그 막기 */
-    -ms-user-select: none; 
+    -ms-user-select: none;
     -moz-user-select: -moz-none;
     -khtml-user-select: none;
     -webkit-user-select: none;
@@ -366,7 +366,7 @@ a:hover, a:active { text-decoration: none;
   justify-content: center;
   align-items: center;
   list-style: none;
-  margin: 0;
+  margin-top: 30px;
   padding: 0;
 }
 
@@ -401,6 +401,32 @@ a:hover, a:active { text-decoration: none;
 .pagination li.disabled a {
   opacity: 0.5;
   cursor: default;
+}
+
+#page-src{
+  margin-top: 15px;
+  width: 80px;
+  border: 2px solid #333;
+  border-radius: 5px;
+}
+
+#page-btn{
+  margin-top: 15px;
+  border: none;
+  background-color: #ced6e0;
+  font-weight: bold;
+  color: #333;
+  cursor: pointer;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-right: 10px;
+  padding-left: 10px;
+  border-radius: 5%;
+  box-shadow: 1px 1px 2px;
+}
+
+#page-btn:active{
+  box-shadow: none;
 }
 
 </style>
