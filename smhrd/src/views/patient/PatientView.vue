@@ -187,7 +187,8 @@ thead tr{
   text-align: center;
   position: relative;
   float: left;
-  margin: 30px 0px 0px 50px;
+  margin: 30px 0px 0px 80px;
+  border-radius: 15%;
 }
 #real-score{
     display: inline-block;

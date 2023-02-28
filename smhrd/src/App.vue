@@ -172,7 +172,7 @@ align-items: center;
 #src-btn{
   border: none;
   background-color: #ced6e0;
-  font-weight: bold;
+  font-weight: 700;
   font-size: small;
   width: 50px;
   margin: 10px;
