@@ -52,7 +52,7 @@ export default {
 </script>
 
 <style scoped>
-*{font-family: 'Do Hyeon', sans-serif;}
+*{font-family: 'Noto Sans KR', sans-serif;}
 template{
   overflow-x: hidden;
 }

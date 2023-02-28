@@ -38,8 +38,8 @@
           {{ patient.pid }}
             </router-link>
             </td>
-            <td>{{ patient.p_name }}</td>
-            <td>{{ patient.p_age }}</td>
+            <td>{{ patient.name }}</td>
+            <td>{{ patient.age }}</td>
             <td>{{  gender[index] }}</td>
             <td>{{ patient.hr }}</td>
             <td>{{ patient.temp }}</td>
@@ -234,7 +234,7 @@ export default {
 </script>
 
 <style scoped>
-*{font-family: 'Do Hyeon', sans-serif;}
+*{font-family: 'Noto Sans KR', sans-serif;}
 #top-wrap{
   width: 100%;
   height: 50px;
