@@ -34,7 +34,7 @@
             <td><input type="checkbox" style="width: 20px; height: 20px; cursor: pointer;" @click="addOn(index)"/></td>
             <td>{{ patient.input_time }}</td>
             <td>
-            <router-link :to="{ name: 'PatientView', params: { pid: patient.pid } }">
+            <router-link :to="{ name: 'PatientView', params: { pid: patient.pid, date: currentDate } }">
           {{ patient.pid }}
             </router-link>
             </td>
@@ -111,7 +111,8 @@ export default {
                 limit: 10,
       },
       searchTerm: '',
-      pageSearchTerm: ''
+      pageSearchTerm: '',
+      currentDate: ""
     }
   },
   setup () {
@@ -154,6 +155,11 @@ export default {
       .catch(error => {
         console.log(error)
       })
+      const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+    this.currentDate = `${year}-${month}-${day}`;
   },
   unmounted () {},
   methods: {
