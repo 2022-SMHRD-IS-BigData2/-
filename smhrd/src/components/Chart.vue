@@ -20,17 +20,17 @@ export default {
             label: 'Sepsis Score',
             backgroundColor: 'rgba(255, 99, 132, 0.2)',
             borderColor: 'rgb(255, 99, 132)',
-            borderWidth: 1,
+            borderWidth: 2,
             data: [0, 10, 5, 2, 20, 30, 45],
           },
         ],
       },
       chartOptions: {
-        responsive: true,
+        responsive: false,
         scales: {
           x: {
             type: 'category', // x축의 스케일을 category로 설정합니다.
-            labels: ['A', 'B', 'C'], // x축 레이블을 설정합니다.
+            labels: ['A', 'B', 'C', 'D', 'E', 'F', 'G'], // x축 레이블을 설정합니다.
           },
           y: {
             beginAtZero: true,
