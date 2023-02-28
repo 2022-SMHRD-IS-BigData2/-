@@ -178,6 +178,12 @@ async def get_latest_sepsis_all():
   session.close()
   return sepsis
 
+@app.get('/api/get_latest_sepsis_percent')
+async def get_latest_sepsis_percent():
+  sepsis=session.query(VitalRecordNowView).filter(VitalRecordNowView.sepsis_percent>=80).all()
+  session.close()
+  return sepsis
+
 @app.get('/api/get_all_record')
 async def get_all_record():
   record=session.query(AllPatientRecordView).all()
@@ -193,4 +199,5 @@ async def get_select_date(pid:int,date:datetime.date):
 
 @app.get('/api/get_search_patient')
 async def get_search_patient(str:str):
+  query=text(f"")
   return "a"
