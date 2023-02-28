@@ -16,7 +16,7 @@ const routes = [
   },
   {
     // path: '/patient/:pid'
-    path: '/patient/:pid',
+    path: '/patient/:pid/:date',
     name: 'PatientView',
     component: PatientView
   },

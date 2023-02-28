@@ -59,6 +59,14 @@
         </thead>
         <tbody>
           <tr>
+            <td>RECENT</td>
+            <td>{{ patients.hr }}</td>
+            <td>{{ patients.temp }}</td>
+            <td>{{ patients.resp }}</td>
+            <td>{{ patients.sbp }}</td>
+            <td>{{ patients.dbp }}</td>
+          </tr>
+          <tr>
             <td>00</td>
             <td>00</td>
             <td>00</td>
@@ -116,11 +124,12 @@ export default {
   }
 },
   mounted() {
-    axios.all([axios.get('http://127.0.0.1:8002/api/get_latest_all/'+ this.$route.params.pid)
-    ,axios.get("http://127.0.0.1:8002/api/get_select_date?pid=" + this.$route.params.pid +"&input_time=" + this.route.params.pid)])
+    axios.all([axios.get('http://127.0.0.1:8002/api/get_latest_all/'+ this.$route.params.pid),axios.get("http://127.0.0.1:8002/api/get_select_date?pid=" + this.$route.params.pid + "&date=" + this.route.params.date)])
     .then(
       axios.spread((res1, res2) => {
+        console.log(res2.data);
         this.patients = res1.data[0];
+        this.all = res2.data;
         return data
       })
     )
