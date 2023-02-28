@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router'
 import MainView from '../views/main/MainView.vue'
 import DetectedView from '../views/main/DetectedView.vue'
 import PatientView from '../views/patient/PatientView.vue'
-import VitalView from '../views/patient/VitalView.vue'
 
 const routes = [
   {
@@ -20,11 +19,6 @@ const routes = [
     path: '/patient/:pid',
     name: 'PatientView',
     component: PatientView
-  },
-  {
-    path: '/vital/:pid',
-    name: 'VitalView',
-    component: VitalView
   },
   {
     path: '/addpatient',

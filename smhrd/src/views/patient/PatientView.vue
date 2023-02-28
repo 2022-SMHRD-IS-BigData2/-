@@ -14,7 +14,7 @@
         </tr>
         <tr>
             <td style="font-weight: bold; background-color: #DFF2F5;">나이</td>
-            <td>{{ patients.p_age }}</td>
+            <td>{{ patients.age }}</td>
         </tr>
         <tr>
             <td style="font-weight: bold; background-color: #DFF2F5;">성별</td>
@@ -31,14 +31,14 @@
       </table>
     </div>
       <div id="score" :style="{'background-color': bgColor}">
-        <div id="real-score">{{ number }}</div>
+        <div id="real-score">{{ patients.sepsis_percent }}</div>
         <div id="scoreup">
           <i class="fa-solid fa-caret-up"></i>00
           <!-- <i class="fa-solid fa-caret-down"></i>00 -->
         </div>
       </div>
       <div id="graph">
-        <Chart />
+        <Chart style="width: 700px; height: 250px;"/>
       </div>
   </div>
     <div id="under">
@@ -80,12 +80,12 @@ import axios from 'axios'
 import Chart from '../../components/Chart.vue'
 import { useRouter } from 'vue-router'
 
+
 export default {
   data() {
     return {
       patients: [],
-      dbDate: null,
-      number: 85
+      dbDate: null
     };
   },
   components: {
@@ -93,13 +93,20 @@ export default {
   },
   setup () {
     const router = useRouter()
+    const AddVital = () => {
+      window.open(router.resolve({ name: 'AddVital' }).href, 'AddVital', 'width=500,height=500')
+    }
+
+    return {
+      AddVital
+    }
   },
   computed: {
     gender() {
       return this.patients.sex === 1 ? 'F' : 'M'
     },
     bgColor() {
-      return this.number >= 80 ? '#fab1a0' : '#CDF9FF';
+      return this.patients.sepsis_percent >= 80 ? '#fab1a0' : '#85E9A7';
     }
   },
   methods: {
@@ -109,15 +116,22 @@ export default {
   }
 },
   mounted() {
-    axios.get('http://127.0.0.1:8002/api/get_latest_all/'+ this.$route.params.pid) //안되면 p_id 로 해보세요
+    axios.all([axios.get('http://127.0.0.1:8002/api/get_latest_all/'+ this.$route.params.pid)
+    ,axios.get("http://127.0.0.1:8002/api/get_select_date?pid=" + this.$route.params.pid +"&input_time=" + this.route.params.pid)])
+    .then(
+      axios.spread((res1, res2) => {
+        this.patients = res1.data[0];
+        return data
+      })
+    )
       .then(response =>{
         return response.data
       })
-      .then(data => {
-        console.log(data[0])
-        this.patients=data[0];
-        return data
-      })
+      // .then(data => {
+      //   console.log(data[0])
+      //   this.patients=data[0];
+      //   return data
+      // })
       .then(response => {
         // this.dbDate = moment(response.birth_date, 'YYYY-MM-DD')
       })
@@ -202,7 +216,7 @@ thead tr{
 canvas{
   margin: 0 auto;
   height: 100%;
-  width: 120%;
+  width: 100%;
 }
 a{
   text-decoration: none;

@@ -38,8 +38,8 @@
           {{ patient.pid }}
             </router-link>
             </td>
-            <td>{{ patient.p_name }}</td>
-            <td>{{ patient.p_age }}</td>
+            <td>{{ patient.name }}</td>
+            <td>{{ patient.age }}</td>
             <td>{{  gender[index] }}</td>
             <td>{{ patient.hr }}</td>
             <td>{{ patient.temp }}</td>
@@ -132,17 +132,25 @@ export default {
     }
   },
   mounted () {
-    axios.get('http://127.0.0.1:8002/api/data')
+    axios.all([axios.get("http://127.0.0.1:8002/api/data"),axios.get("http://127.0.0.1:8002/api/get_latest_sepsis_percent")])
+    .then(
+      axios.spread((res1, res2) => {
+        this.patients = res2.data;
+        this.count = res1.count;
+        this.page = res1.page;
+        return data
+      })
+    )
       .then(response =>{
         return response.data
       })
-      .then(data => {
-        console.log(data)
-        this.patients=data.data;
-        this.count=data.count;
-        this.page=data.page;
-        return data
-      })
+      // .then(data => {
+      //   console.log(data)
+      //   this.patients=data.data;
+      //   this.count=data.count;
+      //   this.page=data.page;
+      //   return data
+      // })
       .then(response => {
         // this.dbDate = moment(response.birth_date, 'YYYY-MM-DD')
       })
