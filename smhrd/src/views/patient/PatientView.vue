@@ -162,6 +162,7 @@ export default {
   border-collapse : collapse;
   margin: 0;
   text-align: center;
+  border: 1px solid #ced6e0;
 }
 #fulltable tr td{
   width: 50%;
@@ -200,19 +201,21 @@ thead tr{
   float: left;
   margin: 30px 0px 0px 80px;
   border-radius: 15%;
+  box-shadow: 0px 2px 9px 5px #CFCFCF;
 }
 #real-score{
     display: inline-block;
     height: 50%;
     width: 100%;
     font-size: 100px;
+    padding-top: 10px;
 }
 #scoreup{
     display: inline-block;
     height: 50%;
     width: 100%;
     font-size: 40px;
-    padding-top: 20px;
+    padding-top: 30px;
 }
 #graph{
   float: right;
