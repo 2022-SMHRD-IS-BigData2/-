@@ -1,56 +1,6 @@
 <template>
   <div id="wrap">
-    <div id="wrap2">
-      <div id="headtable">
-        <table border="1" id="patient">
-          <thead>
-            <tr>
-              <td style="font-weight: bold; background-color: #DFF2F5;">PID</td>
-              <td>00</td>
-              <td style="font-weight: bold; background-color: #DFF2F5;">Name</td>
-              <td >00</td>
-              <td style="font-weight: bold; background-color: #DFF2F5;">Age</td>
-              <td>00</td>
-              <td style="font-weight: bold; background-color: #DFF2F5;">Sex</td>
-              <td>00</td>
-            </tr>
-          </thead>
-        </table>
-      </div>
-      <div id="right">
-        <button @click="AddVital" id="addmore">정보추가</button>
-        <input type="date" id="src-date">
-        <button id="submit">확인</button>
-      </div>
-    </div>
-    <div id="body">
-      <div id="leftarrow"><i class="fa-solid fa-left-long fa-3x"></i></div>
-      <div id="tablewrap">
-      <table border="1" id="realtable">
-        <thead>
-          <tr>
-            <td style="width: 25%; font-weight: bold; background-color: #DFF2F5;">Time</td>
-            <td style="width: 15%; font-weight: bold; background-color: #DFF2F5;">HR</td>
-            <td style="width: 15%; font-weight: bold; background-color: #DFF2F5;">Temp</td>
-            <td style="width: 15%; font-weight: bold; background-color: #DFF2F5;">Resp</td>
-            <td style="width: 15%; font-weight: bold; background-color: #DFF2F5;">SBP</td>
-            <td style="width: 15%; font-weight: bold; background-color: #DFF2F5;">DBP</td>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-      <div id="rightarrow"><i class="fa-solid fa-right-long fa-3x"></i></div>
-    </div>
+
   </div>
 </template>
 <script>
@@ -99,20 +49,14 @@ export default {
 </script>
 
 <style scoped>
-*{font-family: 'Do Hyeon', sans-serif;}
+*{font-family: 'Noto Sans KR', sans-serif;}
 #wrap{
   width: 100%;
   height: 100%;
 }
-#wrap2{
-  width: 100%;
-  height: 25%;
-}
 #patient{
-  border: 2px solid #333;
   width: 80%;
   border-collapse : collapse;
-  border-left: 2px solid #333;
   margin-top: 30px;
   margin-left: auto;
   margin-right: auto;
@@ -122,9 +66,6 @@ export default {
 }
 #patient thead tr td{
   width: 12.5%;
-}
-table thead{
-  border: 2px solid #333;
 }
 #right{
   height: 15%;
@@ -165,11 +106,13 @@ table thead{
 #realtable{
   margin-top: 50px;
   /* display: inline-block; */
-  border: 2px solid #333;
   width: 100%;
   border-collapse : collapse;
   margin-top: 30px;
   text-align: center;
+}
+#realtable tr td{
+  border-bottom: 1px solid #ced6e0;
 }
 #tablewrap{
   display: inline-block;
@@ -187,7 +130,7 @@ text-align: center;
   width: 10%;
 display: inline-block;
 text-align: center;
-
 }
+
 
 </style>

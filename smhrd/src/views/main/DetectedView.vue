@@ -233,7 +233,7 @@ export default {
 </script>
 
 <style scoped>
-*{font-family: 'Do Hyeon', sans-serif;}
+*{font-family: 'Noto Sans KR', sans-serif;}
 #top-wrap{
   width: 100%;
   height: 50px;

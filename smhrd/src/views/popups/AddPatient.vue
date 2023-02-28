@@ -1,7 +1,7 @@
 <template>
   <div id="wrap-box">
     <h3 style="text-align: center;">새 환자 추가</h3>
-    <table border="1">
+    <table>
       <tr>
         <td>이름</td>
         <td><input type="text"></td>
@@ -62,7 +62,7 @@ export default {
 }
 </script>
 <style>
-*{font-family: 'Do Hyeon', sans-serif;}
+*{font-family: 'Noto Sans KR', sans-serif;}
 #header{
   display: none;
 }
@@ -70,15 +70,16 @@ hr{
   display: none;
 }
 table{
-  border: 2px solid #333;
   border-collapse: collapse;
   width: 100%;
   text-align: center;
   height: 60%;
+  padding: 30px;
 }
 table tr td{
   height: 40px;
   font-weight: bold;
+  border-bottom: 1px solid #ced6e0;
 }
 .btn{
   padding: 3px 7px 3px 7px;
