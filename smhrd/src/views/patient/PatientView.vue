@@ -66,13 +66,13 @@
             <td>{{ patients.sbp }}</td>
             <td>{{ patients.dbp }}</td>
           </tr>
-          <tr>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
+          <tr v-for="(vs, index) in all" :key="index">
+            <td>{{ vs.input_time}}</td>
+            <td>{{ vs. hr }}</td>
+            <td>{{ vs.temp }}</td>
+            <td>{{ vs. resp}}</td>
+            <td>{{ vs.sbp }}</td>
+            <td>{{ vs.dbp}}</td>
           </tr>
         </tbody>
       </table>
@@ -124,7 +124,9 @@ export default {
   }
 },
   mounted() {
-    axios.all([axios.get('http://127.0.0.1:8002/api/get_latest_all/'+ this.$route.params.pid),axios.get("http://127.0.0.1:8002/api/get_select_date?pid=" + this.$route.params.pid + "&date=" + this.route.params.date)])
+    axios.get("http://127.0.0.1:8002/api/get_latest_all/" + this.$route.params.pid)
+    axios.all([axios.get('http://127.0.0.1:8002/api/get_latest_all/'+ this.$route.params.pid),axios.get("http://127.0.0.1:8002/api/get_select_date?pid=" + this.$route.params.pid + "&date=" + this.$route.params.date)])
+    // this.route.params.date
     .then(
       axios.spread((res1, res2) => {
         console.log(res2.data);
@@ -289,6 +291,7 @@ a:hover, a:active { text-decoration: none;
 }
 #realtable tr td{
   border-bottom: 1px solid #ced6e0;
+  height: 50px;
 }
 #tablewrap{
   display: inline-block;
