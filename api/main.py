@@ -54,8 +54,7 @@ app.add_middleware(
 )
 
 @app.get('/api/patients')
-async def index(limit: int = 10, page: int = 1):
-  offset = (page - 1) * limit
+async def index():
   patients=session.query(PatientGeneralTable).all()
   session.close()
   return patients
@@ -88,7 +87,7 @@ async def p_record_all(pid:int):
 async def get_view():
   query = "SELECT * FROM vital_record_now_view"
   result=db.execute(query)
-
+  data = [dict(row) for row in result]
   data = [row for row in result]
   # data_json = json.dumps(data)
 
@@ -98,7 +97,8 @@ async def get_view():
 async def get_data(limit: int = 10, page: int = 1):
     offset = (page - 1) * limit
     query = text(f"SELECT * FROM vital_record_now_view LIMIT :limit OFFSET :offset")
-    data = session.execute(query, {"limit": limit, "offset": offset})
+    result = session.execute(query, {"limit": limit, "offset": offset})
+    data = [dict(row) for row in result]
     count = session.execute(text("SELECT COUNT(*) FROM vital_record_now_view")).fetchone()[0]
     session.close()
     return {"data": data, "count": count,'page':{'page':1,'limit':10}}
@@ -179,7 +179,8 @@ async def get_latest_all(pid:int):
 async def get_latest_sepsis_all(limit: int = 10, page: int = 1):
   offset = (page - 1) * limit
   query = text(f"SELECT * FROM now_view_sepsis LIMIT :limit OFFSET :offset")
-  data = session.execute(query, {"limit": limit, "offset": offset}).all()
+  result = session.execute(query, {"limit": limit, "offset": offset}).all()
+  data = [dict(row) for row in result]
   count = session.execute(text("SELECT COUNT(*) FROM now_view_sepsis")).fetchone()[0]
   session.close()
   return {"data": data, "count": count,'page':{'page':1,'limit':10}}
@@ -189,7 +190,8 @@ async def get_latest_sepsis_all(limit: int = 10, page: int = 1):
 async def get_latest_sepsis_percent(limit: int = 10, page: int = 1):
   offset = (page - 1) * limit
   query = text(f"SELECT * FROM vital_record_now_view where sepsis_percent>=80 LIMIT :limit OFFSET :offset")
-  data = session.execute(query, {"limit": limit, "offset": offset}).all()
+  result = session.execute(query, {"limit": limit, "offset": offset}).all()
+  data = [dict(row) for row in result]
   count = session.execute(text("SELECT COUNT(*) FROM vital_record_now_view where sepsis_percent>=80")).fetchone()[0]
   session.close()
   return {"data": data, "count": count,'page':{'page':1,'limit':10}}
@@ -212,7 +214,8 @@ async def get_search_patient(search_str: str, limit: int = 10, page: int = 1):
   offset = (page - 1) * limit
   query = text(f"SELECT * FROM vital_record_now_view WHERE (pid LIKE :search_str OR name LIKE :search_str) LIMIT :limit OFFSET :offset")
   search_str = f"%{search_str}%"  # 검색 문자열 앞뒤에 % 추가
-  data = session.execute(query, {"search_str": search_str, "limit": limit, "offset": offset}).all()
+  result = session.execute(query, {"search_str": search_str, "limit": limit, "offset": offset}).all()
+  data = [dict(row) for row in result]
   count = session.execute(text("SELECT COUNT(*) FROM vital_record_now_view WHERE pid LIKE :search_str OR name LIKE :search_str"), {"search_str": search_str}).fetchone()[0]
   session.close()
   return {"data": data, "count": count, "page": {"page": page, "limit": limit}}
