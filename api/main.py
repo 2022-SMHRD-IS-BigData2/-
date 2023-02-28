@@ -4,13 +4,15 @@ from DATABASE.schemas import Patient,Record
 from typing import List
 from starlette.middleware.cors import CORSMiddleware
 from db import session,Database
-from DATABASE.models import VitalRecordAll,PatientGeneralTable,VitalRecordNowView,VitalRecordNowView,NowViewSepsis,AllPatientRecordView
-from sqlalchemy import Boolean, Column, Integer, String, DateTime, ForeignKey,text
+from DATABASE.models import VitalRecordAll,PatientGeneralTable,VitalRecordNowView,VitalRecordNowView,NowViewSepsis,AllPatientRecordView,VitalRecordAllView
+from sqlalchemy import Boolean, Column, Integer, String, DateTime, ForeignKey,text,and_
 from sqlalchemy.orm import relationship
+from datetime import datetime
 import datetime
 from pydantic import BaseModel
 # from fastapi.staticfiles import StaticFiles
 import random
+import time
 import json
 import sys
 import os
@@ -52,7 +54,8 @@ app.add_middleware(
 )
 
 @app.get('/api/patients')
-async def index():
+async def index(limit: int = 10, page: int = 1):
+  offset = (page - 1) * limit
   patients=session.query(PatientGeneralTable).all()
   session.close()
   return patients
@@ -173,16 +176,20 @@ async def get_latest_all(pid:int):
 
 # sepsis 환자만 가져오기
 @app.get('/api/get_latest_sepsis_all')
-async def get_latest_sepsis_all():
-  sepsis=session.query(NowViewSepsis).all()
-  session.close()
-  return sepsis
+async def get_latest_sepsis_all(limit: int = 10, page: int = 1):
+  offset = (page - 1) * limit
+  query = text(f"SELECT * FROM now_view_sepsis LIMIT :limit OFFSET :offset")
+  result = session.execute(query, {"limit": limit, "offset": offset}).all()
+  count = session.execute(text("SELECT COUNT(*) FROM now_view_sepsis")).fetchone()[0]
+  return {"data": result, "count": count,'page':{'page':10,'limit':10}}
 
 @app.get('/api/get_latest_sepsis_percent')
-async def get_latest_sepsis_percent():
-  sepsis=session.query(VitalRecordNowView).filter(VitalRecordNowView.sepsis_percent>=80).all()
-  session.close()
-  return sepsis
+async def get_latest_sepsis_percent(limit: int = 10, page: int = 1):
+  offset = (page - 1) * limit
+  query = text(f"SELECT * FROM vital_record_now_view where sepsis_percent>=80 LIMIT :limit OFFSET :offset")
+  result = session.execute(query, {"limit": limit, "offset": offset}).all()
+  count = session.execute(text("SELECT COUNT(*) FROM vital_record_now_view")).fetchone()[0]
+  return {"data": result, "count": count,'page':{'page':10,'limit':10}}
 
 @app.get('/api/get_all_record')
 async def get_all_record():
@@ -190,14 +197,14 @@ async def get_all_record():
   session.close()
   return record
 
-@app.get('/api/get_select_date?pid={pid}&input_time={date}')
-async def get_select_date(pid:int,date:datetime.date):
-  query="SELECT * FROM all_patients_vital_record_view WHERE DATE(input_time)=DATE('{date}') AND pid={pid}"
-  record=db.execute(query)
+@app.get('/api/get_select_date')
+async def get_select_date(pid:int,date:str):
+  date_obj = datetime.datetime.strptime(date, '%Y-%m-%d').date()  # 문자열 형식의 날짜를 datetime 객체로 변환
+  record = session.query(AllPatientRecordView).filter(and_(AllPatientRecordView.pid == pid, AllPatientRecordView.input_time >= date_obj, AllPatientRecordView.input_time < date_obj + datetime.timedelta(days=1))).all()
   session.close()
   return record
 
 @app.get('/api/get_search_patient')
 async def get_search_patient(str:str):
-  query=text(f"")
+  query=text(f"select * from VitalRecordNowView where pid like '%{str}%' or name like '%{str}%'")
   return "a"
