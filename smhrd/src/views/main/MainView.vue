@@ -29,7 +29,7 @@
         </thead>
 
         <!-- tbody for문 돌리기 10명 -->
-        <tbody   v-for="(patient, index) in patients" :key="index">
+        <tbody v-for="(patient, index) in (searchData && searchData.length) ? searchData : patients" :key="index">
           <tr>
             <td><input type="checkbox" style="width: 20px; height: 20px; cursor: pointer;" @click="addOn(index)"/></td>
             <td>{{ patient.input_time }}</td>
@@ -63,18 +63,20 @@
           <a @click="onchange(1)">〈〈</a>
         </li>
         <li :class="{disabled: currentPage === 1}">
-          <a @click="onchange(currentPage - 1)">〈</a>
+          <a @click="onchange(currentPage - 1)" :style="{ pointerEvents: currentPage === 1 ? 'none' : 'auto', opacity: currentPage === 1 ? 0.5 : 1 }">〈</a>
         </li>
         <li v-for="n in pages" :key="n" :class="{active: n === currentPage}">
           <a @click="onchange(n)">{{ n }}</a>
         </li>
         <li :class="{disabled: currentPage === pageCount}">
-          <a @click="onchange(currentPage + 1)">〉</a>
+          <a @click="onchange(currentPage + 1)" :style="{ pointerEvents: currentPage === pageCount ? 'none' : 'auto', opacity: currentPage === pageCount ? 0.5 : 1 }">〉</a>
         </li>
         <li :class="{disabled: currentPage === pageCount}">
           <a @click="onchange(pageCount)" :style="{cursor: currentPage === pageCount ? 'default' : 'pointer'}">〉〉</a>
         </li>
       </ul>
+      <div>
+      </div>
       <div class="page-search-container">
         <input type="text" v-model="pageSearchTerm" placeholder="Search page" id="page-src">
         <button @click="goToPage" id="page-btn">Go</button>
@@ -93,7 +95,8 @@ import moment from 'moment'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
 export default {
-  components: {},
+  components: {
+  },
   data () {
     return {
       clickTime: moment().format('YYYY-MM-DD HH:mm:ss'),
@@ -112,43 +115,46 @@ export default {
       pages:[],
       searchTerm: '',
       pageSearchTerm: '',
-      currentDate: ""
+      currentDate: "",
+      searchQuery:"",
+      searchData: [], // 검색 결과 데이터
+      path:""
     }
   },
   setup () {
     const router = useRouter()
-
     const AddPatient = () => {
       window.open(router.resolve({ name: 'AddPatient' }).href, 'AddPatient', 'width=500,height=500')
     }
-
     return {
       AddPatient
     }
   },
-  created () {},
+  async created () {
+    this.fetchData();
+  },
   watch: {
-    currentPage: {
-      handler: 'onchange',
-      immediate: true
+  '$store.state.searchQuery'(newSearchQuery, oldSearchQuery) {
+    this.searchQuery=this.$store.state.searchQuery
+    if (newSearchQuery !== oldSearchQuery) {
+      this.fetchData();
+    }
+    if (this.searchQuery === "") {
+      this.searchQuery = '';
+      this.currentPage = 1;
+      this.fetchData();
+    }
     }
   },
-  mounted () {
-    axios.get('http://127.0.0.1:8002/api/data')
-      .then(response =>{
-        return response.data
-      })
-      .then(data => {
-        console.log(data)
-        this.patients=data.data;
-        this.count=data.count;
-        this.page=data.page;
-        return data
-      })
-      .catch(error => {
-        console.log(error)
-      })
-
+  async mounted() {
+  try {
+    const response = await axios.get('http://127.0.0.1:8002/api/data');
+    this.patients = response.data.data;
+    this.count = response.data.count;
+    this.page = response.data.page;
+  } catch (error) {
+    console.log(error);
+  }
   },
   unmounted () {},
   methods: {
@@ -168,7 +174,6 @@ export default {
     }
   }
 },
-
   selectPatient(patient, index) {
     if (!patient) return;
     this.selectedPatient = {
@@ -177,57 +182,93 @@ export default {
       index: index // 선택된 환자의 인덱스도 함께 저장
     };
   },
-      async onchange(page) {
-      if (page < 1 || page > this.pageCount || page === this.currentPage) {
-        return;
-      }
-      const response = await axios.get('http://127.0.0.1:8002/api/data', {
-        params: {
-          limit: this.perPage,
-          page: page
-        }
-      });
+  async fetchData() {
+    let axiurl = 'http://127.0.0.1:8002/api/data';
+    let params = {
+      limit: this.perPage,
+      page: this.currentPage,
+    };
+    this.patients = [];
+    this.searchData = [];
+    
+    if (this.searchQuery) { // 검색어가 있으면 url 바꿔줌
+      console.log(this.searchQuery,this.$store.state.searchQuery);
+      axiurl = 'http://127.0.0.1:8002/api/get_search_data';
+      this.path=this.$route.path;
+      params = {
+        path: this.path,
+        search_str: this.searchQuery,
+        limit: this.perPage,
+        page: this.currentPage,
+      };
+    }else{
+      this.patients = []; // 검색어가 없을 경우, patients 배열 초기화
+    }
+    const response = await axios.get(axiurl, { params });
+    if (this.searchQuery) { // 검색어가 있으면 저장하는 객체 이름 바꿔주고 v-if문으로 구분함
+      this.searchData = response.data.data;
+      this.count = response.data.count;
+      this.page = response.data.page.page;
+    } else {
       this.patients = response.data.data;
       this.count = response.data.count;
+      this.page = response.data.page.page;
+
+    }
+    // 강제 업데이트!
+    this.$forceUpdate();
+  },
+    // 검색어 변경
+    onSearch(query) {
+      this.searchQuery = query;
+      this.currentPage = 1;
+      this.fetchData();
+    },
+    // 페이지 변경
+    onchange(page) {
       this.currentPage = page;
+      this.fetchData();
     },
     goToPage() {
-      const page = parseInt(this.pageSearchTerm);
+      if (this.pageSearchTerm === '') return;
+      const pageNum = parseInt(this.pageSearchTerm);
+      if (!isNaN(pageNum) && pageNum > 0 && pageNum <= this.pageCount) {
+        this.currentPage = pageNum;
+      }
       this.pageSearchTerm = '';
-      this.onchange(page);
-    },
+},
   },
     computed: {
       gender() {
-    return this.patients.map(patient => patient.sex === 1 ? 'F' : 'M');
-  },
-    pageCount() {
-      const count = this.count;
-      const perPage = this.perPage;
-      return Math.ceil(count / perPage);
-    },
-    pages() {
-      const pagesToShow = 10;
-      const pages = [];
-      const halfPagesToShow = Math.floor(pagesToShow / 2);
-      let start = this.currentPage - halfPagesToShow;
-      if (start < 1) {
-        start = 1;
-      }
-      let end = start + pagesToShow - 1;
-      if (end > this.pageCount) {
-        end = this.pageCount;
-        start = end - pagesToShow + 1;
+        return this.patients.map(patient => patient.sex === 1 ? 'F' : 'M');
+      }, 
+      pageCount() {
+        const count = this.count;
+        const perPage = this.perPage;
+        return Math.ceil(count / perPage);
+      },
+      pages() {
+        const pagesToShow = 10;
+        const pages = [];
+        const halfPagesToShow = Math.floor(pagesToShow / 2);
+        let start = this.currentPage - halfPagesToShow;
         if (start < 1) {
           start = 1;
         }
-      }
-      for (let i = start; i <= end; i++) {
-        pages.push(i);
-      }
-      return pages;
-    },
-  }
+        let end = start + pagesToShow - 1;
+        if (end > this.pageCount) {
+          end = this.pageCount;
+          start = end - pagesToShow + 1;
+          if (start < 1) {
+            start = 1;
+          }
+        }
+        for (let i = start; i <= end; i++) {
+          pages.push(i);
+        }
+          return pages;
+      },
+    }
   }
 
 
