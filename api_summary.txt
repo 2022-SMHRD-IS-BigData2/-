@@ -32,3 +32,8 @@ url : get_latest_sepsis_all
 
 선택한 환자의 선택한 날짜의 모든 레코드(return : record_all_view 형식의 해당 환자 해당 날짜 정보)
 url : get_select_date?pid={pid}&input_time={date}
+
+선택한 환자의 선택한 시간의 모든 레코드1개(return : record_all_view 형식의 해당 환자 해당 입력 시간의 record 1개)
+url : get_select_record/{pid}
+pid,
+input_time : str ('2023-02-13 08:53:06')
