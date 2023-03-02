@@ -32,18 +32,7 @@ origins = [
     "*"
 ]
 
-db=Database(app)
 
-@app.on_event("startup")
-async def startup_event():
-    db.connect()
-
-def get_db():
-    try:
-        db = session()
-        yield db
-    finally:
-        db.close()
 
 app.add_middleware(
   CORSMiddleware,
@@ -73,7 +62,7 @@ async def mk_patient(mk_patient:Patient):
   session.execute(query)
   session.commit()
   query2="SELECT * FROM patient_general ORDER BY pid DESC LIMIT 1"
-  patient=db.execute(query2)
+  patient=session.execute(query2)
   session.close()
   return patient
 
@@ -86,11 +75,11 @@ async def p_record_all(pid:int):
 @app.get("/api/all_from_view")
 async def get_view():
   query = "SELECT * FROM vital_record_now_view"
-  result=db.execute(query)
+  result=session.execute(query)
   data = [dict(row) for row in result]
   data = [row for row in result]
   # data_json = json.dumps(data)
-
+  session.close()
   return {"data": data}
 
 @app.get("/api/data/")
