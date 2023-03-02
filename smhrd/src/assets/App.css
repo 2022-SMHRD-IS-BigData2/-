@@ -7,6 +7,8 @@ template{
 #header{
   width: 100%;
   height: 100px;
+  background-color: #f1f1f1;
+  border-radius: 10px;
 }
 #backward{
   width: 70px;
