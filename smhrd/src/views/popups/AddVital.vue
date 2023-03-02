@@ -81,45 +81,5 @@ export default {
 }
 </script>
 <style>
-*{font-family: 'Noto Sans KR', sans-serif;}
-#header{
-  display: none;
-}
-hr{
-  display: none;
-}
-table{
-  border-collapse: collapse;
-  width: 100%;
-  text-align: center;
-  height: 60%;
-  padding: 30px;
-}
-table tr td{
-  height: 40px;
-  font-weight: bold;
-  border-bottom: 1px solid #ced6e0;
-}
-.btn{
-  padding: 3px 7px 3px 7px;
-  margin: 20px 20px 10px 20px;
-  font-weight: bold;
-  border: none;
-  background-color: #ced6e0;
-  box-shadow: 1px 1px 2px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-.btn:active{
-  box-shadow: none;
-}
-#wrap-box{
-  text-align: center;
-}
-input{
-  border: 0;
-}
-input:focus{
-  outline: none;
-}
+@import "../../assets/AddVital.css";
 </style>
