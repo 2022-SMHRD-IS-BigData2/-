@@ -1,0 +1,30 @@
+"use strict";
+/*
+ * ATTENTION: An "eval-source-map" devtool has been used.
+ * This devtool is neither made for production nor for readable output files.
+ * It uses "eval()" calls to create a separate source file with attached SourceMaps in the browser devtools.
+ * If you are trying to read the output file, select a different devtool (https://webpack.js.org/configuration/devtool/)
+ * or disable the default devtool with "devtool: false".
+ * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
+ */
+(typeof self !== 'undefined' ? self : this)["webpackHotUpdatesmhrd"]("app",{
+
+/***/ "./src/router/index.js":
+/*!*****************************!*\
+  !*** ./src/router/index.js ***!
+  \*****************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-router */ \"./node_modules/vue-router/dist/vue-router.mjs\");\n\nconst routes = [{\n  path: '/',\n  name: 'MainView',\n  component: () => __webpack_require__.e(/*! import() | home */ \"home\").then(__webpack_require__.bind(__webpack_require__, /*! ../views/main/MainView.vue */ \"./src/views/main/MainView.vue\"))\n}, {\n  path: '/detected',\n  name: 'DetectedView',\n  component: () => __webpack_require__.e(/*! import() | home */ \"home\").then(__webpack_require__.bind(__webpack_require__, /*! ../views/main/DetectedView.vue */ \"./src/views/main/DetectedView.vue\"))\n}, {\n  path: '/patient',\n  name: 'PatientView',\n  component: () => __webpack_require__.e(/*! import() | home */ \"home\").then(__webpack_require__.bind(__webpack_require__, /*! ../views/patient/PatientView.vue */ \"./src/views/patient/PatientView.vue\"))\n}, {\n  path: '/vital',\n  name: 'VitalView',\n  component: () => __webpack_require__.e(/*! import() | home */ \"home\").then(__webpack_require__.bind(__webpack_require__, /*! ../views/patient/VitalView.vue */ \"./src/views/patient/VitalView.vue\"))\n}, {\n  path: '/addpatient',\n  name: 'AddPatient',\n  component: () => __webpack_require__.e(/*! import() | home */ \"home\").then(__webpack_require__.bind(__webpack_require__, /*! ../views/popups/AddPatient.vue */ \"./src/views/popups/AddPatient.vue\"))\n}, {\n  path: '/addvital',\n  name: 'AddVital',\n  component: () => __webpack_require__.e(/*! import() | home */ \"home\").then(__webpack_require__.bind(__webpack_require__, /*! ../views/popups/AddVital.vue */ \"./src/views/popups/AddVital.vue\"))\n}, {\n  path: '/addlab',\n  name: 'AddLab',\n  component: () => __webpack_require__.e(/*! import() | home */ \"home\").then(__webpack_require__.bind(__webpack_require__, /*! ../views/popups/AddLab.vue */ \"./src/views/popups/AddLab.vue\"))\n}];\nconst router = (0,vue_router__WEBPACK_IMPORTED_MODULE_0__.createRouter)({\n  history: (0,vue_router__WEBPACK_IMPORTED_MODULE_0__.createWebHistory)(\"\"),\n  routes\n});\n/* harmony default export */ __webpack_exports__[\"default\"] = (router);//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9zcmMvcm91dGVyL2luZGV4LmpzLmpzIiwibWFwcGluZ3MiOiI7O0FBQUE7QUFFQTtBQUVBO0FBQ0E7QUFDQTtBQUVBO0FBRUE7QUFDQTtBQUNBO0FBSUE7QUFFQTtBQUNBO0FBQ0E7QUFJQTtBQUVBO0FBQ0E7QUFDQTtBQUlBO0FBRUE7QUFDQTtBQUNBO0FBRUE7QUFFQTtBQUNBO0FBQ0E7QUFFQTtBQUVBO0FBQ0E7QUFDQTtBQUVBO0FBR0E7QUFDQTtBQUNBO0FBQ0E7QUFFQSIsInNvdXJjZXMiOlsid2VicGFjazovL3NtaHJkLy4vc3JjL3JvdXRlci9pbmRleC5qcz81YWE0Il0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IGNyZWF0ZVJvdXRlciwgY3JlYXRlV2ViSGlzdG9yeSB9IGZyb20gJ3Z1ZS1yb3V0ZXInXHJcblxyXG5jb25zdCByb3V0ZXMgPSBbXHJcbiAge1xyXG4gICAgcGF0aDogJy8nLFxyXG4gICAgbmFtZTogJ01haW5WaWV3JyxcclxuICAgIGNvbXBvbmVudDogKCkgPT5cclxuICAgICAgaW1wb3J0KC8qIHdlYnBhY2tDaHVua05hbWU6IFwiaG9tZVwiICovICcuLi92aWV3cy9tYWluL01haW5WaWV3LnZ1ZScpXHJcbiAgfSxcclxuICB7XHJcbiAgICBwYXRoOiAnL2RldGVjdGVkJyxcclxuICAgIG5hbWU6ICdEZXRlY3RlZFZpZXcnLFxyXG4gICAgY29tcG9uZW50OiAoKSA9PlxyXG4gICAgICBpbXBvcnQoXHJcbiAgICAgICAgLyogd2VicGFja0NodW5rTmFtZTogXCJob21lXCIsIHdlYnBhY2tQcmVmZXRjaDp0cnVlICovICcuLi92aWV3cy9tYWluL0RldGVjdGVkVmlldy52dWUnXHJcbiAgICAgIClcclxuICB9LFxyXG4gIHtcclxuICAgIHBhdGg6ICcvcGF0aWVudCcsXHJcbiAgICBuYW1lOiAnUGF0aWVudFZpZXcnLFxyXG4gICAgY29tcG9uZW50OiAoKSA9PlxyXG4gICAgICBpbXBvcnQoXHJcbiAgICAgICAgLyogd2VicGFja0NodW5rTmFtZTogXCJob21lXCIsIHdlYnBhY2tQcmVmZXRjaDp0cnVlICovICcuLi92aWV3cy9wYXRpZW50L1BhdGllbnRWaWV3LnZ1ZSdcclxuICAgICAgKVxyXG4gIH0sXHJcbiAge1xyXG4gICAgcGF0aDogJy92aXRhbCcsXHJcbiAgICBuYW1lOiAnVml0YWxWaWV3JyxcclxuICAgIGNvbXBvbmVudDogKCkgPT5cclxuICAgICAgaW1wb3J0KFxyXG4gICAgICAgIC8qIHdlYnBhY2tDaHVua05hbWU6IFwiaG9tZVwiLCB3ZWJwYWNrUHJlZmV0Y2g6dHJ1ZSAqLyAnLi4vdmlld3MvcGF0aWVudC9WaXRhbFZpZXcudnVlJ1xyXG4gICAgICApXHJcbiAgfSxcclxuICB7XHJcbiAgICBwYXRoOiAnL2FkZHBhdGllbnQnLFxyXG4gICAgbmFtZTogJ0FkZFBhdGllbnQnLFxyXG4gICAgY29tcG9uZW50OiAoKSA9PlxyXG4gICAgICBpbXBvcnQoLyogd2VicGFja0NodW5rTmFtZTogXCJob21lXCIgKi8gJy4uL3ZpZXdzL3BvcHVwcy9BZGRQYXRpZW50LnZ1ZScpXHJcbiAgfSxcclxuICB7XHJcbiAgICBwYXRoOiAnL2FkZHZpdGFsJyxcclxuICAgIG5hbWU6ICdBZGRWaXRhbCcsXHJcbiAgICBjb21wb25lbnQ6ICgpID0+XHJcbiAgICAgIGltcG9ydCgvKiB3ZWJwYWNrQ2h1bmtOYW1lOiBcImhvbWVcIiAqLyAnLi4vdmlld3MvcG9wdXBzL0FkZFZpdGFsLnZ1ZScpXHJcbiAgfSxcclxuICB7XHJcbiAgICBwYXRoOiAnL2FkZGxhYicsXHJcbiAgICBuYW1lOiAnQWRkTGFiJyxcclxuICAgIGNvbXBvbmVudDogKCkgPT5cclxuICAgICAgaW1wb3J0KC8qIHdlYnBhY2tDaHVua05hbWU6IFwiaG9tZVwiICovICcuLi92aWV3cy9wb3B1cHMvQWRkTGFiLnZ1ZScpXHJcbiAgfVxyXG5dXHJcblxyXG5jb25zdCByb3V0ZXIgPSBjcmVhdGVSb3V0ZXIoe1xyXG4gIGhpc3Rvcnk6IGNyZWF0ZVdlYkhpc3RvcnkocHJvY2Vzcy5lbnYuQkFTRV9VUkwpLFxyXG4gIHJvdXRlc1xyXG59KVxyXG5cclxuZXhwb3J0IGRlZmF1bHQgcm91dGVyXHJcbiJdLCJuYW1lcyI6W10sInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///./src/router/index.js\n");
+
+/***/ })
+
+},
+/******/ function(__webpack_require__) { // webpackRuntimeModules
+/******/ /* webpack/runtime/getFullHash */
+/******/ !function() {
+/******/ 	__webpack_require__.h = function() { return "2944326885fcd507"; }
+/******/ }();
+/******/ 
+/******/ }
+);

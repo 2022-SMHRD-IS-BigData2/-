@@ -3,6 +3,7 @@
     <div>
       <div>
         <button @click="AddPatient">환자 정보 추가</button>
+        <button @click="openNew">피검사</button>
       </div>
       <div>
         <span>새로고침한 시간</span>
@@ -30,25 +31,25 @@
         </thead>
         <!-- tbody for문 돌리기 10명 -->
         <tbody>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
         </tbody>
       </table>
     </div>
-   <div>
-    <span><a href="">페이징 번호 1~10</a></span>
-   </div>
+    <div>
+      <span><a href="">페이징 번호 1~10</a></span>
+    </div>
   </div>
 </template>
 
@@ -56,29 +57,35 @@
 import { useRouter } from 'vue-router'
 export default {
   components: {},
-  data () {
+  data() {
     return {
       sampleData: ''
     }
   },
-  setup () {
+  setup() {
     const router = useRouter()
 
     const AddPatient = () => {
-      window.open(router.resolve({ name: 'AddPatient' }).href, 'AddPatient', 'width=500,height=500')
+      window.open(
+        router.resolve({ name: 'AddPatient' }).href,
+        'AddPatient',
+        'width=500,height=500'
+      )
     }
 
     return {
       AddPatient
     }
   },
-  created () {},
-  mounted () {},
-  unmounted () {},
-  methods: {}
+  created() {},
+  mounted() {},
+  unmounted() {},
+  methods: {
+    openNew: function () {
+      return AddLab
+    }
+  }
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

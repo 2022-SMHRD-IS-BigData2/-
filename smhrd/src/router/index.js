@@ -4,32 +4,50 @@ const routes = [
   {
     path: '/',
     name: 'MainView',
-    component: () => import(/* webpackChunkName: "home" */ '../views/main/MainView.vue')
+    component: () =>
+      import(/* webpackChunkName: "home" */ '../views/main/MainView.vue')
   },
   {
     path: '/detected',
     name: 'DetectedView',
-    component: () => import(/* webpackChunkName: "home", webpackPrefetch:true */ '../views/main/DetectedView.vue')
+    component: () =>
+      import(
+        /* webpackChunkName: "home", webpackPrefetch:true */ '../views/main/DetectedView.vue'
+      )
   },
   {
     path: '/patient',
     name: 'PatientView',
-    component: () => import(/* webpackChunkName: "home", webpackPrefetch:true */ '../views/patient/PatientView.vue')
+    component: () =>
+      import(
+        /* webpackChunkName: "home", webpackPrefetch:true */ '../views/patient/PatientView.vue'
+      )
   },
   {
     path: '/vital',
     name: 'VitalView',
-    component: () => import(/* webpackChunkName: "home", webpackPrefetch:true */ '../views/patient/VitalView.vue')
+    component: () =>
+      import(
+        /* webpackChunkName: "home", webpackPrefetch:true */ '../views/patient/VitalView.vue'
+      )
   },
   {
     path: '/addpatient',
     name: 'AddPatient',
-    component: () => import(/* webpackChunkName: "home" */ '../views/popups/AddPatient.vue')
+    component: () =>
+      import(/* webpackChunkName: "home" */ '../views/popups/AddPatient.vue')
   },
   {
     path: '/addvital',
     name: 'AddVital',
-    component: () => import(/* webpackChunkName: "home" */ '../views/popups/AddVital.vue')
+    component: () =>
+      import(/* webpackChunkName: "home" */ '../views/popups/AddVital.vue')
+  },
+  {
+    path: '/addlab',
+    name: 'AddLab',
+    component: () =>
+      import(/* webpackChunkName: "home" */ '../views/popups/AddLab.vue')
   }
 ]
 
