@@ -1,27 +1,10 @@
 from sqlalchemy import Boolean, Column, INT, FLOAT,String, DateTime, BigInteger, ForeignKey,DATE,DATETIME,INT
 from sqlalchemy.orm import relationship
 from pydantic import BaseModel
-from db import Base
-from db import ENGINE
-
+from core.database import Base
 import datetime
 
-
-class PatientGeneralTable(Base):
-  __tablename__='patient_general'
-  pid = Column(INT, primary_key=True, autoincrement=True)
-  birth_date = Column(DATE,nullable=False)
-  sex=Column(INT,nullable=False)
-  age=Column(INT,nullable=False)
-  name=Column(String(50),nullable=False)
-  emp_id=Column(INT,nullable=False)
-  admin_date=Column(DATETIME, nullable=False)
-  disch_date=Column(DATETIME,nullable=True)
-
-  vital_record_all = relationship("VitalRecordAll", back_populates="patient_general")
-  vital_record_normal = relationship("VitalRecordNormal", back_populates="patient_general")
-
-
+# vital_record_normal(일반 데이터:lab data 없음) 테이블
 class VitalRecordNormal(Base):
   __tablename__ = 'vital_record_normal'
   pid=Column(INT,ForeignKey('patient_general.pid'),primary_key=True)
@@ -43,6 +26,7 @@ class VitalRecordNormal(Base):
   patient_general = relationship("PatientGeneralTable", back_populates="vital_record_normal")
   lab_data_record = relationship("LabDataRecord", primaryjoin="VitalRecordNormal.pid == LabDataRecord.pid")
 
+# vital_record_all(모든 데이터:lab data 포함) 테이블 - 사용중임
 class VitalRecordAll(Base):
   __tablename__ = 'vital_record_all'
   pid=Column(INT,ForeignKey('patient_general.pid'),primary_key=True)
@@ -87,7 +71,7 @@ class VitalRecordAll(Base):
   
   patient_general = relationship("PatientGeneralTable", back_populates="vital_record_all")
 
-
+# lab_data_table(lab data만 따로) 테이블
 class LabDataRecord(Base):
   __tablename__='lab_data_record'
   pid=Column(INT,ForeignKey('vital_record_normal.pid'),primary_key=True,)
@@ -120,8 +104,7 @@ class LabDataRecord(Base):
 
   vital_record_normal=relationship('VitalRecordNormal', back_populates='lab_data_record', primaryjoin="and_(LabDataRecord.pid==VitalRecordNormal.pid, LabDataRecord.p_record_seq==VitalRecordNormal.p_record_seq)")
 
-
-
+# vital_record_all_view 모든 환자 현재 정보 뷰(겹치는것같네)
 class VitalRecordAllView(Base):
   __tablename__='vital_record_all_view'
   pid = Column(INT)
@@ -168,7 +151,7 @@ class VitalRecordAllView(Base):
   sepsis_in_six=Column(INT,nullable=True,default=None)
   sepsis_percent=Column(FLOAT,nullable=True,default=None)
 
-# 모든 환자의 최근 데이터 view
+# vital_record_now_view 모든 환자 현재 정보 뷰
 class VitalRecordNowView(Base):
   __tablename__='vital_record_now_view'
   pid = Column(INT)
@@ -215,7 +198,7 @@ class VitalRecordNowView(Base):
   sepsis_in_six=Column(INT,nullable=True,default=None)
   sepsis_percent=Column(FLOAT,nullable=True,default=None)
 
-  # 모든 패혈증 환자의 view
+# now_view_sepsis 모든 패혈증 환자의 view
 class NowViewSepsis(Base):
   __tablename__='now_view_sepsis'
   pid = Column(INT)
@@ -262,7 +245,7 @@ class NowViewSepsis(Base):
   sepsis_in_six=Column(INT,nullable=True,default=None)
   sepsis_percent=Column(FLOAT,nullable=True,default=None)
 
-
+# all_patients_vital_record_view 모든환자 모든 정보 뷰
 class AllPatientRecordView(Base):
   __tablename__='all_patients_vital_record_view'
   pid = Column(INT)
@@ -308,3 +291,7 @@ class AllPatientRecordView(Base):
   Platelets=Column(FLOAT,nullable=True,default=None)
   sepsis_in_six=Column(INT,nullable=True,default=None)
   sepsis_percent=Column(FLOAT,nullable=True,default=None)
+
+
+# -------------------------여기부터 schema---------------
+# 일반 정보 입력 모델로 바꿔야함
