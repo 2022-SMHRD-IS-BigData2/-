@@ -279,6 +279,200 @@ export default {
 </script>
 
 <style scoped>
-@import "../../assets/MainView.css";
+*{font-family: 'Noto Sans KR', sans-serif;}
+#top-wrap{
+  width: 100%;
+  height: 50px;
+}
+#addpatient{
+  float: left;
+  margin-left: 70px;
+  margin-top: 10px;
+}
+#rerun{
+  float: right;
+  margin-right: 70px;
+  margin-top: 10px;
+
+}
+#rerun-btn{
+  margin-left: 20px;
+  margin-right: 20px;
+}
+.btn{
+  border: none;
+  background-color: #ced6e0;
+  font-weight: bold;
+  color: #333;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-right: 20px;
+  padding-left: 20px;
+  border-radius: 5%;
+  cursor: pointer;
+  box-shadow: 1px 1px 2px;
+}
+.btn:active{
+  box-shadow: none;
+}
+table{
+  width: 100%;
+  text-align: center;
+   border-collapse : collapse;
+   margin-top: 20px;
+}
+thead{
+  background-color: #74b9ff;
+  height: 70px;
+  font-weight: bold;
+}
+/* tbody tr:nth-child(2n){
+  background-color: #F5FFFF;
+} */
+tbody tr{
+  height: 50px;
+  border-bottom: 1px solid #ced6e0;
+}
+.hide{
+  font-weight: 150px;
+}
+
+#addbtn{
+  border: none;
+  background-color: #ced6e0;
+  font-weight: bold;
+  color: #333;
+  cursor: pointer;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-right: 10px;
+  padding-left: 10px;
+  border-radius: 5%;
+  box-shadow: 1px 1px 2px;
+}
+
+#addbtn:active{
+  box-shadow: none;
+}
+
+input{
+  border: 2px solid #dfe6e9;
+  margin-right: 10px;
+  width: 70px;
+}
+tbody tr td a{
+  text-decoration: none;
+  color: black;
+}
+a:visited { text-decoration: none;
+color: black; }
+a:hover { text-decoration: none;
+  color: black; }
+a:focus { text-decoration: none;
+  color: black; }
+a:hover, a:active { text-decoration: none;
+  color: black; }
+
+  /* 페이징처리 출력부 */
+  .pagination-frame {
+    height: 10%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    list-style: none;
+    margin: 1vh 0vw 0vh 0vw;
+    padding: 0px;
+
+    /* 드래그 막기 */
+    -ms-user-select: none;
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  .pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.page-search-container {
+  display: flex;
+  align-items: center;
+}
+
+.page-search-container input[type="text"] {
+  margin-right: 5px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  list-style: none;
+  margin-top: 30px;
+  padding: 0;
+}
+
+.pagination li {
+  margin-right: 5px;
+}
+
+.pagination li a {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 3px;
+  text-align: center;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.pagination li.active a {
+  background-color: #007bff;
+  border-color: #007bff;
+  color: #fff;
+}
+
+.pagination li.active a:hover {
+  background-color: #0062cc;
+  border-color: #005cbf;
+  color: #fff;
+}
+
+.pagination li.disabled a {
+  opacity: 0.5;
+  cursor: default;
+}
+
+#page-src{
+  margin-top: 15px;
+  width: 80px;
+  border: 2px solid #333;
+  border-radius: 5px;
+}
+
+#page-btn{
+  margin-top: 15px;
+  border: none;
+  background-color: #ced6e0;
+  font-weight: bold;
+  color: #333;
+  cursor: pointer;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-right: 10px;
+  padding-left: 10px;
+  border-radius: 5%;
+  box-shadow: 1px 1px 2px;
+}
+
+#page-btn:active{
+  box-shadow: none;
+}
 
 </style>
