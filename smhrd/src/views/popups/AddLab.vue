@@ -3,107 +3,119 @@
     <form action="">
       <table>
         <tbody>
-          <h1 align="center">Lab_Data</h1>
+          <h3 align="center">Lab_Data</h3>
+          <tr>
+            <td>PID</td>
+            <td><input type="text" /></td>
+          </tr>
+          <tr>
+            <td>record_time</td>
+            <td><input type="datetime" /></td>
+          </tr>
+          <tr>
+            <td>BaseExcess</td>
+            <td><input type="number" step="0.1" /></td>
+          </tr>
           <tr>
             <td>HCO3</td>
-            <td><input type="number" /></td>
+            <td><input type="number" step="0.1" /></td>
           </tr>
           <tr>
             <td>FiO2</td>
-            <td><input type="number" /></td>
+            <td><input type="number" step="0.1" /></td>
           </tr>
           <tr>
             <td>pH</td>
-            <td><input type="number" /></td>
+            <td><input type="number" step="0.1" /></td>
           </tr>
           <tr>
             <td>PaCO2</td>
-            <td><input type="number" /></td>
+            <td><input type="number" step="0.1" /></td>
           </tr>
           <tr>
             <td>SaO2</td>
-            <td><input type="number" /></td>
+            <td><input type="number" step="0.1" /></td>
           </tr>
           <tr>
             <td>AST</td>
-            <td><input type="number" /></td>
+            <td><input type="number" step="0.1" /></td>
           </tr>
           <tr>
             <td>Alkalinephos</td>
-            <td><input type="number" /></td>
+            <td><input type="number" step="0.1" /></td>
           </tr>
           <tr>
             <td>Calcium</td>
-            <td><input type="number" /></td>
+            <td><input type="number" step="0.1" /></td>
           </tr>
           <tr>
             <td>Chloride</td>
-            <td><input type="number" /></td>
+            <td><input type="number" step="0.1" /></td>
           </tr>
           <tr>
             <td>Creatinine</td>
-            <td><input type="number" /></td>
+            <td><input type="number" step="0.1" /></td>
           </tr>
           <tr>
             <td>Bilirubin_direct</td>
-            <td><input type="number" /></td>
+            <td><input type="number" step="0.1" /></td>
           </tr>
           <tr>
             <td>Glucose</td>
-            <td><input type="number" /></td>
+            <td><input type="number" step="0.1" /></td>
           </tr>
           <tr>
             <td>Lactate</td>
-            <td><input type="number" /></td>
+            <td><input type="number" step="0.1" /></td>
           </tr>
           <tr>
             <td>Magnesium</td>
-            <td><input type="number" /></td>
+            <td><input type="number" step="0.1" /></td>
           </tr>
           <tr>
             <td>Phosphate</td>
-            <td><input type="number" /></td>
+            <td><input type="number" step="0.1" /></td>
           </tr>
           <tr>
             <td>Potassium</td>
-            <td><input type="number" /></td>
+            <td><input type="number" step="0.1" /></td>
           </tr>
           <tr>
             <td>Bilirubin_total</td>
-            <td><input type="number" /></td>
+            <td><input type="number" step="0.1" /></td>
           </tr>
           <tr>
             <td>Troponinl</td>
-            <td><input type="number" /></td>
+            <td><input type="number" step="0.1" /></td>
           </tr>
           <tr>
             <td>Hct</td>
-            <td><input type="number" /></td>
+            <td><input type="number" step="0.1" /></td>
           </tr>
           <tr>
             <td>Hgb</td>
-            <td><input type="number" /></td>
+            <td><input type="number" step="0.1" /></td>
           </tr>
           <tr>
             <td>PTT</td>
-            <td><input type="number" /></td>
+            <td><input type="number" step="0.1" /></td>
           </tr>
           <tr>
             <td>WBC</td>
-            <td><input type="number" /></td>
+            <td><input type="number" step="0.1" /></td>
           </tr>
           <tr>
             <td>Fibrinogen</td>
-            <td><input type="number" /></td>
+            <td><input type="number" step="0.1" /></td>
           </tr>
           <tr>
             <td>Platelets</td>
-            <td><input type="number" /></td>
+            <td><input type="number" step="0.1" /></td>
           </tr>
         </tbody>
       </table>
       <button @click="db_input">저장</button>
-      <button class="close">취소</button>
+      <button @click="close">취소</button>
     </form>
   </div>
 </template>
@@ -145,7 +157,9 @@ export default {
   mounted() {},
   unmounted() {},
   methods: {
-    close() {},
+    close() {
+      window.close()
+    },
     db_input() {}
   }
 }

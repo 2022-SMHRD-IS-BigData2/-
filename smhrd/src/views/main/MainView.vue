@@ -77,7 +77,7 @@ export default {
       window.open(
         router.resolve({ name: 'AddLab' }).href,
         'AddLab',
-        'width=500,height=500'
+        'width=500,height=auto'
       )
     }
 
