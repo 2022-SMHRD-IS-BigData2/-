@@ -33,7 +33,7 @@
           <tr>
             <td><input type="checkbox" style="width: 20px; height: 20px; cursor: pointer;" @click="addOn(index)"/></td>
             <td>{{ patient.input_time }}</td>
-            <td>
+            <td style="font-weight: bold;">
             <router-link :to="{ name: 'PatientView', params: { pid: patient.pid, date: patient.input_time.slice(0, 10) } }">
           {{ patient.pid }}
             </router-link>
@@ -50,7 +50,17 @@
           </tr>
           <tr v-if="patient.isAddOn">
             <td colspan="13">
-              PID <input type="text" readonly v-model="patient.pid" > Name <input type="text" readonly v-model="patient.p_name">   HR <input type="number">   Temp <input type="number">   Resp <input type="number">  SBP <input type="number">   DBP <input type="number">   <button type="submit" id="addbtn" @click="detailAdd"> 추가 </button>
+              PID <input type="text" readonly v-model="patient.pid" @input="preventInvalidInput" :name="'fast_pid'+patient.pid">
+              Name <input type="text" readonly v-model="patient.name" @input="preventInvalidInput" :name="'fast_name'+patient.pid">
+              HR <input type="text" @input="preventInvalidInput" :name="'fast_hr'+patient.pid">
+              Temp <input type="text" @input="preventInvalidInput" :name="'fast_temp'+patient.pid">
+              Resp <input type="text" @input="preventInvalidInput" :name="'fast_resp'+patient.pid">
+              SBP <input type="text" @input="preventInvalidInput" :name="'fast_sbp'+patient.pid">
+              DBP <input type="text" @input="preventInvalidInput" :name="'fast_dbp'+patient.pid">
+              <input type="hidden" :name="'fast_birth_date'+patient.pid" :value="patient.birth_date">
+              <input type="hidden" :name="'fast_sex'+patient.pid" :value="patient.sex">
+              <input type="hidden" :name="'fast_ICULOC'+patient.pid" :value="patient.ICULOC">
+              <button type="button" :id="'addbtn'+patient.pid" @click="insertRecord(patient.pid)"> 추가 </button>
             </td>
           </tr>
         </tbody>
@@ -241,6 +251,80 @@ export default {
       }
       this.pageSearchTerm = '';
     },
+  // text input tag 숫자랑 . 만 써지도록
+  async preventInvalidInput(event) {
+      const inputVal = event.target.value;
+      const inputName = event.target.name;
+      const isValidInput = /^[\d.]*$/.test(inputVal);
+      
+      if (!isValidInput) {
+        event.target.value = '';
+        event.target.classList.add('invalid-input');
+        } else {
+        event.target.classList.remove('invalid-input');
+        }
+
+      switch(inputName) {
+        case "fast_hr{patient.pid}":
+        this.hr = isValidInput ? inputVal : '';
+        break;
+        case "fast_temp{patient.pid}":
+        this.temp = isValidInput ? inputVal : '';
+        break;
+        case "fast_resp{patient.pid}":
+        this.resp = isValidInput ? inputVal : '';
+        break;
+        case "fast_sbp{patient.pid}":
+        this.sbp = isValidInput ? inputVal : '';
+        break;
+        case "fast_dbp{patient.pid}":
+        this.dbp = isValidInput ? inputVal : '';
+        break;
+      }
+      if (!isValidInput || inputVal === '') {
+      event.target.style.borderColor = 'red';
+      } else {
+      event.target.style.borderColor = 'green';
+      }
+      },
+      async insertRecord(pid) {
+      let fast_pid=document.querySelector("input[name=fast_pid"+pid+"]").value;
+      let fast_birth_date=document.querySelector("input[name=fast_birth_date"+pid+"]").value;
+      let fast_sex=document.querySelector("input[name=fast_sex"+pid+"]").value;
+      let fast_hr=document.querySelector("input[name=fast_hr"+pid+"]").value;
+      let fast_temp=document.querySelector("input[name=fast_temp"+pid+"]").value;
+      let fast_resp=document.querySelector("input[name=fast_resp"+pid+"]").value;
+      let fast_sbp=document.querySelector("input[name=fast_sbp"+pid+"]").value;
+      let fast_dbp=document.querySelector("input[name=fast_dbp"+pid+"]").value;
+      
+
+      const record_i = {
+        pid: parseInt(pid),
+        input_time: moment(Date.now()).format('YYYY-MM-DDTHH:mm:ss'),
+        birth_date:fast_birth_date,
+        sex : parseInt(fast_sex),
+        hr: parseInt(fast_hr),
+        temp: parseFloat(fast_temp),
+        resp: parseInt(fast_resp),
+        sbp: parseInt(fast_sbp),
+        dbp: parseInt(fast_dbp),
+      };
+    try {
+      console.log(record_i);
+      // API 호출
+      const response = await axios.post(`http://127.0.0.1:8002/api/insert_fast_record/${pid}`,record_i);
+      // 응답 데이터 확인
+      console.log(response.data);
+      // 창 닫기
+      patient.isAddOn = false;
+      await this.fetchData();
+
+    } 
+    catch (error) {
+      alert("입력값을 확인해주세요.")
+      console.error(error);
+    }
+  },
   },
     computed: {
       gender() {
@@ -473,6 +557,17 @@ a:hover, a:active { text-decoration: none;
 
 #page-btn:active{
   box-shadow: none;
+}
+
+input:invalid {
+  border: 1px solid green;
+  transition: all 0.3s ease-out;
+}
+
+input:valid {
+  border: 1px solid red;
+  transition: all 0.3s ease-out;
+  
 }
 
 </style>

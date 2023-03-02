@@ -87,7 +87,7 @@ async def input_record(record :Record):
   session.close()
   return {"record":pred}
 
-  # 모든 환자의 최근 데이터를 가져오자(뷰를 만들었음) , 정철씨 안나옴!
+# 모든 환자의 최근 데이터를 가져오자(뷰를 만들었음) , 정철씨 안나옴!
 @router.get('/api/get_latest_all')
 async def get_latest_all():
   record=session.query(VitalRecordNowView).all()
@@ -124,6 +124,7 @@ async def get_latest_sepsis_percent(limit: int = 10, page: int = 1):
   session.close()
   return {"data": data, "count": count,'page':{'page':1,'limit':10}}
 
+# 
 @router.get('/api/get_all_record')
 async def get_all_record():
   record=session.query(AllPatientRecordView).all()
@@ -188,4 +189,28 @@ async def update_record(pid:int, record_u:Record_u):
   session.close()
   return updated_record
 
+def model_predict2(Record_i):
+  per=round(random.random()*100,2)
+  if per>50:
+    Record_i.sepsis_in_six=1
+  else :
+    Record_i.sepsis_in_six=0
+    Record_i.sepsis_percent=per
+  return Record_i
 
+
+# 환자 vital 5개 빠른추가
+@router.post('/api/insert_fast_record/{pid}')
+async def insert_fast_record(pid:int, record_i:Record_i):
+  input_time = datetime.datetime.strptime(record_i.input_time, '%Y-%m-%dT%H:%M:%S')
+  birth_date = datetime.datetime.strptime(record_i.birth_date, '%Y-%m-%d').date()
+
+  model_predict2(record_i)
+  query = text(f"INSERT INTO vital_record_all (pid, input_time, birth_date, sex, hr, temp, resp, sbp, dbp, sepsis_in_six, sepsis_percent) VALUES (:pid, :input_time, :birth_date, :sex, :hr, :temp, :resp, :sbp, :dbp, :sepsis_in_six, :sepsis_percent)")
+  values = {'pid': pid, 'input_time': input_time, 'birth_date': birth_date, 'sex': record_i.sex, 'hr': record_i.hr, 'temp': record_i.temp, 'resp': record_i.resp, 'sbp': record_i.sbp, 'dbp': record_i.dbp, 'sepsis_in_six': record_i.sepsis_in_six, 'sepsis_percent': record_i.sepsis_percent}
+    # 쿼리 실행
+  session.execute(query,values)
+  session.commit()
+  updated_record = session.query(AllPatientRecordView).filter(AllPatientRecordView.pid == pid, AllPatientRecordView.input_time == input_time).first()
+  session.close()
+  return updated_record

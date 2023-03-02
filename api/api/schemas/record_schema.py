@@ -60,12 +60,24 @@ class Record(BaseModel):
 class Record_u(BaseModel):
   pid : int
   p_record_seq : int
-  input_time : datetime.datetime
   hr: int
   temp: float
   resp: int
   sbp: int
   dbp: int
+
+class Record_i(BaseModel):
+  pid : int
+  input_time: str
+  birth_date: str
+  sex: int
+  hr: int
+  temp: float
+  resp: int
+  sbp: int
+  dbp: int
+  sepsis_in_six: int=None
+  sepsis_percent: float=None
 
 
 # 보기 위한 객체

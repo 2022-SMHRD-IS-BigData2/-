@@ -8,5 +8,6 @@ __all__ = [
     'Record_for_Predict',
     'RecordNormal',
     'Record_v',
-    'Record_u'
+    'Record_u',
+    'Record_i'
 ]

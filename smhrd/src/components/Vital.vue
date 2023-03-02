@@ -13,7 +13,7 @@
         </thead>
         <tbody>
           <tr>
-            <td>RECENT</td>
+            <td @click="EditVital($event)" style="cursor: pointer; font-weight: bold; padding: 5px;">RECENT<br>{{ patients.input_time }}</td>
             <td>{{ patients.hr }}</td>
             <td>{{ patients.temp }}</td>
             <td>{{ patients.resp }}</td>
@@ -21,7 +21,7 @@
             <td>{{ patients.dbp }}</td>
           </tr>
           <tr v-for="(vs, index) in all" :key="index" :value="vs.input_time">
-            <td @click="EditVital($event)">{{ vs.input_time }}</td>
+            <td @click="EditVital($event)" style="cursor: pointer; font-weight: bold; padding: 5px;">{{ vs.input_time }}</td>
             <td>{{ vs.hr }}</td>
             <td>{{ vs.temp }}</td>
             <td>{{ vs.resp }}</td>
@@ -55,7 +55,7 @@ export default {
     const router = useRouter()
     const EditVital = (event) => {
       const targetValue = event.target
-   window.open(router.resolve({ name: 'EditVital', params: { input: targetValue.innerHTML  } }).href, 'EditVital', 'width=500,height=500')
+    window.open(router.resolve({ name: 'EditVital', params: { input: targetValue.innerHTML.split(">")[1]  } }).href, 'EditVital', 'width=500,height=500')
     }
 
     return {
