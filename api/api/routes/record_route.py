@@ -175,3 +175,8 @@ async def get_select_record(pid: int, input_time: str):
     record = session.execute(query, {"input_time": input_time}).first()
     session.close()
     return {"data": record}
+
+# record 수정한 값 받아서 업데이트하는 api
+@router.post('/api/update_record/{pid}')
+async def update_record(pid:int, patient):
+  return ""
