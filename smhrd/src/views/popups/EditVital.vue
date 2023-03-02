@@ -1,6 +1,6 @@
 <template>
   <div id="wrap-box">
-    <h3 style="text-align: center;">환자 V/S 추가</h3>
+    <h3 style="text-align: center;">환자 V/S 수정</h3>
     <table>
       <tr>
         <td>이름</td>
@@ -8,11 +8,11 @@
       </tr>
       <tr>
         <td>생년월일</td>
-        <td>{{ patients.birth_date  }}</td>
+        <td>{{ patients.birth_date }}</td>
       </tr>
       <tr>
         <td>입력 시간</td>
-        <td>{{ clickTime }}</td>
+        <td>{{ this.$route.params.input }}</td>
       </tr>
       <tr>
         <td>HR</td>
@@ -42,13 +42,11 @@
 <script>
 import { useRouter } from 'vue-router'
 import axios from 'axios'
-import moment from 'moment';
 
 export default {
   components: {},
   data () {
     return {
-      clickTime: moment().format('YYYY-MM-DDTHH:mm:ss'),
       patients: []
     }
   },

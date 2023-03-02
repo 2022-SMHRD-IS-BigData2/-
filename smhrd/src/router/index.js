@@ -27,9 +27,14 @@ const routes = [
     component: () => import(/* webpackChunkName: "home" */ '../views/popups/AddPatient.vue')
   },
   {
-    path: '/addvital',
+    path: '/addvital/:pid',
     name: 'AddVital',
     component: () => import(/* webpackChunkName: "home" */ '../views/popups/AddVital.vue')
+  },
+  {
+    path: '/editvital/:pid/:input',
+    name: 'EditVital',
+    component: () => import(/* webpackChunkName: "home" */ '../views/popups/EditVital.vue')
   },
   {
     path: '/getAllPatient',

@@ -20,8 +20,8 @@
             <td>{{ patients.sbp }}</td>
             <td>{{ patients.dbp }}</td>
           </tr>
-          <tr v-for="(vs, index) in all" :key="index">
-            <td>{{ vs.input_time}}</td>
+          <tr v-for="(vs, index) in all" :key="index" :value="vs.input_time">
+            <td @click="EditVital">{{ vs.input_time }}</td>
             <td>{{ vs.hr }}</td>
             <td>{{ vs.temp }}</td>
             <td>{{ vs.resp }}</td>
@@ -34,6 +34,8 @@
 </template>
 <script>
 import axios from 'axios'
+import { useRouter } from 'vue-router'
+
 export default {
   name: "Vital",
   props: {
@@ -49,7 +51,17 @@ export default {
       all: []
     }
   },
-  setup() {},
+  setup() {
+    const router = useRouter()
+    const EditVital = (e) => {
+      const invalue = e.target.getAttribute('value');
+   window.open(router.resolve({ name: 'EditVital', params: { input: invalue } }).href, 'EditVital', 'width=500,height=500')
+    }
+
+    return {
+      EditVital
+    }
+  },
   created() {},
   watch: {
   currentDate(newVal, oldVal) {

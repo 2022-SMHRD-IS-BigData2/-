@@ -119,7 +119,6 @@ export default {
     const router = useRouter()
 
     const AddPatient = () => {
-      const router = useRouter()
       window.open(router.resolve({ name: 'AddPatient' }).href, 'AddPatient', 'width=500,height=500')
     }
 
@@ -195,7 +194,7 @@ export default {
     };
     this.patients = [];
     this.searchData = [];
-    
+
     if (this.searchQuery) { // 검색어가 있으면 url 바꿔줌
       console.log(this.searchQuery,this.$store.state.searchQuery);
       axiurl = 'http://127.0.0.1:8002/api/get_search_data';

@@ -94,7 +94,7 @@ export default {
   setup () {
     const router = useRouter()
     const AddVital = () => {
-      window.open(router.resolve({ name: 'AddVital' }).href, 'AddVital', 'width=500,height=500')
+    window.open(router.resolve({ name: 'AddVital' }).href, 'AddVital', 'width=500,height=500')
     }
 
     return {
