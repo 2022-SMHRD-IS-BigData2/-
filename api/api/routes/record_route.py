@@ -157,7 +157,7 @@ async def get_search_patient(path: str = '', search_str: str = '', limit: int = 
     if path in switch_path:
         query = text(switch_path[path])
         count = session.execute(text(switch_count[path]), {"search_str": search_str}).fetchone()[0]
-    
+
     if query is not None:
         result = session.execute(query, {"search_str": search_str, "limit": limit, "offset": offset}).all()
         data = [dict(row) for row in result]
