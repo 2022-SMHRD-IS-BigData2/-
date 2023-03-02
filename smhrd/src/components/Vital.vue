@@ -21,7 +21,7 @@
             <td>{{ patients.dbp }}</td>
           </tr>
           <tr v-for="(vs, index) in all" :key="index" :value="vs.input_time">
-            <td @click="EditVital">{{ vs.input_time }}</td>
+            <td @click="EditVital($event)">{{ vs.input_time }}</td>
             <td>{{ vs.hr }}</td>
             <td>{{ vs.temp }}</td>
             <td>{{ vs.resp }}</td>
@@ -53,9 +53,9 @@ export default {
   },
   setup() {
     const router = useRouter()
-    const EditVital = (e) => {
-      const invalue = e.target.getAttribute('value');
-   window.open(router.resolve({ name: 'EditVital', params: { input: invalue } }).href, 'EditVital', 'width=500,height=500')
+    const EditVital = (event) => {
+      const targetValue = event.target
+   window.open(router.resolve({ name: 'EditVital', params: { input: targetValue.innerHTML  } }).href, 'EditVital', 'width=500,height=500')
     }
 
     return {
