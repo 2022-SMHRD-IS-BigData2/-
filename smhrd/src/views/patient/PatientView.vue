@@ -2,6 +2,7 @@
   <div id="wrap">
     <div id="table">
       <div id="right">
+        <button @click="reRun" id="rerun-btn" >새로고침</button>
         <button @click="AddVital" id="addmore">정보추가</button>
         <input type="date" id="src-date" v-model="selectedDate">
         <button id="submit" type="submit" @click="chooseDate">확인</button>
@@ -46,49 +47,20 @@
     <div id="body">
       <div id="leftarrow">
 
-        <a :href="$router.resolve({ name: 'PatientView', params: { pid: this.$route.params.pid, date: yesterday } }).href">
-          <i class="fa-solid fa-left-long fa-3x" style="color: #ced6e0;" ></i></a>
-
+        <button @click="changeDateBefore" class="date-btn">
+          <i class="fa-solid fa-left-long fa-3x" style="color: #ced6e0;" ></i></button>
       </div>
       <div id="tablewrap">
-      <table id="realtable">
-        <thead>
-          <tr>
-            <td style="width: 25%; font-weight: bold; background-color: #DFF2F5;">Time</td>
-            <td style="width: 15%; font-weight: bold; background-color: #DFF2F5;">HR</td>
-            <td style="width: 15%; font-weight: bold; background-color: #DFF2F5;">Temp</td>
-            <td style="width: 15%; font-weight: bold; background-color: #DFF2F5;">Resp</td>
-            <td style="width: 15%; font-weight: bold; background-color: #DFF2F5;">SBP</td>
-            <td style="width: 15%; font-weight: bold; background-color: #DFF2F5;">DBP</td>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>RECENT</td>
-            <td>{{ patients.hr }}</td>
-            <td>{{ patients.temp }}</td>
-            <td>{{ patients.resp }}</td>
-            <td>{{ patients.sbp }}</td>
-            <td>{{ patients.dbp }}</td>
-          </tr>
-          <tr v-for="(vs, index) in all" :key="index">
-            <td>{{ vs.input_time}}</td>
-            <td>{{ vs. hr }}</td>
-            <td>{{ vs.temp }}</td>
-            <td>{{ vs.resp }}</td>
-            <td>{{ vs.sbp }}</td>
-            <td>{{ vs.dbp}}</td>
-          </tr>
-        </tbody>
-      </table>
+        <Vital :patients="patients" :dbDate="dbDate" :selectedDate="selectedDate" :currentDate="currentDate" :loadpid="loadpid
+        "></Vital>
+
     </div>
       <div id="rightarrow">
-        <a :href="$router.resolve({ name: 'PatientView', params: { pid: this.$route.params.pid, date: tomorrow } }).href">
-          <i class="fa-solid fa-right-long fa-3x" style="color: #ced6e0;"></i></a></div>
+        <button @click="changeDateAfter" class="date-btn">
+          <i class="fa-solid fa-right-long fa-3x" style="color: #ced6e0;"></i></button></div>
     </div>
     </div>
   </div>
-  <router-view :key="$route.fullPath"></router-view>
 </template>
 
 <script>
@@ -96,6 +68,7 @@ import axios from 'axios'
 import Chart from '../../components/Chart.vue'
 import { useRouter } from 'vue-router'
 import moment from 'moment'
+import Vital from "../../components/Vital.vue";
 
 
 export default {
@@ -103,13 +76,20 @@ export default {
     return {
       patients: [],
       dbDate: null,
-      all: [],
       selectedDate: this.$route.params.date,
-      currentDate: this.$route.params.date
+      currentDate: this.$route.params.date,
+      loadpid: this.$route.params.pid
     };
   },
   components: {
     Chart,
+    Vital
+  },
+  watch: {
+    currentDate: function(newVal, oldVal) {
+    this.selectedDate = newVal;
+    this.currentDate = newVal;
+  }
   },
   setup () {
     const router = useRouter()
@@ -140,29 +120,38 @@ export default {
       const result = this.patients.filter( patient => patient.pid  === this.$route.params.pid );
   },
   chooseDate() {
-    router.push({name: 'PatientView', params: { pid: this.$route.params.pid, date: this.selectedDate }})
-  }
+    this.currentDate = this.selectedDate;
+  },
+  changeDateBefore() {
+      this.currentDate = this.yesterday;
+    },
+  changeDateAfter() {
+    this.currentDate = this.tomorrow;
+  },
+  reRun() {
+      window.location.reload()
+    }
 },
   mounted() {
     axios.get("http://127.0.0.1:8002/api/get_latest_all/" + this.$route.params.pid)
-    axios.all([axios.get('http://127.0.0.1:8002/api/get_latest_all/'+ this.$route.params.pid),axios.get("http://127.0.0.1:8002/api/get_select_date?pid=" + this.$route.params.pid + "&date=" + this.$route.params.date)])
+    // axios.all([axios.get('http://127.0.0.1:8002/api/get_latest_all/'+ this.$route.params.pid),axios.get("http://127.0.0.1:8002/api/get_select_date?pid=" + this.$route.params.pid + "&date=" + this.$route.params.date)])
     // this.route.params.date
-    .then(
-      axios.spread((res1, res2) => {
-        console.log(res2.data);
-        this.patients = res1.data[0];
-        this.all = res2.data;
-        return data();
-      })
-    )
+    // .then(
+    //   axios.spread((res1, res2) => {
+    //     console.log(res2.data);
+    //     this.patients = res1.data[0];
+    //     this.all = res2.data;
+    //     return data();
+    //   })
+    // )
       .then(response =>{
         return response.data
       })
-      // .then(data => {
-      //   console.log(data[0])
-      //   this.patients=data[0];
-      //   return data
-      // })
+      .then(data => {
+        console.log(data[0])
+        this.patients=data[0];
+        return data
+      })
       .then(response => {
         // this.dbDate = moment(response.birth_date, 'YYYY-MM-DD')
       })
@@ -304,18 +293,7 @@ a:hover, a:active { text-decoration: none;
 #submit:active{
   box-shadow: none;
 }
-#realtable{
-  margin-top: 50px;
-  /* display: inline-block; */
-  width: 100%;
-  border-collapse : collapse;
-  margin-top: 30px;
-  text-align: center;
-}
-#realtable tr td{
-  border-bottom: 1px solid #ced6e0;
-  height: 50px;
-}
+
 #tablewrap{
   display: inline-block;
   width: 80%;
@@ -336,7 +314,21 @@ height: 100%;
 display: inline-block;
 text-align: center;
 height: 100%;
-
+}
+.date-btn{
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+#rerun-btn{
+  margin-right: 10px;
+  padding: 5px 10px 5px 10px;
+  border-radius: 5px;
+  border: none;
+  background-color: #ced6e0;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 1px 1px 2px;
 }
 </style>
 <!-- this.patients = response.data.patients -->

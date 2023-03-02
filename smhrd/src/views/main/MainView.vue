@@ -29,7 +29,7 @@
         </thead>
 
         <!-- tbody for문 돌리기 10명 -->
-        <tbody   v-for="(patient, index) in patients" :key="index">
+        <tbody v-for="(patient, index) in (searchData && searchData.length) ? searchData : patients" :key="index">
           <tr>
             <td><input type="checkbox" style="width: 20px; height: 20px; cursor: pointer;" @click="addOn(index)"/></td>
             <td>{{ patient.input_time }}</td>
@@ -57,24 +57,24 @@
       </table>
     </div>
     <div class="pointer">
-    <div class="pagination-container">
-      <ul class="pagination">
-        <li :class="{disabled: currentPage === 1}">
-          <a @click="onchange(1)">〈〈</a>
-        </li>
-        <li :class="{disabled: currentPage === 1}">
-          <a @click="onchange(currentPage - 1)">〈</a>
-        </li>
-        <li v-for="n in pages" :key="n" :class="{active: n === currentPage}">
-          <a @click="onchange(n)">{{ n }}</a>
-        </li>
-        <li :class="{disabled: currentPage === pageCount}">
-          <a @click="onchange(currentPage + 1)">〉</a>
-        </li>
-        <li :class="{disabled: currentPage === pageCount}">
-          <a @click="onchange(pageCount)" :style="{cursor: currentPage === pageCount ? 'default' : 'pointer'}">〉〉</a>
-        </li>
-      </ul>
+      <div class="pagination-container">
+        <ul class="pagination">
+          <li :class="{disabled: currentPage === 1}">
+            <a @click="onchange(1)">〈〈</a>
+          </li>
+          <li :class="{disabled: currentPage === 1}">
+            <a @click="onchange(currentPage - 1)" :style="{ pointerEvents: currentPage === 1 ? 'none' : 'auto', opacity: currentPage === 1 ? 0.5 : 1 }">〈</a>
+          </li>
+          <li v-for="n in pages" :key="n" :class="{active: n === currentPage}">
+            <a @click="onchange(n)">{{ n }}</a>
+          </li>
+          <li :class="{disabled: currentPage === pageCount}">
+            <a @click="onchange(currentPage + 1)" :style="{ pointerEvents: currentPage === pageCount ? 'none' : 'auto', opacity: currentPage === pageCount ? 0.5 : 1 }">〉</a>
+          </li>
+          <li :class="{disabled: currentPage === pageCount}">
+            <a @click="onchange(pageCount)" :style="{cursor: currentPage === pageCount ? 'default' : 'pointer'}">〉〉</a>
+          </li>
+        </ul>
       <div class="page-search-container">
         <input type="text" v-model="pageSearchTerm" placeholder="Search page" id="page-src">
         <button @click="goToPage" id="page-btn">Go</button>
@@ -85,9 +85,6 @@
 </template>
 
 <script>
-// 아래 페이징 번호 가져와서 구현 https://junhyunny.github.io/spring-boot/vue.js/spring-boot-vue-js-paging-table/
-// tbody 환자 10명만 나오게 for문 돌리기 >2페이지 넘어가면 그다음 환자부터
-// 환자 추가 버튼 누르고 정보 입력하면 정보 받아와서 반영
 
 import moment from 'moment'
 import axios from 'axios'
@@ -112,13 +109,17 @@ export default {
       pages:[],
       searchTerm: '',
       pageSearchTerm: '',
-      currentDate: ""
+      currentDate: "",
+      searchQuery:"",
+      searchData: [], // 검색 결과 데이터
+      path:""
     }
   },
   setup () {
     const router = useRouter()
 
     const AddPatient = () => {
+      const router = useRouter()
       window.open(router.resolve({ name: 'AddPatient' }).href, 'AddPatient', 'width=500,height=500')
     }
 
@@ -126,11 +127,20 @@ export default {
       AddPatient
     }
   },
-  created () {},
+  async created () {
+    this.fetchData();
+  },
   watch: {
-    currentPage: {
-      handler: 'onchange',
-      immediate: true
+  '$store.state.searchQuery'(newSearchQuery, oldSearchQuery) {
+    this.searchQuery=this.$store.state.searchQuery
+    if (newSearchQuery !== oldSearchQuery) {
+      this.fetchData();
+    }
+    if (this.searchQuery === "") {
+      this.searchQuery = '';
+      this.currentPage = 1;
+      this.fetchData();
+    }
     }
   },
   mounted () {
@@ -177,24 +187,60 @@ export default {
       index: index // 선택된 환자의 인덱스도 함께 저장
     };
   },
-      async onchange(page) {
-      if (page < 1 || page > this.pageCount || page === this.currentPage) {
-        return;
-      }
-      const response = await axios.get('http://127.0.0.1:8002/api/data', {
-        params: {
-          limit: this.perPage,
-          page: page
-        }
-      });
+  async fetchData() {
+    let axiurl = 'http://127.0.0.1:8002/api/data';
+    let params = {
+      limit: this.perPage,
+      page: this.currentPage,
+    };
+    this.patients = [];
+    this.searchData = [];
+    
+    if (this.searchQuery) { // 검색어가 있으면 url 바꿔줌
+      console.log(this.searchQuery,this.$store.state.searchQuery);
+      axiurl = 'http://127.0.0.1:8002/api/get_search_data';
+      this.path=this.$route.path;
+      params = {
+        path: this.path,
+        search_str: this.searchQuery,
+        limit: this.perPage,
+        page: this.currentPage,
+      };
+    }else{
+      this.patients = []; // 검색어가 없을 경우, patients 배열 초기화
+    }
+    const response = await axios.get(axiurl, { params });
+    if (this.searchQuery) { // 검색어가 있으면 저장하는 객체 이름 바꿔주고 v-if문으로 구분함
+      this.searchData = response.data.data;
+      this.count = response.data.count;
+      this.page = response.data.page.page;
+    } else {
       this.patients = response.data.data;
       this.count = response.data.count;
+      this.page = response.data.page.page;
+
+    }
+    // 강제 업데이트!
+    this.$forceUpdate();
+  },
+    // 검색어 변경
+    onSearch(query) {
+      this.searchQuery = query;
+      this.currentPage = 1;
+      this.fetchData();
+    },
+    // 페이지 변경
+    onchange(page) {
       this.currentPage = page;
+      this.fetchData();
     },
     goToPage() {
-      const page = parseInt(this.pageSearchTerm);
+      if (this.pageSearchTerm === '') return;
+      const pageNum = parseInt(this.pageSearchTerm);
+      if (!isNaN(pageNum) && pageNum > 0 && pageNum <= this.pageCount) {
+        this.currentPage = pageNum;
+      }
       this.pageSearchTerm = '';
-      this.onchange(page);
     },
   },
     computed: {
