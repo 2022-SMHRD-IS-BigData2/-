@@ -170,8 +170,13 @@ async def get_search_patient(path: str = '', search_str: str = '', limit: int = 
 # pid, input_time 입력받아서 그 시간의 record 가져오는 api
 @router.get('/api/get_select_record/{pid}')
 async def get_select_record(pid: int, input_time: str):
-    input_time = datetime.datetime.strptime(input_time, '%Y-%m-%d %H:%M:%S')
+    input_time = datetime.datetime.strptime(input_time, '%Y-%m-%dT%H:%M:%S')
     query = text(f'select * from all_patients_vital_record_view where pid=pid and input_time=:input_time')
     record = session.execute(query, {"input_time": input_time}).first()
     session.close()
     return {"data": record}
+
+# record 수정한 값 받아서 업데이트하는 api
+@router.post('/api/update_record/{pid}')
+async def update_record(pid:int, patient):
+  return ""
