@@ -6,7 +6,7 @@ from datetime import datetime
 import datetime
 from ..models.patient_model import PatientGeneralTable
 from ..schemas.patient_schema import Patient
-from core.database import session
+from ..core.database import session
 
 router = APIRouter()
 

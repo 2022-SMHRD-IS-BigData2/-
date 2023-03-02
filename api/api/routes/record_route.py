@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends
-from core.database import session
+from ..core.database import session
 from typing import List
 from sqlalchemy import Boolean, Column, Integer, String, DateTime, ForeignKey,text,and_
 from sqlalchemy.orm import relationship
