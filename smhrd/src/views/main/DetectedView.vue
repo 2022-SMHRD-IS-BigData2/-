@@ -29,7 +29,7 @@
         </thead>
 
         <!-- tbody for문 돌리기 10명 -->
-        <tbody   v-for="(patient, index) in patients" :key="index">
+        <tbody v-for="(patient, index) in (searchData && searchData.length) ? searchData : patients" :key="index">
           <tr>
             <td><input type="checkbox" style="width: 20px; height: 20px; cursor: pointer;" @click="addOn(index)"/></td>
             <td>{{ patient.input_time }}</td>
@@ -63,13 +63,13 @@
           <a @click="onchange(1)">〈〈</a>
         </li>
         <li :class="{disabled: currentPage === 1}">
-          <a @click="onchange(currentPage - 1)">〈</a>
+          <a @click="onchange(currentPage - 1)" :style="{ pointerEvents: currentPage === 1 ? 'none' : 'auto', opacity: currentPage === 1 ? 0.5 : 1 }">〈</a>
         </li>
         <li v-for="n in pages" :key="n" :class="{active: n === currentPage}">
           <a @click="onchange(n)">{{ n }}</a>
         </li>
         <li :class="{disabled: currentPage === pageCount}">
-          <a @click="onchange(currentPage + 1)">〉</a>
+          <a @click="onchange(currentPage + 1)" :style="{ pointerEvents: currentPage === pageCount ? 'none' : 'auto', opacity: currentPage === pageCount ? 0.5 : 1 }">〉</a>
         </li>
         <li :class="{disabled: currentPage === pageCount}">
           <a @click="onchange(pageCount)" :style="{cursor: currentPage === pageCount ? 'default' : 'pointer'}">〉〉</a>
@@ -112,7 +112,10 @@ export default {
       },
       searchTerm: '',
       pageSearchTerm: '',
-      currentDate: ""
+      currentDate: "",
+      searchQuery:"",
+      searchData: [], // 검색 결과 데이터
+      path:""
     }
   },
   setup () {
@@ -126,13 +129,22 @@ export default {
       AddPatient
     }
   },
-  created () {},
+  created () {
+    this.fetchData();
+  },
   watch: {
-    currentPage: {
-      handler: 'onchange',
-      immediate: true
+    '$store.state.searchQuery'(newSearchQuery, oldSearchQuery) {
+    this.searchQuery=this.$store.state.searchQuery
+    if (newSearchQuery !== oldSearchQuery) {
+      this.fetchData();
+    }
+    if (this.searchQuery === "") {
+      this.searchQuery = '';
+      this.currentPage = 1;
+      this.fetchData();
     }
   },
+},
   mounted () {
     axios.get("http://127.0.0.1:8002/api/get_latest_sepsis_percent")
     .then(res => {
@@ -187,24 +199,58 @@ export default {
       index: index // 선택된 환자의 인덱스도 함께 저장
     };
   },
-      async onchange(page) {
-      if (page < 1 || page > this.pageCount || page === this.currentPage) {
-        return;
-      }
-      const response = await axios.get('http://127.0.0.1:8002/api/get_latest_sepsis_percent', {
-        params: {
+  async fetchData() {
+      let axiurl = 'http://127.0.0.1:8002/api/get_latest_sepsis_percent';
+      let params = {
+        limit: this.perPage,
+        page: this.currentPage,
+      };
+      this.patients = [];
+      this.searchData = [];
+
+      if (this.searchQuery) { // 검색어가 있으면 url 바꿔줌
+        console.log(this.searchQuery,this.$store.state.searchQuery);
+        axiurl = 'http://127.0.0.1:8002/api/get_search_data';
+        this.path=this.$route.path;
+        params = {
+          path: this.path,
+          search_str: this.searchQuery,
           limit: this.perPage,
-          page: page
-        }
-      });
-      this.patients = response.data.data;
-      this.count = response.data.count;
+          page: this.currentPage,
+        };
+      }
+      const response = await axios.get(axiurl, { params });
+      if (this.searchQuery) { // 검색어가 있으면 저장하는 객체 이름 바꿔주고 v-if문으로 구분함
+        this.searchData = response.data.data;
+        this.count = response.data.count;
+        this.page = response.data.page.page;
+      } 
+      else {
+        this.patients = response.data.data;
+        this.count = response.data.count;
+        this.page = response.data.page.page;
+
+      }
+      // 강제 업데이트!
+      this.$forceUpdate();
+      },
+      // 검색어 변경
+    onSearch(query) {
+      this.searchQuery = query;
+      this.currentPage = 1;
+      this.fetchData();
+    },
+    onchange(page) {
       this.currentPage = page;
+      this.fetchData();
     },
     goToPage() {
-      const page = parseInt(this.pageSearchTerm);
+      if (this.pageSearchTerm === '') return;
+      const pageNum = parseInt(this.pageSearchTerm);
+      if (!isNaN(pageNum) && pageNum > 0 && pageNum <= this.pageCount) {
+        this.currentPage = pageNum;
+      }
       this.pageSearchTerm = '';
-      this.onchange(page);
     },
   },
     computed: {
@@ -238,9 +284,7 @@ export default {
       return pages;
     },
   }
-  }
-
-
+}
 </script>
 
 <style scoped>
