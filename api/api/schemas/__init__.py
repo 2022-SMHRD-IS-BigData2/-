@@ -1,5 +1,5 @@
-from .patient_schema import Patient
-from .record_schema import  Lab_Data,Record,Record_for_Predict,RecordNormal,Record_v
+from .patient_schema import *
+from .record_schema import  *
 
 __all__ = [
     'Patient',
@@ -8,4 +8,5 @@ __all__ = [
     'Record_for_Predict',
     'RecordNormal',
     'Record_v',
+    'Record_u'
 ]

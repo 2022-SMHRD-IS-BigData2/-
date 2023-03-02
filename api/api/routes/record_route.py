@@ -178,5 +178,14 @@ async def get_select_record(pid: int, input_time: str):
 
 # record 수정한 값 받아서 업데이트하는 api
 @router.post('/api/update_record/{pid}')
-async def update_record(pid:int, patient):
-  return ""
+async def update_record(pid:int, record_u:Record_u):
+  query = text(f"UPDATE vital_record_all SET hr = :hr, temp = :temp, resp = :resp, sbp = :sbp, dbp = :dbp WHERE pid = :pid AND p_record_seq = :p_record_seq")
+  values = {'hr': record_u.hr, 'temp': record_u.temp, 'resp': record_u.resp, 'sbp': record_u.sbp, 'dbp': record_u.dbp, 'pid': pid, 'p_record_seq': record_u.p_record_seq}
+    # 쿼리 실행
+  session.execute(query,values)
+  session.commit()
+  updated_record = session.query(AllPatientRecordView).filter(AllPatientRecordView.pid == pid, AllPatientRecordView.p_record_seq == record_u.p_record_seq).first()
+  session.close()
+  return updated_record
+
+

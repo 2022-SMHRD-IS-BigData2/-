@@ -4,7 +4,7 @@ patient
 birth_date : date(yyyy-mm-dd)
 sex : int(0,1)
 emp_id : int
-admin_date : datetime(yyyy-mm-dd hh:mm:ss)
+admin_date : str (yyyy-mm-dd hh:mm:ss)
 
 
 모든 환자 불러오기(return : list(patient_general) 모든 환자 정보)
@@ -34,6 +34,21 @@ url : get_latest_sepsis_all
 url : get_select_date?pid={pid}&input_time={date}
 
 선택한 환자의 선택한 시간의 모든 레코드1개(return : record_all_view 형식의 해당 환자 해당 입력 시간의 record 1개)
-url : get_select_record/{pid}
+url : get_select_record/1?input_time=2023-02-13%2008%3A53%3A06
 pid,
 input_time : str ('2023-02-13 08:53:06')
+
+
+환자의 레코드 업데이트하기(return : record_all_view형식의 업데이트된 환자 정보 1개)
+url : update_record/1
+  { 
+    "pid": 1,
+    "p_record_seq": 2,
+    "input_time": "2023-02-13T04:53:06",
+    "hr": 111,
+    "temp": 36.7,
+    "resp": 43,
+    "sbp": 127,
+    "dbp": 62
+  }
+

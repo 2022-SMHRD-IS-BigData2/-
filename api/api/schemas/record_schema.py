@@ -57,6 +57,17 @@ class Record(BaseModel):
   sepsis_in_six:int
   sepsis_percent:float
 
+class Record_u(BaseModel):
+  pid : int
+  p_record_seq : int
+  input_time : datetime.datetime
+  hr: int
+  temp: float
+  resp: int
+  sbp: int
+  dbp: int
+
+
 # 보기 위한 객체
 class Record_v(BaseModel):
   pid : int
