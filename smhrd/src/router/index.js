@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import MainView from '../views/main/MainView.vue'
 import DetectedView from '../views/main/DetectedView.vue'
 import PatientView from '../views/patient/PatientView.vue'
+import Vital from '../components/Vital.vue';
 
 const routes = [
   {
