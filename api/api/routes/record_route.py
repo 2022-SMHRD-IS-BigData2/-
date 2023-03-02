@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends
-from core.database import session
+from ..core.database import session
 from typing import List
 from sqlalchemy import Boolean, Column, Integer, String, DateTime, ForeignKey,text,and_
 from sqlalchemy.orm import relationship
@@ -165,3 +165,13 @@ async def get_search_patient(path: str = '', search_str: str = '', limit: int = 
         data = []
 
     return {"data": data, "count": count, "page": {"page": page, "limit": limit}}
+
+
+# pid, input_time 입력받아서 그 시간의 record 가져오는 api
+@router.get('/api/get_select_record/{pid}')
+async def get_select_record(pid: int, input_time: str):
+    input_time = datetime.datetime.strptime(input_time, '%Y-%m-%d %H:%M:%S')
+    query = text(f'select * from all_patients_vital_record_view where pid=pid and input_time=:input_time')
+    record = session.execute(query, {"input_time": input_time}).first()
+    session.close()
+    return {"data": record}

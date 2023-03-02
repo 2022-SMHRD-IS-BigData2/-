@@ -1,7 +1,7 @@
 from sqlalchemy import Boolean, Column, INT, FLOAT,String, DateTime, BigInteger, ForeignKey,DATE,DATETIME,INT
 from sqlalchemy.orm import relationship
 from pydantic import BaseModel
-from core.database import Base
+from ..core.database import Base
 import datetime
 
 # vital_record_normal(일반 데이터:lab data 없음) 테이블
