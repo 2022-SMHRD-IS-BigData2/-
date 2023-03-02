@@ -1,18 +1,5 @@
-from pydantic import BaseModel,Field
+from pydantic import BaseModel
 import datetime
-from sqlalchemy import Boolean, Column, Integer, String, DateTime, ForeignKey
-from sqlalchemy.orm import relationship
-from typing import Union
-
-class Patient(BaseModel):
-  pid : int
-  birth_date: datetime.date
-  sex : int
-  age : int
-  name : str
-  emp_id : int
-  admin_date : datetime.datetime=datetime.datetime.now()
-  disch_date: datetime.datetime=None
 
 class RecordNormal(BaseModel):
   pid : int
@@ -30,6 +17,7 @@ class RecordNormal(BaseModel):
   sepsis_in_six:int
   sepsis_percent:float
 
+# 입력을 위한 객체
 class Record(BaseModel):
   pid : int
   # p_record_seq : int
@@ -69,6 +57,7 @@ class Record(BaseModel):
   sepsis_in_six:int
   sepsis_percent:float
 
+# 보기 위한 객체
 class Record_v(BaseModel):
   pid : int
   p_record_seq : int
@@ -123,7 +112,7 @@ class Record_for_Predict:
   sbp: int
   dbp: int
 
-
+# 랩 데이터만 따로 관리
 class Lab_Data:
   pid : int
   p_record_seq : int

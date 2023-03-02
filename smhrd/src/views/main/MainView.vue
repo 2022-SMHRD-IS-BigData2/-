@@ -87,9 +87,6 @@
 </template>
 
 <script>
-// 아래 페이징 번호 가져와서 구현 https://junhyunny.github.io/spring-boot/vue.js/spring-boot-vue-js-paging-table/
-// tbody 환자 10명만 나오게 for문 돌리기 >2페이지 넘어가면 그다음 환자부터
-// 환자 추가 버튼 누르고 정보 입력하면 정보 받아와서 반영
 
 import moment from 'moment'
 import axios from 'axios'

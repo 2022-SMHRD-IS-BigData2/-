@@ -249,7 +249,7 @@ export default {
         this.currentPage = pageNum;
       }
       this.pageSearchTerm = '';
-},
+    },
   },
     computed: {
       gender() {
