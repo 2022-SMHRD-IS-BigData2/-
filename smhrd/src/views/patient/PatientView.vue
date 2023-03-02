@@ -2,6 +2,7 @@
   <div id="wrap">
     <div id="table">
       <div id="right">
+        <button @click="reRun" id="rerun-btn" >새로고침</button>
         <button @click="AddVital" id="addmore">정보추가</button>
         <input type="date" id="src-date" v-model="selectedDate">
         <button id="submit" type="submit" @click="chooseDate">확인</button>
@@ -126,7 +127,10 @@ export default {
     },
   changeDateAfter() {
     this.currentDate = this.tomorrow;
-  }
+  },
+  reRun() {
+      window.location.reload()
+    }
 },
   mounted() {
     axios.get("http://127.0.0.1:8002/api/get_latest_all/" + this.$route.params.pid)
@@ -315,6 +319,16 @@ height: 100%;
   background-color: transparent;
   border: none;
   cursor: pointer;
+}
+#rerun-btn{
+  margin-right: 10px;
+  padding: 5px 10px 5px 10px;
+  border-radius: 5px;
+  border: none;
+  background-color: #ced6e0;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 1px 1px 2px;
 }
 </style>
 <!-- this.patients = response.data.patients -->

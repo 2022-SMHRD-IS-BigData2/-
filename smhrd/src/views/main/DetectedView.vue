@@ -34,7 +34,7 @@
             <td><input type="checkbox" style="width: 20px; height: 20px; cursor: pointer;" @click="addOn(index)"/></td>
             <td>{{ patient.input_time }}</td>
             <td>
-            <router-link :to="{ name: 'PatientView', params: { pid: patient.pid, date: currentDate } }">
+              <router-link :to="{ name: 'PatientView', params: { pid: patient.pid, date: patient.input_time.slice(0, 10) } }">
           {{ patient.pid }}
             </router-link>
             </td>
