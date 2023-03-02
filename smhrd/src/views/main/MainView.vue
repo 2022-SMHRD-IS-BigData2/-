@@ -3,7 +3,7 @@
     <div>
       <div>
         <button @click="AddPatient">환자 정보 추가</button>
-        <button @click="openNew">피검사</button>
+        <button @click="AddLab">피검사</button>
       </div>
       <div>
         <span>새로고침한 시간</span>
@@ -73,18 +73,23 @@ export default {
       )
     }
 
+    const AddLab = () => {
+      window.open(
+        router.resolve({ name: 'AddLab' }).href,
+        'AddLab',
+        'width=500,height=500'
+      )
+    }
+
     return {
-      AddPatient
+      AddPatient,
+      AddLab
     }
   },
   created() {},
   mounted() {},
   unmounted() {},
-  methods: {
-    openNew: function () {
-      return AddLab
-    }
-  }
+  methods: {}
 }
 </script>
 
