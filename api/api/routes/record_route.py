@@ -157,7 +157,7 @@ async def get_search_patient(path: str = '', search_str: str = '', limit: int = 
     if path in switch_path:
         query = text(switch_path[path])
         count = session.execute(text(switch_count[path]), {"search_str": search_str}).fetchone()[0]
-    
+
     if query is not None:
         result = session.execute(query, {"search_str": search_str, "limit": limit, "offset": offset}).all()
         data = [dict(row) for row in result]
@@ -170,7 +170,7 @@ async def get_search_patient(path: str = '', search_str: str = '', limit: int = 
 # pid, input_time 입력받아서 그 시간의 record 가져오는 api
 @router.get('/api/get_select_record/{pid}')
 async def get_select_record(pid: int, input_time: str):
-    input_time = datetime.datetime.strptime(input_time, '%Y-%m-%d %H:%M:%S')
+    input_time = datetime.datetime.strptime(input_time, '%Y-%m-%dT%H:%M:%S')
     query = text(f'select * from all_patients_vital_record_view where pid=pid and input_time=:input_time')
     record = session.execute(query, {"input_time": input_time}).first()
     session.close()

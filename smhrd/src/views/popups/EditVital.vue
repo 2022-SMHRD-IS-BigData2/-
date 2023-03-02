@@ -16,23 +16,23 @@
       </tr>
       <tr>
         <td>HR</td>
-        <td><input type="number"></td>
+        <td><input type="number" v-model="hr"></td>
       </tr>
       <tr>
         <td>Temp</td>
-        <td><input type="number"></td>
+        <td><input type="number" v-model="temp"></td>
       </tr>
       <tr>
         <td>Resp</td>
-        <td><input type="number"></td>
+        <td><input type="number" v-model="resp"></td>
       </tr>
       <tr>
         <td>SBP</td>
-        <td><input type="number"></td>
+        <td><input type="number" v-model="sbp"></td>
       </tr>
       <tr>
         <td>DBP</td>
-        <td><input type="number"></td>
+        <td><input type="number" v-model="dbp"></td>
       </tr>
     </table>
     <button type="submit" class="btn">저장</button>
@@ -47,19 +47,34 @@ export default {
   components: {},
   data () {
     return {
-      patients: []
+      patients: [],
+      modifiedInput: '',
+      hr: null,
+      temp: null,
+      sbp: null,
+      dbp: null,
+      resp: null
     }
   },
   setup () {},
-  created () {},
+  created () {
+    let input = this.$route.params.input;
+    this.modifiedInput = input.replace(/:/g, "%3A");
+  },
   mounted () {
-    axios.get("http://127.0.0.1:8002/api/get_latest_all/" + this.$route.params.pid)
+    axios.get("http://127.0.0.1:8002/api/get_select_record/" + this.$route.params.pid + "?input_time=" + this.modifiedInput )
+
     .then(response =>{
         return response.data
       })
       .then(data => {
-        console.log(data[0])
-        this.patients=data[0];
+        console.log(data['data'])
+        this.patients=data['data'];
+        this.hr = this.patients.hr;  // `hr` 프로퍼티 추가
+        this.temp = this.patients.temp;  // `temp` 프로퍼티 추가
+        this.sbp = this.patients.sbp;  // `sbp` 프로퍼티 추가
+        this.dbp = this.patients.dbp;  // `dbp` 프로퍼티 추가
+        this.resp = this.patients.resp;  // `resp` 프로퍼티 추가
         return data
       })
       .then(response => {
