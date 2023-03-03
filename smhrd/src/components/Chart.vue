@@ -42,18 +42,19 @@ export default {
   methods: {
     formatDate(dateString) {
       const date = new Date(dateString)
-      return `${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}h`
+      return `${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}:00`
     },
     async generateChartData() {
-      const chartRecords = await axios.get(`http://127.0.0.1:8002/api/chart_records/${this.pid}`)
+      const chartRecords = await axios.get(`http://127.0.0.1:8002/api/chart_records/${this.pid}`);
       const chartData = chartRecords.data.map((item) => {
         return {
           date: this.formatDate(item.input_time),
           value: item.sepsis_percent,
         }
       })
-      const labels = chartData.map(item => item.date)
-      const data = chartData.map(item => item.value)
+      const reversedData = chartData.reverse();
+      const labels = reversedData.map(item => item.date)
+      const data = reversedData.map(item => item.value)
       this.chartData = {
         labels,
         datasets: [
@@ -69,7 +70,7 @@ export default {
     }
   },
   mounted() {
-    this.generateChartData()
+    this.generateChartData();
   }
 };
 </script>

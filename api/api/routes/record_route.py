@@ -222,6 +222,6 @@ async def chart_records(pid:int):
   
   query=text(f"SELECT * FROM all_patients_vital_record_view WHERE pid={pid} ORDER BY input_time DESC LIMIT 7")
   
-  chart_records = await session.fetch_all(query)
+  chart_records = session.execute(query).all()
   session.close()
   return chart_records
