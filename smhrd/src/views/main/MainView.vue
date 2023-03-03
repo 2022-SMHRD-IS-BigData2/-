@@ -309,22 +309,24 @@ export default {
         sbp: parseInt(fast_sbp),
         dbp: parseInt(fast_dbp),
       };
-    try {
-      console.log(record_i);
-      // API 호출
-      const response = await axios.post(`http://127.0.0.1:8002/api/insert_fast_record/${pid}`,record_i);
-      // 응답 데이터 확인
-      console.log(response.data);
-      // 창 닫기
+      try {
+    console.log(record_i);
+    // API 호출
+    const response = await axios.post(`http://127.0.0.1:8002/api/insert_fast_record/${pid}`,record_i);
+    // 응답 데이터 확인
+    console.log(response.data);
+    // 창 닫기
+    const patient = this.patients.find(p => p.pid === parseInt(pid));
+    if (patient) {
       patient.isAddOn = false;
-      await this.fetchData();
-
-    } 
-    catch (error) {
-      alert("입력값을 확인해주세요.")
-      console.error(error);
     }
-  },
+    await this.fetchData();
+  } 
+  catch (error) {
+    alert("입력값을 확인해주세요.")
+    console.error(error);
+  }
+}
   },
     computed: {
       gender() {

@@ -101,6 +101,7 @@ export default {
 
 // 서버로 보낼 데이터 객체 생성
   const record_i = {
+      pid : this.patients.pid,
       input_time: this.clickTime,
       birth_date: this.patients.birth_date,
       sex: this.patients.sex,
@@ -113,20 +114,20 @@ export default {
       sepsis_percent: 0
     };
     try {
-      console.log(record_i);
-      // API 호출
-      const response = await axios.post(`http://127.0.0.1:8002/api/insert_fast_record/${pid}`,record_i);
-      // 응답 데이터 확인
-      console.log(response.data);
-      // 창 닫기
-      window.close();
-
-    } 
-    catch (error) {
-      alert("입력값을 확인해주세요.")
-      console.error(error);
-    }
-  },
+    console.log(record_i);
+    // API 호출
+    const response = await axios.post(`http://127.0.0.1:8002/api/insert_fast_record/${record_i.pid}`,record_i);
+    // 응답 데이터 확인
+    console.log(response.data);
+    // 창 닫기
+    alert("입력 성공");    
+    window.close();
+  } 
+  catch (error) {
+    alert("입력값을 확인해주세요.")
+    console.error(error);
+  }
+},
 
   }
 }
