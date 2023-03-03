@@ -13,7 +13,7 @@
         </thead>
         <tbody>
           <tr id="td-bold">
-            <td style="cursor: pointer; font-weight: bold; color: blue; padding: 5px;">RECENT</td>
+            <td td @click="EditVital($event)" style="cursor: pointer; font-weight: bold; padding: 5px;">RECENT<br>{{  patients.input_time }}</td>
             <td>{{ patients.hr }}</td>
             <td>{{ patients.temp }}</td>
             <td>{{ patients.resp }}</td>
