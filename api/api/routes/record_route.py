@@ -214,3 +214,14 @@ async def insert_fast_record(pid:int, record_i:Record_i):
   updated_record = session.query(AllPatientRecordView).filter(AllPatientRecordView.pid == pid, AllPatientRecordView.input_time == input_time).first()
   session.close()
   return updated_record
+
+
+# 선택한 환자의 최근 7개 record를 가져오자
+@router.get('/api/chart_records/{pid}')
+async def chart_records(pid:int):
+  
+  query=text(f"SELECT * FROM all_patients_vital_record_view WHERE pid={pid} ORDER BY input_time DESC LIMIT 7")
+  
+  chart_records = await session.fetch_all(query)
+  session.close()
+  return chart_records

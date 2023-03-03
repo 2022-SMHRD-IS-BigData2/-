@@ -44,7 +44,7 @@
         </div>
       </div>
       <div id="graph">
-        <Chart style="width: 700px; height: 250px" />
+        <Chart :pid="loadpid" style="width: 700px; height: 250px" />
       </div>
     </div>
     <div id="under">
@@ -154,7 +154,8 @@ export default {
     },
     reRun() {
       window.location.reload()
-    }
+    },
+    
   },
   mounted() {
     axios
