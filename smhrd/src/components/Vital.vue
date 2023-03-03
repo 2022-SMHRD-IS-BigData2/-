@@ -12,8 +12,8 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td @click="EditVital($event)" style="cursor: pointer; font-weight: bold; padding: 5px;">RECENT<br>{{ patients.input_time }}</td>
+          <tr id="td-bold">
+            <td style="cursor: pointer; font-weight: bold; color: blue; padding: 5px;">RECENT</td>
             <td>{{ patients.hr }}</td>
             <td>{{ patients.temp }}</td>
             <td>{{ patients.resp }}</td>
@@ -55,7 +55,7 @@ export default {
     const router = useRouter()
     const EditVital = (event) => {
       const targetValue = event.target
-    window.open(router.resolve({ name: 'EditVital', params: { input: targetValue.innerHTML.split(">")[1]  } }).href, 'EditVital', 'width=500,height=500')
+    window.open(router.resolve({ name: 'EditVital', params: { input: targetValue.innerHTML } }).href, 'EditVital', 'width=500,height=500')
     }
 
     return {
@@ -93,6 +93,9 @@ export default {
 }
 </script>
 <style scoped>
+* {
+  font-family: 'Noto Sans KR', sans-serif;
+}
 #realtable{
   margin-top: 50px;
   /* display: inline-block; */
@@ -104,5 +107,9 @@ export default {
 #realtable tr td{
   border-bottom: 1px solid #ced6e0;
   height: 50px;
+}
+
+tbody tr#td-bold td{
+  font-weight: bold;
 }
 </style>
