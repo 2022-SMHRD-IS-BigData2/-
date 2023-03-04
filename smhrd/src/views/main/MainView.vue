@@ -256,7 +256,7 @@ export default {
       const inputVal = event.target.value;
       const inputName = event.target.name;
       const isValidInput = /^[\d.]*$/.test(inputVal);
-      
+
       if (!isValidInput) {
         event.target.value = '';
         event.target.classList.add('invalid-input');
@@ -296,7 +296,7 @@ export default {
       let fast_resp=document.querySelector("input[name=fast_resp"+pid+"]").value;
       let fast_sbp=document.querySelector("input[name=fast_sbp"+pid+"]").value;
       let fast_dbp=document.querySelector("input[name=fast_dbp"+pid+"]").value;
-      
+
 
       const record_i = {
         pid: parseInt(pid),
@@ -321,7 +321,7 @@ export default {
       patient.isAddOn = false;
     }
     await this.fetchData();
-  } 
+  }
   catch (error) {
     alert("입력값을 확인해주세요.")
     console.error(error);
@@ -569,7 +569,7 @@ input:invalid {
 input:valid {
   border: 1px solid red;
   transition: all 0.3s ease-out;
-  
+
 }
 
 </style>

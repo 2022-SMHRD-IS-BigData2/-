@@ -3,8 +3,6 @@
 *{font-family: 'Noto Sans KR', sans-serif;}
 template{
   overflow-x: hidden;
-  overflow: scroll;
-  min-width: 2000px;
 }
 #header{
   width: 100%;
