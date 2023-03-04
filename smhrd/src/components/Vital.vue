@@ -15,6 +15,7 @@
           <tr id="td-bold">
             <td style="cursor: pointer; font-weight: bold; padding: 5px;">RECENT<br>{{  patients.input_time }}</td>
             <td>{{ patients.hr }}</td>
+            <td>{{ patients.O2Sat }}</td>
             <td>{{ patients.temp }}</td>
             <td>{{ patients.resp }}</td>
             <td>{{ patients.sbp }}</td>
@@ -23,6 +24,7 @@
           <tr v-for="(vs, index) in all" :key="index" :value="vs.input_time">
             <td @click="EditVital($event)" style="cursor: pointer; font-weight: bold; padding: 5px;">{{ vs.input_time }}</td>
             <td>{{ vs.hr }}</td>
+            <td>{{ vs.O2Sat }}</td>
             <td>{{ vs.temp }}</td>
             <td>{{ vs.resp }}</td>
             <td>{{ vs.sbp }}</td>

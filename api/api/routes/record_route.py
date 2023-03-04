@@ -50,11 +50,12 @@ async def input_record(record :Record):
   temp.input_time=datetime.datetime.now()
   # temp.p_age=record.p_age
   temp.hr=record.hr
+  temp.O2Sat=record.O2Sat
   temp.temp=record.temp
   temp.resp=record.resp
   temp.sbp=record.sbp
   temp.dbp=record.dbp
-  temp.ICULOC = record.ICULOC
+  temp.ICULOS = record.ICULOS
   temp.BaseExcess=record.BaseExcess
   temp.HCO3=record.HCO3
   temp.FiO2=record.FiO2
@@ -180,8 +181,8 @@ async def get_select_record(pid: int, input_time: str):
 # record 수정한 값 받아서 업데이트하는 api
 @router.post('/api/update_record/{pid}')
 async def update_record(pid:int, record_u:Record_u):
-  query = text(f"UPDATE vital_record_all SET hr = :hr, temp = :temp, resp = :resp, sbp = :sbp, dbp = :dbp WHERE pid = :pid AND p_record_seq = :p_record_seq")
-  values = {'hr': record_u.hr, 'temp': record_u.temp, 'resp': record_u.resp, 'sbp': record_u.sbp, 'dbp': record_u.dbp, 'pid': pid, 'p_record_seq': record_u.p_record_seq}
+  query = text(f"UPDATE vital_record_all SET hr = :hr, O2Sat = :O2Sat, temp = :temp, resp = :resp, sbp = :sbp, dbp = :dbp WHERE pid = :pid AND p_record_seq = :p_record_seq")
+  values = {'hr': record_u.hr, 'O2Sat': record_u.O2Sat, 'temp': record_u.temp, 'resp': record_u.resp, 'sbp': record_u.sbp, 'dbp': record_u.dbp, 'pid': pid, 'p_record_seq': record_u.p_record_seq}
     # 쿼리 실행
   session.execute(query,values)
   session.commit()
@@ -206,8 +207,8 @@ async def insert_fast_record(pid:int, record_i:Record_i):
   birth_date = datetime.datetime.strptime(record_i.birth_date, '%Y-%m-%d').date()
 
   model_predict2(record_i)
-  query = text(f"INSERT INTO vital_record_all (pid, input_time, birth_date, sex, hr, temp, resp, sbp, dbp, sepsis_in_six, sepsis_percent) VALUES (:pid, :input_time, :birth_date, :sex, :hr, :temp, :resp, :sbp, :dbp, :sepsis_in_six, :sepsis_percent)")
-  values = {'pid': pid, 'input_time': input_time, 'birth_date': birth_date, 'sex': record_i.sex, 'hr': record_i.hr, 'temp': record_i.temp, 'resp': record_i.resp, 'sbp': record_i.sbp, 'dbp': record_i.dbp, 'sepsis_in_six': record_i.sepsis_in_six, 'sepsis_percent': record_i.sepsis_percent}
+  query = text(f"INSERT INTO vital_record_all (pid, input_time, birth_date, sex, hr, temp, resp, sbp, dbp, sepsis_in_six, sepsis_percent) VALUES (:pid, :input_time, :birth_date, :sex, :hr, :O2Sat, :temp, :resp, :sbp, :dbp, :sepsis_in_six, :sepsis_percent)")
+  values = {'pid': pid, 'input_time': input_time, 'birth_date': birth_date, 'sex': record_i.sex, 'hr': record_i.hr, 'O2Sat': record_i.O2Sat, 'temp': record_i.temp, 'resp': record_i.resp, 'sbp': record_i.sbp, 'dbp': record_i.dbp, 'sepsis_in_six': record_i.sepsis_in_six, 'sepsis_percent': record_i.sepsis_percent}
     # 쿼리 실행
   session.execute(query,values)
   session.commit()

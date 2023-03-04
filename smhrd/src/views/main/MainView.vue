@@ -20,6 +20,7 @@
             <td style="width: 5%;">Age</td>
             <td style="width: 5%;">Sex</td>
             <td style="width: 5%;">HR</td>
+            <td style="width: 5%;">O2Sat</td>
             <td style="width: 5%;">Temp</td>
             <td style="width: 5%;">Resp</td>
             <td style="width: 5%;">SBP</td>
@@ -42,6 +43,7 @@
             <td>{{ patient.age }}</td>
             <td>{{  gender[index] }}</td>
             <td>{{ patient.hr }}</td>
+            <td>{{ patient.O2Sat }}</td>
             <td>{{ patient.temp }}</td>
             <td>{{ patient.resp }}</td>
             <td>{{ patient.sbp }}</td>
@@ -53,6 +55,7 @@
               PID <input type="text" readonly v-model="patient.pid" @input="preventInvalidInput" :name="'fast_pid'+patient.pid">
               Name <input type="text" readonly v-model="patient.name" @input="preventInvalidInput" :name="'fast_name'+patient.pid">
               HR <input type="text" @input="preventInvalidInput" :name="'fast_hr'+patient.pid">
+              O2Sat <input type="text" @input="preventInvalidInput" :name="'fast_O2Sat'+patient.pid">
               Temp <input type="text" @input="preventInvalidInput" :name="'fast_temp'+patient.pid">
               Resp <input type="text" @input="preventInvalidInput" :name="'fast_resp'+patient.pid">
               SBP <input type="text" @input="preventInvalidInput" :name="'fast_sbp'+patient.pid">
@@ -268,6 +271,9 @@ export default {
         case "fast_hr{patient.pid}":
         this.hr = isValidInput ? inputVal : '';
         break;
+        case "fast_O2Sat{patient.pid}":
+        this.hr = isValidInput ? inputVal : '';
+        break;
         case "fast_temp{patient.pid}":
         this.temp = isValidInput ? inputVal : '';
         break;
@@ -292,6 +298,7 @@ export default {
       let fast_birth_date=document.querySelector("input[name=fast_birth_date"+pid+"]").value;
       let fast_sex=document.querySelector("input[name=fast_sex"+pid+"]").value;
       let fast_hr=document.querySelector("input[name=fast_hr"+pid+"]").value;
+      let fast_O2Sat=document.querySelector("input[name=fast_hr"+pid+"]").value;
       let fast_temp=document.querySelector("input[name=fast_temp"+pid+"]").value;
       let fast_resp=document.querySelector("input[name=fast_resp"+pid+"]").value;
       let fast_sbp=document.querySelector("input[name=fast_sbp"+pid+"]").value;
@@ -304,6 +311,7 @@ export default {
         birth_date:fast_birth_date,
         sex : parseInt(fast_sex),
         hr: parseInt(fast_hr),
+        O2Sat: parseInt(fast_O2Sat),
         temp: parseFloat(fast_temp),
         resp: parseInt(fast_resp),
         sbp: parseInt(fast_sbp),

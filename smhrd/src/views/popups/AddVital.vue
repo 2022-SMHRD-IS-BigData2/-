@@ -20,6 +20,10 @@
       <td><input type="text" v-model="hr" :style="hr ? 'border-color: green;' : ''" @input="preventInvalidInput($event, 'hr')"></td>
         </tr>
         <tr>
+        <td>O2Sat</td>
+      <td><input type="text" v-model="O2Sat" :style="O2Sat ? 'border-color: green;' : ''" @input="preventInvalidInput($event, 'O2Sat')"></td>
+        </tr>
+        <tr>
           <td>Temp</td>
           <td><input type="text" v-model="temp" :style="temp ? 'border-color: green;' : ''" @input="preventInvalidInput($event, 'temp')"></td>
         </tr>
@@ -106,6 +110,7 @@ export default {
       birth_date: this.patients.birth_date,
       sex: this.patients.sex,
       hr: this.hr,
+      O2Sat: this.O2Sat,
       temp: this.temp,
       resp: this.resp,
       sbp: this.sbp,

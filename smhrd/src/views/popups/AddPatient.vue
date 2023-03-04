@@ -22,6 +22,10 @@
         <td><input type="number" class="inputcss"></td>
       </tr>
       <tr>
+        <td>O2Sat</td>
+        <td><input type="number" class="inputcss"></td>
+      </tr>
+      <tr>
         <td>Temp</td>
         <td><input type="number" class="inputcss"></td>
       </tr>

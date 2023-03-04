@@ -9,11 +9,12 @@ class RecordNormal(BaseModel):
   sex :int
   age: int
   hr: int
+  O2Sat :float
   temp: float
   resp: int
   sbp: int
   dbp: int
-  ICULOC : int
+  ICULOS : int
   sepsis_in_six:int
   sepsis_percent:float
 
@@ -26,11 +27,13 @@ class Record(BaseModel):
   sex: int
   # p_age: int
   hr: int
+  O2Sat :float
   temp: float
   resp: int
   sbp: int
   dbp: int
-  ICULOC : int
+  ICULOS : int
+  EtCO2: float
   BaseExcess:float
   HCO3:float
   FiO2:float
@@ -41,13 +44,11 @@ class Record(BaseModel):
   Calcium:float
   Chloride:float
   Creatinine:float
-  Bilirubin_direct:float
   Glucose:float
   Lactate:float
   Phosphate:float
   Potassium:float
   Bilirubin_total:float
-  TroponinI:float
   Hct:float
   Hgb:float
   PTT:float
@@ -61,6 +62,7 @@ class Record_u(BaseModel):
   pid : int
   p_record_seq : int
   hr: int
+  O2Sat :float
   temp: float
   resp: int
   sbp: int
@@ -72,6 +74,7 @@ class Record_i(BaseModel):
   birth_date: str
   sex: int
   hr: int
+  O2Sat :float
   temp: float
   resp: int
   sbp: int
@@ -93,11 +96,13 @@ class Record_v(BaseModel):
   disch_date : datetime.datetime=None
   input_time : datetime.datetime=datetime.datetime.now()
   hr: int
+  O2Sat :float
   temp: float
   resp: int
   sbp: int
   dbp: int
-  ICULOC: int
+  ICULOS: int
+  EtCO2: float
   BaseExcess:float
   HCO3:float
   FiO2:float
@@ -108,13 +113,11 @@ class Record_v(BaseModel):
   Calcium:float
   Chloride:float
   Creatinine:float
-  Bilirubin_direct:float
   Glucose:float
   Lactate:float
   Phosphate:float
   Potassium:float
   Bilirubin_total:float
-  TroponinI:float
   Hct:float
   Hgb:float
   PTT:float
@@ -140,6 +143,7 @@ class Lab_Data:
   pid : int
   p_record_seq : int
   lab_record_seq: int
+  EtCO2: float
   BaseExcess:float
   HCO3:float
   FiO2:float
@@ -150,13 +154,11 @@ class Lab_Data:
   Calcium:float
   Chloride:float
   Creatinine:float
-  Bilirubin_direct:float
   Glucose:float
   Lactate:float
   Phosphate:float
   Potassium:float
   Bilirubin_total:float
-  TroponinI:float
   Hct:float
   Hgb:float
   PTT:float

@@ -20,6 +20,10 @@
       <td><input type="text" v-model="hr" :style="hr ? 'border-color: green;' : ''" @input="preventInvalidInput($event, 'hr')"></td>
         </tr>
         <tr>
+      <td>O2Sat</td>
+      <td><input type="text" v-model="O2Sat" :style="hr ? 'border-color: green;' : ''" @input="preventInvalidInput($event, 'O2Sat')"></td>
+        </tr>
+        <tr>
           <td>Temp</td>
           <td><input type="text" v-model="temp" :style="temp ? 'border-color: green;' : ''" @input="preventInvalidInput($event, 'temp')"></td>
         </tr>
@@ -75,6 +79,7 @@ export default {
         console.log(data['data'])
         this.patients=data['data'];
         this.hr = this.patients.hr;  // `hr` 프로퍼티 추가
+        this.O2Sat = this.patients.O2Sat;  // `hr` 프로퍼티 추가
         this.temp = this.patients.temp;  // `temp` 프로퍼티 추가
         this.sbp = this.patients.sbp;  // `sbp` 프로퍼티 추가
         this.dbp = this.patients.dbp;  // `dbp` 프로퍼티 추가
@@ -116,6 +121,7 @@ export default {
         pid: parseInt(this.patients.pid),
         p_record_seq: parseInt(this.patients.p_record_seq),
         hr: parseInt(this.hr),
+        O2Sat: parseInt(this.O2Sat),
         temp: parseFloat(this.temp),
         resp: parseInt(this.resp),
         sbp: parseInt(this.sbp),
