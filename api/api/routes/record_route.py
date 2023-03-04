@@ -66,13 +66,11 @@ async def input_record(record :Record):
   temp.Calcium=record.Calcium
   temp.Chloride=record.Chloride
   temp.Creatinine=record.Creatinine
-  temp.Bilirubin_direct=record.Bilirubin_direct
   temp.Glucose=record.Glucose
   temp.Lactate=record.Lactate
   temp.Phosphate=record.Phosphate
   temp.Potassium=record.Potassium
   temp.Bilirubin_total=record.Bilirubin_total
-  temp.TroponinI=record.TroponinI
   temp.Hct=record.Hct
   temp.Hgb=record.Hgb
   temp.PTT=record.PTT
