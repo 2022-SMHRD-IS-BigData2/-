@@ -40,6 +40,8 @@ class Record(BaseModel):
   pH:float
   PaCO2:float
   SaO2:float
+  AST:float
+  BUN:float
   Alkalinephos:float
   Calcium:float
   Chloride:float
@@ -109,6 +111,8 @@ class Record_v(BaseModel):
   pH:float
   PaCO2:float
   SaO2:float
+  AST:float
+  BUN:float
   Alkalinephos:float
   Calcium:float
   Chloride:float
@@ -150,6 +154,8 @@ class Lab_Data:
   pH:float
   PaCO2:float
   SaO2:float
+  AST:float
+  BUN:float
   Alkalinephos:float
   Calcium:float
   Chloride:float
