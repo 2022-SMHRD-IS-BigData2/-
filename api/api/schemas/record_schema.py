@@ -145,7 +145,6 @@ class Record_for_Predict:
 # 랩 데이터만 따로 관리
 class Lab_Data:
   pid : int
-  p_record_seq : int
   lab_record_seq: int
   EtCO2: float
   BaseExcess:float

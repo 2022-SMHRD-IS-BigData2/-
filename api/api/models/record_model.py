@@ -78,7 +78,6 @@ class VitalRecordAll(Base):
 class LabDataRecord(Base):
   __tablename__='lab_data_record'
   pid=Column(INT,ForeignKey('vital_record_normal.pid'),primary_key=True,)
-  p_record_seq = Column(INT,ForeignKey('vital_record_normal.p_record_seq'),primary_key=True)
   lab_record_seq=Column(INT,primary_key=True)
   EtCO2=Column(FLOAT,nullable=True,defalut=None)
   BaseExcess=Column(FLOAT,nullable=True,default=None)
