@@ -6,7 +6,7 @@
       </div>
       <div id="rerun">
         <span>{{ clickTime }}</span>
-        <button @click="reRun" id="rerun-btn" class="btn" >새로고침</button>
+        <button @click="reRun" id="rerun-btn" class="btn">새로고침</button>
       </div>
     </div>
     <div>
@@ -395,19 +395,16 @@ export default {
 }
 .btn{
   border: none;
-  background-color: #ced6e0;
+  background-color: #6c757D;
   font-weight: bold;
-  color: #333;
+  color: white;
   padding-top: 10px;
   padding-bottom: 10px;
   padding-right: 20px;
   padding-left: 20px;
   border-radius: 5%;
   cursor: pointer;
-  box-shadow: 1px 1px 2px;
-}
-.btn:active{
-  box-shadow: none;
+
 }
 table{
   width: 100%;
@@ -433,20 +430,15 @@ tbody tr{
 
 #addbtn{
   border: none;
-  background-color: #ced6e0;
+  background-color: #6c757D;
   font-weight: bold;
-  color: #333;
+  color: white;
   cursor: pointer;
   padding-top: 5px;
   padding-bottom: 5px;
   padding-right: 10px;
   padding-left: 10px;
   border-radius: 5%;
-  box-shadow: 1px 1px 2px;
-}
-
-#addbtn:active{
-  box-shadow: none;
 }
 
 input{
@@ -546,27 +538,23 @@ a:hover, a:active { text-decoration: none;
 #page-src{
   margin-top: 15px;
   width: 80px;
-  border: 2px solid #333;
+  border: 2px solid #6c757D;
   border-radius: 5px;
 }
 
 #page-btn{
   margin-top: 15px;
   border: none;
-  background-color: #ced6e0;
+  background-color: #6c757D;
   font-weight: bold;
-  color: #333;
+  color: white;
   cursor: pointer;
   padding-top: 5px;
   padding-bottom: 5px;
   padding-right: 10px;
   padding-left: 10px;
   border-radius: 5%;
-  box-shadow: 1px 1px 2px;
-}
-
-#page-btn:active{
-  box-shadow: none;
+  border-radius: 5px;
 }
 
 input:invalid {
@@ -577,7 +565,6 @@ input:invalid {
 input:valid {
   border: 1px solid red;
   transition: all 0.3s ease-out;
-
 }
 
 </style>
