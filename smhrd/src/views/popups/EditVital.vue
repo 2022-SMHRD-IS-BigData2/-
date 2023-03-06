@@ -44,6 +44,7 @@
     <input type="hidden" v-model="patients.p_record_seq">
     <button type="submit" class="btn">저장</button>
     <button class="btn" @click="closeWindow">취소</button>
+    <button class="btn">삭제</button>
   </form>
   </div>
 </template>
@@ -107,7 +108,7 @@ export default {
   if (!/^[\d.]*$/.test(inputVal)) {
     event.target.value = this[field] || '';
     event.target.style.borderColor = 'red';
-  } 
+  }
   else {
     // 유효한 값이 입력된 경우, 입력값을 Vue.js 인스턴스의 데이터에 반영
     this[field] = inputVal;
@@ -135,7 +136,7 @@ export default {
       alert('업데이트 성공')
       // 창 닫기
       window.close();
-    } 
+    }
     catch (error) {
       alert('업데이트 실패')
       console.error(error);
