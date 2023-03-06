@@ -39,8 +39,9 @@
       <div id="score" :style="{ 'background-color': bgColor }">
         <div id="real-score">{{ patients.sepsis_percent }}</div>
         <div id="scoreup">
-          <i class="fa-solid fa-caret-up"></i>00
-          <!-- <i class="fa-solid fa-caret-down"></i>00 -->
+          <span v-show="isUp"><i class="fa-solid fa-caret-up"></i></span>
+          <span v-show="!isUp"><i class="fa-solid fa-caret-down"></i></span>
+          {{ Math.abs(this.scoreGap) }}
         </div>
       </div>
       <div id="graph">
@@ -87,7 +88,9 @@ export default {
       dbDate: null,
       selectedDate: this.$route.params.date,
       currentDate: this.$route.params.date,
-      loadpid: this.$route.params.pid
+      loadpid: this.$route.params.pid,
+      scoreGap: 0,
+      isOk: true
     }
   },
   components: {
@@ -135,8 +138,11 @@ export default {
     },
     yesterday() {
       return moment(this.currentDate).subtract(1, 'day').format('YYYY-MM-DD')
+    },
+    isUp() {
+      return this.scoreGap >= 0
     }
-  },
+},
   methods: {
     getPatientName() {
       const result = this.patients.filter(
@@ -158,26 +164,33 @@ export default {
 
   },
   mounted() {
-    axios
-      .get('http://127.0.0.1:8002/api/get_latest_all/' + this.$route.params.pid)
-      // axios.all([axios.get('http://127.0.0.1:8002/api/get_latest_all/'+ this.$route.params.pid),axios.get("http://127.0.0.1:8002/api/get_select_date?pid=" + this.$route.params.pid + "&date=" + this.$route.params.date)])
+    // axios.get('http://127.0.0.1:8002/api/get_latest_all/' + this.$route.params.pid)
+    axios.all([axios.get('http://127.0.0.1:8002/api/get_latest_all/'+ this.$route.params.pid),axios.get("http://127.0.0.1:8002/api/chart_records/" + this.$route.params.pid)])
       // this.route.params.date
-      // .then(
-      //   axios.spread((res1, res2) => {
-      //     console.log(res2.data);
-      //     this.patients = res1.data[0];
-      //     this.all = res2.data;
-      //     return data();
-      //   })
-      // )
+      .then(
+        axios.spread((res1, res2) => {
+          console.log(res2.data);
+          console.log(res2.data[0].sepsis_percent); 53
+          console.log(res2.data[1].sepsis_percent); 74
+          this.patients = res1.data[0];
+          this.nowScore = res2.data[0].sepsis_percent;
+          this.beforeScore = res2.data[1].sepsis_percent;
+
+          this.scoreGap = parseFloat((this.nowScore - this.beforeScore).toFixed(2));
+          console.log(this.scoreGap);
+          console.log(this.scoreGapClass);
+          return data();
+        })
+      )
+
       .then((response) => {
         return response.data
       })
-      .then((data) => {
-        console.log(data[0])
-        this.patients = data[0]
-        return data
-      })
+      // .then((data) => {
+      //   console.log(data[0])
+      //   this.patients = data[0]
+      //   return data
+      // })
       .then((response) => {
         // this.dbDate = moment(response.birth_date, 'YYYY-MM-DD')
       })

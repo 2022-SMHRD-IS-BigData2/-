@@ -3,12 +3,13 @@
     <table id="realtable">
         <thead>
           <tr>
-            <td style="width: 25%; font-weight: bold; background-color: #DFF2F5;">Time</td>
-            <td style="width: 15%; font-weight: bold; background-color: #DFF2F5;">HR</td>
-            <td style="width: 15%; font-weight: bold; background-color: #DFF2F5;">Temp</td>
-            <td style="width: 15%; font-weight: bold; background-color: #DFF2F5;">Resp</td>
-            <td style="width: 15%; font-weight: bold; background-color: #DFF2F5;">SBP</td>
-            <td style="width: 15%; font-weight: bold; background-color: #DFF2F5;">DBP</td>
+            <td style="width: 20%; font-weight: bold; background-color: #DFF2F5;">Time</td>
+            <td style="width: 10%; font-weight: bold; background-color: #DFF2F5;">HR</td>
+            <td style="width: 10%; font-weight: bold; background-color: #DFF2F5;">O2Sat</td>
+            <td style="width: 10%; font-weight: bold; background-color: #DFF2F5;">Temp</td>
+            <td style="width: 10%; font-weight: bold; background-color: #DFF2F5;">Resp</td>
+            <td style="width: 10%; font-weight: bold; background-color: #DFF2F5;">SBP</td>
+            <td style="width: 10%; font-weight: bold; background-color: #DFF2F5;">DBP</td>
           </tr>
         </thead>
         <tbody>
