@@ -1,5 +1,5 @@
 from .patient_model import PatientGeneralTable
-from .record_model import AllPatientRecordView,VitalRecordAll,LabDataRecord,VitalRecordNormal,VitalRecordAllView,VitalRecordNowView,NowViewSepsis
+from .record_model import *
 
 __all__ = [
     'PatientGeneralTable',
@@ -7,7 +7,8 @@ __all__ = [
     'AllPatientRecordView',
     'VitalRecordAll',
     'LabDataRecord',
-    'VitalRecordNormal',
+    'LabDataFilled',
+    # 'VitalRecordNormal',
     'VitalRecordAllView',
     'VitalRecordNowView',
     'NowViewSepsis'
