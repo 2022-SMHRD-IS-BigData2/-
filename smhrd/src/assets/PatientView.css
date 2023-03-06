@@ -114,17 +114,14 @@ a:active {
   padding: 5px 10px 5px 10px;
   border-radius: 5px;
   border: none;
-  background-color: #ced6e0;
+  background-color: #6c757D;
+  color: white;
   font-weight: bold;
   cursor: pointer;
-  box-shadow: 1px 1px 2px;
-}
-#addmore:active {
-  box-shadow: none;
 }
 #src-date {
   padding: 5px 10px 5px 10px;
-  border: 2px solid #ced6e0;
+  border: 2px solid #6c757D;
   border-radius: 5px;
   width: 150px;
 }
@@ -133,10 +130,10 @@ a:active {
   padding: 5px 10px 5px 10px;
   border-radius: 5px;
   border: none;
-  background-color: #ced6e0;
+  background-color: #6c757D;
   font-weight: bold;
   cursor: pointer;
-  box-shadow: 1px 1px 2px;
+  color: white;
 }
 #submit:active {
   box-shadow: none;
@@ -173,8 +170,8 @@ a:active {
   padding: 5px 10px 5px 10px;
   border-radius: 5px;
   border: none;
-  background-color: #ced6e0;
+  background-color: #6c757D;
   font-weight: bold;
   cursor: pointer;
-  box-shadow: 1px 1px 2px;
+  color: white;
 }

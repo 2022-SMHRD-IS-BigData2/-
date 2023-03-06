@@ -23,8 +23,8 @@ table tr td{
   margin: 20px 20px 10px 20px;
   font-weight: bold;
   border: none;
-  background-color: #ced6e0;
-  box-shadow: 1px 1px 2px;
+  background-color: #6c757D;
+  color: white;
   border-radius: 5px;
   cursor: pointer;
 }

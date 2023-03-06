@@ -121,7 +121,8 @@ align-items: center;
 }
 #src-btn{
   border: none;
-  background-color: #ced6e0;
+  background-color: #6c757D;
+  color: white;
   font-weight: 700;
   font-size: small;
   width: 50px;
@@ -129,8 +130,4 @@ align-items: center;
   border-radius: 5px;
   cursor: pointer;
   padding: 5px;
-  box-shadow: 1px 1px 2px;
-}
-#src-btn:active{
-  box-shadow: none;
 }
