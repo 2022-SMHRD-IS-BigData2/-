@@ -105,7 +105,7 @@ class LabDataRecord(Base):
   Fibrinogen=Column(FLOAT,nullable=True,default=None)
   Platelets=Column(FLOAT,nullable=True,default=None)
 
-vital_record_normal = relationship('VitalRecordNormal', back_populates='lab_data_record')
+  vital_record_normal = relationship('VitalRecordNormal', back_populates='lab_data_record')
 
 # vital_record_all_view 모든 환자 현재 정보 뷰(겹치는것같네)
 class VitalRecordAllView(Base):
