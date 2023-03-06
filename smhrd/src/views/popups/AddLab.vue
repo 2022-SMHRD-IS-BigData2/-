@@ -16,106 +16,106 @@
           <tr>
             <td>EtCO2</td>
             <td>
-              <input type="text" v-model="hr" :style="hr ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'EtCO2')" />
+              <input type="text" v-model="EtCO2" :style="EtCO2 ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'EtCO2')" />
             </td>
           </tr>
           <tr>
             <td>BaseExcess</td>
             <td>
-              <input type="text" v-model="hr" :style="hr ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'BaseExcess')" />
+              <input type="text" v-model="BaseExcess" :style="BaseExcess ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'BaseExcess')" />
             </td>
           </tr>
           <tr>
             <td>HCO3</td>
-            <td><input type="text" v-model="hr" :style="hr ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'HCO3')" /></td>
+            <td><input type="text" v-model="HCO3" :style="HCO3 ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'HCO3')" /></td>
           </tr>
           <tr>
             <td>FiO2</td>
-            <td><input type="text" v-model="hr" :style="hr ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'FiO2')" /></td>
+            <td><input type="text" v-model="FiO2" :style="FiO2 ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'FiO2')" /></td>
           </tr>
           <tr>
             <td>pH</td>
-            <td><input type="text" v-model="hr" :style="hr ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'pH')"/></td>
+            <td><input type="text" v-model="pH" :style="pH ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'pH')"/></td>
           </tr>
           <tr>
             <td>PaCO2</td>
-            <td><input type="text" v-model="hr" :style="hr ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'PaCO2')" /></td>
+            <td><input type="text" v-model="PaCO2" :style="PaCO2 ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'PaCO2')" /></td>
           </tr>
           <tr>
             <td>SaO2</td>
-            <td><input type="text" v-model="hr" :style="hr ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'SaO2')"/></td>
+            <td><input type="text" v-model="SaO2" :style="SaO2 ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'SaO2')"/></td>
           </tr>
           <tr>
             <td>AST</td>
-            <td><input type="text" v-model="hr" :style="hr ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'AST')" /></td>
+            <td><input type="text" v-model="AST" :style="AST ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'AST')" /></td>
           </tr>
           <tr>
             <td>BUN</td>
-            <td><input type="text" v-model="hr" :style="hr ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'BUN')" /></td>
+            <td><input type="text" v-model="BUN" :style="BUN ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'BUN')" /></td>
           </tr>
           <tr>
             <td>Alkalinephos</td>
-            <td><input type="text" v-model="hr" :style="hr ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'Alkalinephos')"/></td>
+            <td><input type="text" v-model="Alkalinephos" :style="Alkalinephos ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'Alkalinephos')"/></td>
           </tr>
           <tr>
             <td>Calcium</td>
-            <td><input type="text" v-model="hr" :style="hr ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'Calcium')" /></td>
+            <td><input type="text" v-model="Calcium" :style="Calcium ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'Calcium')" /></td>
           </tr>
           <tr>
             <td>Chloride</td>
-            <td><input type="text" v-model="hr" :style="hr ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'Chloride')" /></td>
+            <td><input type="text" v-model="Chloride" :style="Chloride ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'Chloride')" /></td>
           </tr>
           <tr>
             <td>Creatinine</td>
-            <td><input type="text" v-model="hr" :style="hr ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'Creatinine')" /></td>
+            <td><input type="text" v-model="Creatinine" :style="Creatinine ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'Creatinine')" /></td>
           </tr>
           <tr>
             <td>Glucose</td>
-            <td><input type="text" v-model="hr" :style="hr ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'Glucose')" /></td>
+            <td><input type="text" v-model="Glucose" :style="Glucose ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'Glucose')" /></td>
           </tr>
           <tr>
             <td>Lactate</td>
-            <td><input type="text" v-model="hr" :style="hr ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'Lactate')" /></td>
+            <td><input type="text" v-model="Lactate" :style="Lactate ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'Lactate')" /></td>
           </tr>
           <tr>
             <td>Magnesium</td>
-            <td><input type="text" v-model="hr" :style="hr ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'Magnesium')"/></td>
+            <td><input type="text" v-model="Magnesium" :style="Magnesium ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'Magnesium')"/></td>
           </tr>
           <tr>
             <td>Phosphate</td>
-            <td><input type="text" v-model="hr" :style="hr ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'Phosphate')"/></td>
+            <td><input type="text" v-model="Phosphate" :style="Phosphate ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'Phosphate')"/></td>
           </tr>
           <tr>
             <td>Potassium</td>
-            <td><input type="text" v-model="hr" :style="hr ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'Potassium')"/></td>
+            <td><input type="text" v-model="Potassium" :style="Potassium ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'Potassium')"/></td>
           </tr>
           <tr>
             <td>Bilirubin_total</td>
-            <td><input type="text" v-model="hr" :style="hr ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'Bilirubin_total')"/></td>
+            <td><input type="text" v-model="Bilirubin_total" :style="Bilirubin_total ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'Bilirubin_total')"/></td>
           </tr>
           <tr>
             <td>Hct</td>
-            <td><input type="text" v-model="hr" :style="hr ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'Hct')"/></td>
+            <td><input type="text" v-model="Hct" :style="Hct ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'Hct')"/></td>
           </tr>
           <tr>
             <td>Hgb</td>
-            <td><input type="text" v-model="hr" :style="hr ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'Hgb')"/></td>
+            <td><input type="text" v-model="Hgb" :style="Hgb ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'Hgb')"/></td>
           </tr>
           <tr>
             <td>PTT</td>
-            <td><input type="text" v-model="hr" :style="hr ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'PTT')"/></td>
+            <td><input type="text" v-model="PTT" :style="PTT ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'PTT')"/></td>
           </tr>
           <tr>
             <td>WBC</td>
-            <td><input type="text" v-model="hr" :style="hr ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'WBC')"/></td>
+            <td><input type="text" v-model="WBC" :style="WBC ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'WBC')"/></td>
           </tr>
           <tr>
             <td>Fibrinogen</td>
-            <td><input type="text" v-model="hr" :style="hr ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'Fibrinogen')"/></td>
+            <td><input type="text" v-model="Fibrinogen" :style="Fibrinogen ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'Fibrinogen')"/></td>
           </tr>
           <tr>
             <td>Platelets</td>
-            <td><input type="text" v-model="hr" :style="hr ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'Platelets')"/></td>
+            <td><input type="text" v-model="Platelets" :style="Platelets ? 'border-color: green;' : ''" @input="preventInvalidInput($event,'Platelets')"/></td>
           </tr>
         </tbody>
       </table>
