@@ -14,6 +14,37 @@ import random
 
 router = APIRouter()
 
+median_values = {
+    'EtCO2': 33.00,
+    'BaseExcess': 0.00,
+    'HCO3': 24.00,
+    'FiO2': 0.50,
+    'pH': 7.38,
+    'PaCO2': 40.00,
+    'SaO2': 97.00,
+    'AST': 41.00,
+    'BUN': 17.00,
+    'Alkalinephos': 74.00,
+    'Calcium': 8.30,
+    'Chloride': 106.00,
+    'Creatinine': 0.94,
+    'Glucose': 127.00,
+    'Lactate': 1.80,
+    'Magnesium': 2.00,
+    'Phosphate': 3.30,
+    'Potassium': 4.10,
+    'Bilirubin_total': 0.90,
+    'Hct': 30.30,
+    'Hgb': 10.30,
+    'PTT': 32.40,
+    'WBC': 10.30,
+    'Fibrinogen': 250.00,
+    'Platelets': 181.00
+}
+
+
+
+
 @router.get('/api/record/{pid}')
 async def p_record_all(pid:int):
   p_record=session.query(AllPatientRecordView).filter(AllPatientRecordView.pid==pid).all()
@@ -224,3 +255,19 @@ async def chart_records(pid:int):
   chart_records = session.execute(query).all()
   session.close()
   return chart_records
+
+@router.post('/api/insert_fast_record/{pid}')
+async def insert_fast_record(pid:int, record_i:Record_i):
+  input_time = datetime.datetime.strptime(record_i.input_time, '%Y-%m-%dT%H:%M:%S')
+  birth_date = datetime.datetime.strptime(record_i.birth_date, '%Y-%m-%d').date()
+  
+
+  model_predict2(record_i)
+  query = text(f"INSERT INTO vital_record_all (pid, input_time, birth_date, sex, hr, temp, resp, sbp, dbp, sepsis_in_six, sepsis_percent) VALUES (:pid, :input_time, :birth_date, :sex, :hr, :O2Sat, :temp, :resp, :sbp, :dbp, :sepsis_in_six, :sepsis_percent)")
+  values = {'pid': pid, 'input_time': input_time, 'birth_date': birth_date, 'sex': record_i.sex, 'hr': record_i.hr, 'O2Sat': record_i.O2Sat, 'temp': record_i.temp, 'resp': record_i.resp, 'sbp': record_i.sbp, 'dbp': record_i.dbp, 'sepsis_in_six': record_i.sepsis_in_six, 'sepsis_percent': record_i.sepsis_percent}
+    # 쿼리 실행
+  session.execute(query,values)
+  session.commit()
+  updated_record = session.query(AllPatientRecordView).filter(AllPatientRecordView.pid == pid, AllPatientRecordView.input_time == input_time).first()
+  session.close()
+  return updated_record
