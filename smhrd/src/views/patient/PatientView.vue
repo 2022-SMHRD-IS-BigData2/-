@@ -45,7 +45,7 @@
         </div>
       </div>
       <div id="graph">
-        <Chart :pid="loadpid" style="width: 590px; height: 240px" />
+        <Chart :pid="loadpid" style="width: 750px; height: 240px" />
       </div>
     </div>
     <div id="under">
