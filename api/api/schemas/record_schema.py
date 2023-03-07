@@ -83,6 +83,7 @@ class Record_i(BaseModel):
   resp: int
   sbp: int
   dbp: int
+  
   sepsis_in_six: int=None
   sepsis_percent: float=None
 
@@ -105,6 +106,7 @@ class Record_v(BaseModel):
   resp: int
   sbp: int
   dbp: int
+  MAP:float
   ICULOS: int
   EtCO2: float
   BaseExcess:float
@@ -133,17 +135,42 @@ class Record_v(BaseModel):
   sepsis_in_six:int
   sepsis_percent:float
 
-class Record_for_Predict:
+class Record_for_Predict(BaseModel):
   pid : int
   p_record_seq : int
   age : int
   hr: int
+  O2Sat :float
   temp: float
   resp: int
-  bp: int
   sbp: int
   dbp: int
-
+  MAP:float
+  ICULOS: int
+  EtCO2: float
+  BaseExcess:float
+  HCO3:float
+  FiO2:float
+  pH:float
+  PaCO2:float
+  SaO2:float
+  AST:float
+  BUN:float
+  Alkalinephos:float
+  Calcium:float
+  Chloride:float
+  Creatinine:float
+  Glucose:float
+  Lactate:float
+  Phosphate:float
+  Potassium:float
+  Bilirubin_total:float
+  Hct:float
+  Hgb:float
+  PTT:float
+  WBC:float
+  Fibrinogen:float
+  Platelets:float
 # 랩 데이터만 따로 관리
 class LabData(BaseModel):
   pid : int

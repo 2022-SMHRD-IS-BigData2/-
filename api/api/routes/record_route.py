@@ -5,6 +5,7 @@ from sqlalchemy import Boolean, Column, Integer, String, DateTime, ForeignKey,te
 from sqlalchemy.orm import relationship
 from fastapi.encoders import jsonable_encoder
 from api.models.record_model import *
+from api.models.patient_model import *
 from api.schemas.record_schema import *
 import pandas as pd, numpy as np
 from datetime import datetime
@@ -15,33 +16,113 @@ import random
 router = APIRouter()
 
 median_values = {
-    'EtCO2': 33.00,
-    'BaseExcess': 0.00,
-    'HCO3': 24.00,
-    'FiO2': 0.50,
-    'pH': 7.38,
-    'PaCO2': 40.00,
-    'SaO2': 97.00,
-    'AST': 41.00,
-    'BUN': 17.00,
-    'Alkalinephos': 74.00,
-    'Calcium': 8.30,
-    'Chloride': 106.00,
-    'Creatinine': 0.94,
-    'Glucose': 127.00,
-    'Lactate': 1.80,
-    'Magnesium': 2.00,
-    'Phosphate': 3.30,
-    'Potassium': 4.10,
-    'Bilirubin_total': 0.90,
-    'Hct': 30.30,
-    'Hgb': 10.30,
-    'PTT': 32.40,
-    'WBC': 10.30,
-    'Fibrinogen': 250.00,
-    'Platelets': 181.00
+'hr': 84.58,
+'O2Sat': 97.19,
+'temp': 36.98,
+'sbp': 123.75,
+'dbp': 63.83,
+'MAP': 82.40,
+'resp': 18.73,
+'EtCO2': 32.96,
+'BaseExcess': -0.69,
+'HCO3': 24.08,
+'FiO2': 0.55,
+'pH': 7.38,
+'PaCO2': 41.02,
+'SaO2': 92.65,
+'AST': 260.22,
+'BUN': 23.92,
+'Alkalinephos': 102.48,
+'Calcium': 7.56,
+'Chloride': 105.83,
+'Creatinine': 1.51,
+'Glucose': 136.93,
+'Lactate': 2.65,
+'Magnesium': 2.05,
+'Phosphate': 3.54,
+'Potassium': 4.14,
+'Bilirubin_total': 2.11,
+'Hct': 30.79,
+'Hgb': 10.43,
+'PTT': 41.23,
+'WBC': 11.45,
+'Fibrinogen': 287.39,
+'Platelets': 196.01
 }
-
+mean_values = {
+    'hr': 84.58,
+    'O2Sat': 97.19,
+    'temp': 36.98,
+    'sbp': 123.75,
+    'dbp': 63.83,
+    'MAP': 82.40,
+    'resp': 18.73,
+    'EtCO2': 32.96,
+    'BaseExcess': -0.69,
+    'HCO3': 24.08,
+    'FiO2': 0.55,
+    'pH': 7.38,
+    'PaCO2': 41.02,
+    'SaO2': 92.65,
+    'AST': 260.22,
+    'BUN': 23.92,
+    'Alkalinephos': 102.48,
+    'Calcium': 7.56,
+    'Chloride': 105.83,
+    'Creatinine': 1.51,
+    'Glucose': 136.93,
+    'Lactate': 2.65,
+    'Magnesium': 2.05,
+    'Phosphate': 3.54,
+    'Potassium': 4.14,
+    'Bilirubin_total': 2.11,
+    'Hct': 30.79,
+    'Hgb': 10.43,
+    'PTT': 41.23,
+    'WBC': 11.45,
+    'Fibrinogen': 287.39,
+    'Platelets': 196.01
+}
+std_values = {
+    'hr': 17.33,
+    'O2Sat': 2.94,
+    'temp': 0.77,
+    'sbp': 23.23,
+    'dbp': 13.96,
+    'MAP': 16.34,
+    'resp': 5.10,
+    'EtCO2': 7.95,
+    'BaseExcess': 4.29,
+    'HCO3': 4.38,
+    'FiO2': 11.12,
+    'pH': 0.07,
+    'PaCO2': 9.27,
+    'SaO2': 10.89,
+    'AST': 855.75,
+    'BUN': 19.99,
+    'Alkalinephos': 120.12,
+    'Calcium': 2.43,
+    'Chloride': 5.88,
+    'Creatinine': 1.81,
+    'Glucose': 51.31,
+    'Lactate': 2.53,
+    'Magnesium': 0.40,
+    'Phosphate': 1.42,
+    'Potassium': 0.64,
+    'Bilirubin_total': 4.31,
+    'Hct': 5.49,
+    'Hgb': 1.97,
+    'PTT': 26.22,
+    'WBC': 7.73,
+    'Fibrinogen': 153.00,
+    'Platelets': 103.64
+}
+vital_cols=['hr', 'O2Sat', 'temp', 'sbp', 'dbp', 'MAP', 'resp','EtCO2',
+      'BaseExcess', 'HCO3', 'FiO2', 'pH', 'PaCO2', 'SaO2', 'AST', 'BUN',
+      'Alkalinephos', 'Calcium', 'Chloride', 'Creatinine',
+      'Glucose', 'Lactate', 'Magnesium', 'Phosphate', 'Potassium',
+      'Bilirubin_total', 'Hct', 'Hgb', 'PTT', 'WBC',
+      'Fibrinogen', 'Platelets']
 
 
 
@@ -255,40 +336,24 @@ async def chart_records(pid:int):
   chart_records = session.execute(query).all()
   session.close()
   return chart_records
-
-median_values = {
-    "EtCO2": 33.00,
-    "BaseExcess": 0.00,
-    "HCO3": 24.00,
-    "FiO2": 0.50,
-    "pH": 7.38,
-    "PaCO2": 40.00,
-    "SaO2": 97.00,
-    "AST": 41.00,
-    "BUN": 17.00,
-    "Alkalinephos": 74.00,
-    "Calcium": 8.30,
-    "Chloride": 106.00,
-    "Creatinine": 0.94,
-    "Glucose": 127.00,
-    "Lactate": 1.80,
-    "Magnesium": 2.00,
-    "Phosphate": 3.30,
-    "Potassium": 4.10,
-    "Bilirubin_total": 0.90,
-    "Hct": 30.30,
-    "Hgb": 10.30,
-    "PTT": 32.40,
-    "WBC": 10.30,
-    "Fibrinogen": 250.00,
-    "Platelets": 181.00,
-}
 lab_cols=['pid','EtCO2',
       'BaseExcess', 'HCO3', 'FiO2', 'pH', 'PaCO2', 'SaO2', 'AST', 'BUN',
       'Alkalinephos', 'Calcium', 'Chloride', 'Creatinine',
       'Glucose', 'Lactate', 'Magnesium', 'Phosphate', 'Potassium',
       'Bilirubin_total', 'Hct', 'Hgb', 'PTT', 'WBC',
       'Fibrinogen', 'Platelets']
+
+#model 예시
+
+def pred_sepsis(pred_sat):
+    # 랜덤한 0~100의 값을 가진 변수 생성
+  percent = random.uniform(0, 100)
+  
+  # 실수값이 80 이상이면 1, 아니면 0을 리턴
+  if percent >= 80:
+      return 1,percent
+  else:
+      return 0,percent
 
 # lab data!!!!!!
 @router.post('/api/lab_insert/{pid}')
@@ -355,13 +420,30 @@ async def lab_insert(pid:int,labdata: LabData):
         'pid': pid,
         'p_record_seq': latest_record.p_record_seq
     }
-    session.execute(query, values)
-    session.commit()
+  session.execute(query, values)
+  session.commit()
   # ------------------vital_record_all 최근 batch 개 뽑아서 model pred 돌리기--------
-  data_sat=session.query(VitalRecordAll).filter(VitalRecordAll.pid==pid).all()
+  data_sat = session.query(VitalRecordAll).filter(VitalRecordAll.pid==pid).all()
+  data_sat = pd.DataFrame.from_records([record.__dict__ for record in data_sat])
+  pred_sat=[]
   # 스케일링하기~
+  for col in vital_cols:
+    data_sat[col] = (data_sat[col] - mean_values[col]) / std_values[col]
+  for i in range(len(data_sat)):
+    r = dict(data_sat.iloc[i])
+    pred_sat.append(Record_for_Predict(**r))
   # pred,percent = model(data_sat)
   # update해주기
+  sep,percent=pred_sepsis(pred_sat)
+  query=text("update vital_record_all set sepsis_in_six = :sepsis_in_six, sepsis_percent = :sepsis_percent where pid = :pid and p_record_seq = :p_record_seq")
+  values={'sepsis_in_six' : sep,
+          'sepsis_percent' : percent,
+          'pid': pid,
+          'p_record_seq':latest_record.p_record_seq}
+  session.execute(query,values)
+  session.commit()
+  session.close()
+
 
 
   # ------------------vital_record_all 최근 데이터 sepsis업데이트하기--------------
@@ -371,7 +453,7 @@ async def vital_insert(pid:int,vital: Record_i):
   birth_date = datetime.datetime.strptime(vital.birth_date, '%Y-%m-%d').date()
     # -----------------vital_record_all 만들기 넣기--------------------------
   latest_filled=session.query(LabDataFilled).filter(LabDataFilled.pid==pid).order_by(desc(LabDataFilled.lab_record_seq)).first()
-  patient=session.execute(f"select * from patient_general where pid = {pid}")
+  patient=session.query(PatientGeneralTable).filter_by(pid=pid).first()
   if latest_filled:
     query = text("""
         INSERT INTO vital_record_all (
@@ -466,6 +548,7 @@ async def vital_insert(pid:int,vital: Record_i):
         'resp': vital.resp,
         'sbp': vital.sbp,
         'dbp': vital.dbp,
+        'MAP': mean_values.MAP,
         'EtCO2': median_values.EtCO2,
         'BaseExcess': median_values.BaseExcess,
         'HCO3': median_values.HCO3,
@@ -493,15 +576,29 @@ async def vital_insert(pid:int,vital: Record_i):
         'Platelets': median_values.Platelets,
     }
 
-    session.execute(query, values)
-    session.commit()
+  session.execute(query, values)
+  session.commit()
   # ------------------vital_record_all 최근 batch 개 뽑아서 model pred 돌리기--------
-  data_sat=session.query(VitalRecordAll).filter(VitalRecordAll.pid==pid).all()
-  # pred,percent = model(data_sat)
+  data_sat = session.query(VitalRecordAll).filter(VitalRecordAll.pid==pid).all()
+  data_sat = pd.DataFrame.from_records([record.__dict__ for record in data_sat])
+  pred_sat=[]
   # 스케일링하기~
-  # pred,percent = model(data_sat)
-  # update해주기
+  for col in vital_cols:
+    data_sat[col] = (data_sat[col] - mean_values[col]) / std_values[col]
+  for i in range(len(data_sat)):
+    r = dict(data_sat.iloc[i])
+    pred_sat.append(Record_for_Predict(**r))
   # ------------------vital_record_all 최근 데이터 sepsis업데이트하기--------------
+  latest_record = session.query(VitalRecordAll).filter_by(pid=pid).order_by(desc(VitalRecordAll.p_record_seq)).first()
+  sep,percent=pred_sepsis(pred_sat)
+  query=text("update vital_record_all set sepsis_in_six = :sepsis_in_six, sepsis_percent = :sepsis_percent where pid = :pid AND p_record_seq = :p_record_seq")
+  values={'sepsis_in_six' : sep,
+          'sepsis_percent' : percent,
+          'pid': pid,
+          'p_record_seq':latest_record.p_record_seq}
+  session.execute(query,values)
+  session.commit()
+  session.close()
 
 
 
