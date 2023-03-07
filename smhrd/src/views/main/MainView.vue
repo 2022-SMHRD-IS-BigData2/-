@@ -62,7 +62,7 @@
               DBP <input type="text" @input="preventInvalidInput" :name="'fast_dbp'+patient.pid">
               <input type="hidden" :name="'fast_birth_date'+patient.pid" :value="patient.birth_date">
               <input type="hidden" :name="'fast_sex'+patient.pid" :value="patient.sex">
-              <input type="hidden" :name="'fast_ICULOC'+patient.pid" :value="patient.ICULOC">
+              <input type="hidden" :name="'fast_ICULOS'+patient.pid" :value="patient.ICULOS">
               <button type="button" :id="'addbtn'+patient.pid" @click="insertRecord(patient.pid)"> 추가 </button>
             </td>
           </tr>
