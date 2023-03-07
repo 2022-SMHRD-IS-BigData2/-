@@ -89,7 +89,7 @@ export default {
     },
     async preventInvalidInput(event, field) {
   const inputVal = event.target.value;
-  const valid = /^[\d.]+$/.test(inputVal); // 입력값이 숫자와 소수점으로만 이루어졌는지 확인
+  const valid = /^[\d.]*$/.test(inputVal); // 입력값이 숫자와 소수점으로만 이루어졌는지 확인
 
   if (valid) {
     // 유효한 값이 입력된 경우, 입력값을 Vue.js 인스턴스의 데이터에 반영
@@ -100,6 +100,15 @@ export default {
     event.target.value = this[field] || '';
     event.target.style.borderColor = 'red';
   }
+
+  if (inputVal === '' && this[field] !== '') {
+    this[field] = '';
+    event.target.style.borderColor = 'green';
+  }
+  if (inputVal === '') {
+  event.target.style.borderColor = 'red';
+  return;
+}
 },
   async insertRecord() {
 
