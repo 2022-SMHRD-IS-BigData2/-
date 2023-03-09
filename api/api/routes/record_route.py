@@ -21,7 +21,7 @@ median_values = {
 'temp': 36.98,
 'sbp': 123.75,
 'dbp': 63.83,
-'MAP': 82.40,
+'map': 82.40,
 'resp': 18.73,
 'EtCO2': 32.96,
 'BaseExcess': -0.69,
@@ -55,7 +55,7 @@ mean_values = {
     'temp': 36.98,
     'sbp': 123.75,
     'dbp': 63.83,
-    'MAP': 82.40,
+    'map': 82.40,
     'resp': 18.73,
     'EtCO2': 32.96,
     'BaseExcess': -0.69,
@@ -89,7 +89,7 @@ std_values = {
     'temp': 0.77,
     'sbp': 23.23,
     'dbp': 13.96,
-    'MAP': 16.34,
+    'map': 16.34,
     'resp': 5.10,
     'EtCO2': 7.95,
     'BaseExcess': 4.29,
@@ -117,13 +117,19 @@ std_values = {
     'Fibrinogen': 153.00,
     'Platelets': 103.64
 }
-vital_cols=['hr', 'O2Sat', 'temp', 'sbp', 'dbp', 'MAP', 'resp','EtCO2',
+vital_cols=['hr', 'O2Sat', 'temp', 'sbp', 'dbp', 'map', 'resp','EtCO2',
       'BaseExcess', 'HCO3', 'FiO2', 'pH', 'PaCO2', 'SaO2', 'AST', 'BUN',
       'Alkalinephos', 'Calcium', 'Chloride', 'Creatinine',
       'Glucose', 'Lactate', 'Magnesium', 'Phosphate', 'Potassium',
       'Bilirubin_total', 'Hct', 'Hgb', 'PTT', 'WBC',
       'Fibrinogen', 'Platelets']
-
+COLSpp = ['HR', 'O2Sat', 'Temp', 'SBP', 'MAP', 'DBP', 'Resp', 'EtCO2',
+          'BaseExcess', 'HCO3', 'FiO2', 'pH', 'PaCO2', 'SaO2', 'AST', 'BUN',
+          'Alkalinephos', 'Calcium', 'Chloride', 'Creatinine',
+          'Glucose', 'Lactate', 'Magnesium', 'Phosphate', 'Potassium',
+          'Bilirubin_total', 'Hct', 'Hgb', 'PTT', 'WBC',
+          'Fibrinogen', 'Platelets', 'Age']
+INFO_COLS = ['pid', 'HospAdmTime', 'ICULOS', 'SepsisLabel', 'Age','Gender']
 
 
 @router.get('/api/record/{pid}')
@@ -342,10 +348,15 @@ lab_cols=['pid','EtCO2',
       'Glucose', 'Lactate', 'Magnesium', 'Phosphate', 'Potassium',
       'Bilirubin_total', 'Hct', 'Hgb', 'PTT', 'WBC',
       'Fibrinogen', 'Platelets']
-
+lab_cols2=['EtCO2',
+      'BaseExcess', 'HCO3', 'FiO2', 'pH', 'PaCO2', 'SaO2', 'AST', 'BUN',
+      'Alkalinephos', 'Calcium', 'Chloride', 'Creatinine',
+      'Glucose', 'Lactate', 'Magnesium', 'Phosphate', 'Potassium',
+      'Bilirubin_total', 'Hct', 'Hgb', 'PTT', 'WBC',
+      'Fibrinogen', 'Platelets','sepsis_in_six','sepsis_percent']
 #model 예시
 
-def pred_sepsis(pred_sat):
+def pred_sepsis(pred_sat:Record_for_Predict):
     # 랜덤한 0~100의 값을 가진 변수 생성
   percent = random.uniform(0, 100)
   
@@ -355,6 +366,12 @@ def pred_sepsis(pred_sat):
   else:
       return 0,percent
 
+COLS = ['age', 'hr', 'O2Sat', 'temp', 'resp', 'sbp', 'dbp', 'map', 'EtCO2',
+      'BaseExcess', 'HCO3', 'FiO2', 'pH', 'PaCO2', 'SaO2', 'AST', 'BUN',
+      'Alkalinephos', 'Calcium', 'Chloride', 'Creatinine',
+      'Glucose', 'Lactate', 'Magnesium', 'Phosphate', 'Potassium',
+      'Bilirubin_total', 'Hct', 'Hgb', 'PTT', 'WBC',
+      'Fibrinogen', 'Platelets']
 # lab data!!!!!!
 @router.post('/api/lab_insert/{pid}')
 async def lab_insert(pid:int,labdata: LabData):
@@ -362,9 +379,10 @@ async def lab_insert(pid:int,labdata: LabData):
   db_lab_data = LabDataRecord(**labdata.dict())
   session.add(db_lab_data)
   session.commit()
-  
+
   # -----------------lab_data_filled 채우기-------------------
   df_fill_list = pd.read_sql(session.query(LabDataRecord).filter(LabDataRecord.pid==pid).statement, session.bind)
+  # 채울때 하나채우고 dup을 해보자
 
   for col in lab_cols:
     # pid의 첫번째 행(record_seq=1)들만 남긴다 => 인덱스 구해서 저장
@@ -379,7 +397,8 @@ async def lab_insert(pid:int,labdata: LabData):
 # -----------------vital_record_all 최근 데이터 업데이트하기-----------
   latest_record = session.query(VitalRecordAll).filter_by(pid=pid).order_by(desc(VitalRecordAll.p_record_seq)).first()
   latest_filled = session.query(LabDataFilled).filter_by(pid=pid).order_by(desc(LabDataFilled.lab_record_seq)).first()
-  if latest_filled:
+  if latest_record:
+    #------latest vital_record_all update)
     query = text("""
         UPDATE vital_record_all 
         SET EtCO2 = :EtCO2, BaseExcess = :BaseExcess, HCO3 = :HCO3, FiO2 = :FiO2, 
@@ -420,29 +439,80 @@ async def lab_insert(pid:int,labdata: LabData):
         'pid': pid,
         'p_record_seq': latest_record.p_record_seq
     }
-  session.execute(query, values)
-  session.commit()
-  # ------------------vital_record_all 최근 batch 개 뽑아서 model pred 돌리기--------
-  data_sat = session.query(VitalRecordAll).filter(VitalRecordAll.pid==pid).all()
-  data_sat = pd.DataFrame.from_records([record.__dict__ for record in data_sat])
-  pred_sat=[]
-  # 스케일링하기~
-  for col in vital_cols:
-    data_sat[col] = (data_sat[col] - mean_values[col]) / std_values[col]
-  for i in range(len(data_sat)):
-    r = dict(data_sat.iloc[i])
-    pred_sat.append(Record_for_Predict(**r))
-  # pred,percent = model(data_sat)
-  # update해주기
-  sep,percent=pred_sepsis(pred_sat)
-  query=text("update vital_record_all set sepsis_in_six = :sepsis_in_six, sepsis_percent = :sepsis_percent where pid = :pid and p_record_seq = :p_record_seq")
-  values={'sepsis_in_six' : sep,
-          'sepsis_percent' : percent,
-          'pid': pid,
-          'p_record_seq':latest_record.p_record_seq}
-  session.execute(query,values)
-  session.commit()
-  session.close()
+    session.execute(query, values)
+    session.commit()
+    # latest_record가 있을 경우 vital_record_all 및 vital_record_all_mask 업데이트
+    # COLS: 기존 column 이름들의 리스트
+    MASK_COLS = [x+'_mask' for x in COLS]
+    # 안되면 되는거해라
+    data1 = session.execute(f"SELECT * FROM vital_record_all WHERE pid={pid} ORDER BY p_record_seq DESC").fetchone()
+    cols = session.execute("SELECT column_name FROM information_schema.columns WHERE table_name='vital_record_all'").fetchall()
+    cols = [c[0] for c in cols]  # 튜플을 리스트로 변환
+    raw_data = pd.DataFrame([data1], columns=cols) # 데이터 프레임으로
+    df_filled1 = raw_data.drop(['sepsis_in_six','sepsis_percent'],axis=1,inplace=False).copy()
+    data2=raw_data.drop(lab_cols2,axis=1,inplace=False)
+    data3=pd.DataFrame([labdata.dict()])
+    df_sub=pd.merge(data2,data3,on='pid')
+
+    df_masks = pd.DataFrame()
+    for col in COLS:
+        # 해당 column에서 NaN이 아닌 값의 index를 True로, NaN이면 False로 설정
+        df_masks[col+'_mask'] = df_sub[col].isna().astype(int)
+            
+    # 모든 mask column을 결합하여 하나의 DataFrame으로 만듦
+    df_masks = pd.concat([df_masks[x] for x in MASK_COLS], axis=1)
+    df_filled1[df_masks.columns]=df_masks
+    # df_filled와 df_masks를 머지
+    df_sub_mask = df_filled1
+    df_sub_dict=df_sub_mask.iloc[0].to_dict()
+
+#   VitalRecordAllMask 테이블의 primary key가 'pid'와 'p_record_seq' 인지 확인이 필요합니다
+# -------------vital_record_all_mask 업데이트~-----------------
+    sub_mask = VitalRecordAllMask(**df_sub_dict)
+    print(sub_mask)
+    session.merge(sub_mask)
+    session.commit()
+
+  # # ------------------vital_record_all_mask 최근 batch 개 뽑아서 model pred 돌리기--------
+  data_sat_raw = session.query(VitalRecordAllMask).filter(VitalRecordAllMask.pid == pid).order_by(VitalRecordAllMask.p_record_seq.desc()).limit(30).all()
+  if data_sat_raw:
+    data_sat_raw = pd.DataFrame.from_records([record.__dict__ for record in data_sat_raw])
+    data_sat_raw.drop('_sa_instance_state',axis=1,inplace=True)
+    data_sat_raw=data_sat_raw.sort_values(["pid", "p_record_seq"]).reset_index(drop=True)
+    max_ind = data_sat_raw['p_record_seq'].max()
+    pred_sat=[]
+    # pred_sat=[data_sat_raw.iloc[max_ind]]
+    # ICULOS 값은 최근값만 사용하도록 해보자~
+    for k in range(max_ind):
+      if (data_sat_raw.iloc[max_ind-k-1].ICULOS - data_sat_raw.iloc[max_ind-k-2].ICULOS == 1):
+        pred_sat.insert(0, data_sat_raw.iloc[max_ind-k-1])
+      else:
+        if k == max_ind-1:
+          pred_sat.insert(0, data_sat_raw.iloc[max_ind-k-1])
+          break
+        else:
+          break
+    # pred_sat df로 묶어주기
+    pred_sat=pd.DataFrame(pred_sat)
+
+    # 스케일링하기~
+    pred_list=[]
+    for col in vital_cols:
+      pred_sat[col] = (pred_sat[col] - mean_values[col]) / std_values[col]
+    for i in range(len(pred_sat)):
+      r = dict(pred_sat.iloc[i])
+      pred_list.append(Record_for_Predict(**r))
+    # update해주기
+    sep,percent=pred_sepsis(pred_sat)
+    print(latest_record.p_record_seq)
+    query=text("update vital_record_all set sepsis_in_six = :sepsis_in_six, sepsis_percent = :sepsis_percent where pid = :pid and p_record_seq = :p_record_seq")
+    values={'sepsis_in_six' : sep,
+            'sepsis_percent' : percent,
+            'pid': pid,
+            'p_record_seq':latest_record.p_record_seq}
+    session.execute(query,values)
+    session.commit()
+    session.close()
 
 
 

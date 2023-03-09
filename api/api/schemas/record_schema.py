@@ -50,6 +50,7 @@ class Record(BaseModel):
   Creatinine:float
   Glucose:float
   Lactate:float
+  Magnesium:float
   Phosphate:float
   Potassium:float
   Bilirubin_total:float
@@ -123,6 +124,7 @@ class Record_v(BaseModel):
   Creatinine:float
   Glucose:float
   Lactate:float
+  Magnesium:float
   Phosphate:float
   Potassium:float
   Bilirubin_total:float
@@ -136,8 +138,6 @@ class Record_v(BaseModel):
   sepsis_percent:float
 
 class Record_for_Predict(BaseModel):
-  pid : int
-  p_record_seq : int
   age : int
   hr: int
   O2Sat :float
@@ -145,7 +145,7 @@ class Record_for_Predict(BaseModel):
   resp: int
   sbp: int
   dbp: int
-  MAP:float
+  map:float
   ICULOS: int
   EtCO2: float
   BaseExcess:float
@@ -162,6 +162,7 @@ class Record_for_Predict(BaseModel):
   Creatinine:float
   Glucose:float
   Lactate:float
+  Magnesium:float
   Phosphate:float
   Potassium:float
   Bilirubin_total:float
@@ -171,10 +172,55 @@ class Record_for_Predict(BaseModel):
   WBC:float
   Fibrinogen:float
   Platelets:float
+  age_mask: int = 0
+  hr_mask: int = 0
+  O2Sat_mask: int = 0
+  temp_mask: int = 0
+  resp_mask: int = 0
+  sbp_mask: int = 0
+  dbp_mask: int = 0
+  map_mask: int = 0
+  ICULOS_mask: int = 0
+  EtCO2_mask: int = 0
+  BaseExcess_mask: int = 0
+  HCO3_mask: int = 0
+  FiO2_mask: int = 0
+  pH_mask: int = 0
+  PaCO2_mask: int = 0
+  SaO2_mask: int = 0
+  AST_mask: int = 0
+  BUN_mask: int = 0
+  Alkalinephos_mask: int = 0
+  Calcium_mask: int = 0
+  Chloride_mask: int = 0
+  Creatinine_mask: int = 0
+  Glucose_mask: int = 0
+  Lactate_mask: int = 0
+  Magnesium_mask: int = 0
+  Phosphate_mask: int = 0
+  Potassium_mask: int = 0
+  Bilirubin_total_mask: int = 0
+  Hct_mask: int = 0
+  Hgb_mask: int = 0
+  PTT_mask: int = 0
+  WBC_mask: int = 0
+  Fibrinogen_mask: int = 0
+  Platelets_mask: int = 0
+
+
+
+
 # 랩 데이터만 따로 관리
 class LabData(BaseModel):
   pid : int
 #  lab_record_seq: int
+  # age : Optional[int] = None
+  # hr: Optional[int] = None
+  # O2Sat :Optional[float] = None
+  # temp: Optional[float] = None
+  # resp: Optional[float] = None
+  # sbp: Optional[int] = None
+  # dbp: Optional[int] = None
   EtCO2: Optional[float] = None
   BaseExcess:Optional[float] = None
   HCO3:Optional[float] = None
@@ -190,6 +236,7 @@ class LabData(BaseModel):
   Creatinine:Optional[float] = None
   Glucose:Optional[float] = None
   Lactate:Optional[float] = None
+  Magnesium:Optional[float] = None
   Phosphate:Optional[float] = None
   Potassium:Optional[float] = None
   Bilirubin_total:Optional[float] = None
@@ -200,24 +247,4 @@ class LabData(BaseModel):
   Fibrinogen:Optional[float] = None
   Platelets:Optional[float] = None
 
-  def to_query_values(self) -> Tuple:
-    values = []
-    columns = []
-    for field, value in self.__dict__.items():
-        if field != 'pid' and value is not None:
-            columns.append(field)
-            values.append(value)
-    return tuple(values),
-  def jsonable_encoder(self, exclude_unset=True, exclude_none=False):
-    """
-    Custom JSON serializer for LabData class.
-    """
-    data = {}
-    for key, value in self:
-        if exclude_unset and self.__fields__[key].default is value:
-            continue
-        if exclude_none and value is None:
-            continue
-        data[key] = value
-    return data
 

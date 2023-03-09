@@ -11,5 +11,6 @@ __all__ = [
     # 'VitalRecordNormal',
     'VitalRecordAllView',
     'VitalRecordNowView',
-    'NowViewSepsis'
+    'NowViewSepsis',
+    'VitalRecordAllMask'
 ]

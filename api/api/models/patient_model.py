@@ -16,5 +16,7 @@ class PatientGeneralTable(Base):
   disch_date=Column(DATETIME,nullable=True)
 
   vital_record_all = relationship("VitalRecordAll", back_populates="patient_general")
+  vital_record_all_mask = relationship("VitalRecordAllMask", back_populates="patient_general")
+
 
 
