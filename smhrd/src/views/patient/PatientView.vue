@@ -52,7 +52,7 @@
       <div id="body">
         <div id="leftarrow">
           <button @click="changeDateBefore" class="date-btn">
-            <i class="fa-solid fa-left-long fa-3x" style="color: #ced6e0"></i>
+            <i class="fa-solid fa-left-long fa-3x" style="color: #6c757D"></i>
           </button>
         </div>
         <div id="tablewrap">
@@ -66,7 +66,7 @@
         </div>
         <div id="rightarrow">
           <button @click="changeDateAfter" class="date-btn">
-            <i class="fa-solid fa-right-long fa-3x" style="color: #ced6e0"></i>
+            <i class="fa-solid fa-right-long fa-3x" style="color: #6c757D"></i>
           </button>
         </div>
       </div>

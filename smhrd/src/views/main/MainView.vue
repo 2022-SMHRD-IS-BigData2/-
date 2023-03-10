@@ -34,10 +34,10 @@
           <tr>
             <td><input type="checkbox" style="width: 20px; height: 20px; cursor: pointer;" @click="addOn(index)"/></td>
             <td>{{ patient.input_time }}</td>
-            <td style="font-weight: bold;">
-            <router-link :to="{ name: 'PatientView', params: { pid: patient.pid, date: patient.input_time.slice(0, 10) } }">
+            <td style="font-weight: bold; cursor: pointer;" class="hover-gradient" @click="navigateToRoute(patient)" >
+
           {{ patient.pid }}
-            </router-link>
+
             </td>
             <td>{{ patient.name }}</td>
             <td>{{ patient.age }}</td>
@@ -190,7 +190,10 @@ export default {
     }
   }
 },
-
+navigateToRoute(patient) {
+      // 라우팅 동작을 수행합니다.
+      this.$router.push({ name: 'PatientView', params: { pid: patient.pid, date: patient.input_time.slice(0, 10) } })
+    },
   selectPatient(patient, index) {
     if (!patient) return;
     this.selectedPatient = {
@@ -458,6 +461,10 @@ a:focus { text-decoration: none;
   color: black; }
 a:hover, a:active { text-decoration: none;
   color: black; }
+
+  .hover-gradient:hover {
+   box-shadow: 4px 4px 3px #6c757D inset
+}
 
   /* 페이징처리 출력부 */
   .pagination-frame {

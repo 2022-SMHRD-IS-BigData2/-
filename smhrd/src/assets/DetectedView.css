@@ -84,7 +84,9 @@ a:focus { text-decoration: none;
   color: black; }
 a:hover, a:active { text-decoration: none;
   color: black; }
-
+  .hover-gradient:hover {
+    box-shadow: 4px 4px 3px #6c757D inset
+ }
   /* 페이징처리 출력부 */
   .pagination-frame {
     height: 10%;
