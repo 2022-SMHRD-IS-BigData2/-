@@ -178,7 +178,7 @@ export default {
           if (newPatients.length > 0 || deletedPatients.length > 0) {
             const addedNames = newPatients.map(patient => patient.NAME);
             const deletedNames = deletedPatients.join(', ');
-            const message = `${addedNames.join(', ')} 환자가 추가되었고, ${deletedNames.join(', ')} 환자가 제거되었습니다.`;
+            const message = `${addedNames.join(', ')} 환자가 추가되었고, ${deletedNames} 환자가 제거되었습니다.`;
             this.$notify({
               title: '환자 변동',
               message: message,
