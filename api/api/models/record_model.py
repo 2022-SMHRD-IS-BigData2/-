@@ -4,29 +4,6 @@ from pydantic import BaseModel
 from ..core.database import Base
 import datetime
 
-# # vital_record_normal(일반 데이터:lab data 없음) 테이블
-# class VitalRecordNormal(Base):
-#   __tablename__ = 'vital_record_normal'
-#   pid=Column(INT,ForeignKey('patient_general.pid'),primary_key=True)
-#   p_record_seq = Column(INT, primary_key=True)
-#   birth_date=Column(DATE,nullable=False)
-#   input_time=Column(DATETIME,nullable=False)
-#   sex=Column(INT,nullable=False)
-#   age=Column(INT,nullable=False)
-#   hr=Column(INT,nullable=False)
-#   O2Sat=Column(FLOAT,nullable=False)
-#   temp=Column(FLOAT,nullable=False)
-#   resp=Column(INT,nullable=False)
-#   sbp=Column(INT,nullable=False)
-#   dbp=Column(INT,nullable=False)
-#   MAP=Column(FLOAT,nullable=True)
-#   ICULOS=Column(INT,nullable=False)
-#   sepsis_in_six=Column(INT,nullable=True,default=None)
-#   sepsis_percent=Column(FLOAT,nullable=True,default=None)
-  
-#   patient_general = relationship("PatientGeneralTable", back_populates="vital_record_normal")
-#   lab_data_record = relationship("LabDataRecord", primaryjoin="VitalRecordNormal.pid == LabDataRecord.pid")
-
 # vital_record_all(모든 데이터:lab data 포함) 테이블 - 사용중임
 class VitalRecordAll(Base):
   __tablename__ = 'vital_record_all'

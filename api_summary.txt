@@ -10,11 +10,11 @@ admin_date : str (yyyy-mm-dd hh:mm:ss)
 모든 환자 불러오기(return : list(patient_general) 모든 환자 정보)
 ulr : api/patients 
 
-환자 한명 불러오기(return : patient_general p_id 검색된 환자 정보)
-url : api/patients/p_id
+환자 한명 불러오기(return : patient_general pid 검색된 환자 정보)
+url : api/patients/pid
 
 환자 한명의 모든 기록 불러오기(return : record_all_view 형식의 환자 한명 모든정보)
-url : record/p_id
+url : record/pid
 
 모든 환자의 모든 기록(return : record_all_view 형식의 모든 환자 모든 정보)
 url : get_all_record *2월 27일 수정
@@ -40,15 +40,38 @@ input_time : str ('2023-02-13 08:53:06')
 
 
 환자의 레코드 업데이트하기(return : record_all_view형식의 업데이트된 환자 정보 1개)
-url : update_record/1
+url : update_record/pid
   { 
     "pid": 1,
-    "p_record_seq": 2,
     "input_time": "2023-02-13T04:53:06",
     "hr": 111,
+    "O2Sat" : 26.4
     "temp": 36.7,
     "resp": 43,
     "sbp": 127,
     "dbp": 62
   }
+
+환자의 vital_record 입력하기(return 없음, forceupdate 넣어야할듯?)
+url : vital_insert/pid
+{
+    "pid": 1,
+    "input_time": "2023-02-13T04:53:06",
+    "birth_date": "1998-03-05",
+    "hr": 111,
+    "O2Sat" : 26.4
+    "temp": 36.7,
+    "resp": 43,
+    "sbp": 127,
+    "dbp": 62
+}
+
+환자의 lab_data 입력하기(return 없음, forceupdate 넣어야할듯?)
+url : lab_insert/pid
+{
+    "pid": 1,
+    ----필수아님-----
+    "EtCO2":11.2,
+    ...
+}
 
