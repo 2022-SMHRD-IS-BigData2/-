@@ -34,10 +34,10 @@
           <tr>
             <td><input type="checkbox" style="width: 20px; height: 20px; cursor: pointer;" @click="addOn(index)"/></td>
             <td>{{ patient.input_time }}</td>
-            <td style="font-weight: bold;">
-              <router-link :to="{ name: 'PatientView', params: { pid: patient.pid, date: patient.input_time.slice(0, 10) } }">
+            <td style="font-weight: bold; cursor: pointer;" class="hover-gradient" @click="navigateToRoute(patient)" >
+
           {{ patient.pid }}
-            </router-link>
+
             </td>
             <td>{{ patient.name }}</td>
             <td>{{ patient.age }}</td>
@@ -159,27 +159,42 @@ export default {
 },
   mounted () {
     axios.get("http://127.0.0.1:8002/api/get_latest_sepsis_percent")
-    .then(res => {
-      return res.data
-    })
+    .then(res => res.data)
     .then(data => {
       this.patients = data.data;
       this.count = data.count;
       this.page = data.page;
-      return data
+      return data;
     })
-      // .then(data => {
-      //   console.log(data)
-      //   this.patients=data.data;
-      //   this.count=data.count;
-      //   this.page=data.page;
-      //   return data
-      // })
-        // this.dbDate = moment(response.birth_date, 'YYYY-MM-DD')
-      .catch(error => {
-        console.log(error)
-      })
-      const now = new Date();
+    .then(data => {
+      setInterval(() => {
+        axios.get("http://127.0.0.1:8002/api/get_latest_sepsis_percent")
+        .then(res => res.data)
+        .then(data => {
+          const oldPatients = this.patients.map(patient => patient.name);
+          this.patients = data.data;
+          const newPatients = this.patients.filter(patient => !oldPatients.includes(patient.name));
+          const deletedPatients = oldPatients.filter(name => !this.patients.some(patient => patient.name === name));
+          if (newPatients.length > 0 || deletedPatients.length > 0) {
+            const addedNames = newPatients.map(patient => patient.NAME);
+            const deletedNames = deletedPatients.join(', ');
+            const message = `${addedNames.join(', ')} 환자가 추가되었고, ${deletedNames} 환자가 제거되었습니다.`;
+            this.$notify({
+              title: '환자 변동',
+              message: message,
+              type: 'success'
+            });
+          }
+        });
+      }, 5000);
+    })
+    .catch(error => {
+      console.log(error);
+    });
+
+
+
+    const now = new Date();
     const year = now.getFullYear();
     const month = String(now.getMonth() + 1).padStart(2, "0");
     const day = String(now.getDate()).padStart(2, "0");
@@ -203,6 +218,10 @@ export default {
     }
   }
 },
+navigateToRoute(patient) {
+      // 라우팅 동작을 수행합니다.
+      this.$router.push({ name: 'PatientView', params: { pid: patient.pid, date: patient.input_time.slice(0, 10) } })
+    },
   selectPatient(patient, index) {
     if (!patient) return;
     this.selectedPatient = {

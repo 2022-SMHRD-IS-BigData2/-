@@ -23,7 +23,7 @@
             <td>{{ patients.dbp }}</td>
           </tr>
           <tr v-for="(vs, index) in all" :key="index" :value="vs.input_time">
-            <td @click="EditVital($event)" style="cursor: pointer; font-weight: bold; padding: 5px;">{{ vs.input_time }}</td>
+            <td @click="EditVital($event)" style="cursor: pointer; font-weight: bold; padding: 5px;" class="hover-gradient">{{ vs.input_time }}</td>
             <td>{{ vs.hr }}</td>
             <td>{{ vs.O2Sat }}</td>
             <td>{{ vs.temp }}</td>
@@ -114,5 +114,9 @@ export default {
 
 tbody tr#td-bold td{
   font-weight: bold;
+}
+
+.hover-gradient:hover {
+   box-shadow: 4px 4px 3px #6c757D inset
 }
 </style>
