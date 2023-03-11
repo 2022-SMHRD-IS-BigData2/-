@@ -10,6 +10,7 @@
             <td style="width: 10%; font-weight: bold; background-color: #DFF2F5;">Resp</td>
             <td style="width: 10%; font-weight: bold; background-color: #DFF2F5;">SBP</td>
             <td style="width: 10%; font-weight: bold; background-color: #DFF2F5;">DBP</td>
+            <td style="width: 10%; font-weight: bold; background-color: #DFF2F5;">Sepsis-Score</td>
           </tr>
         </thead>
         <tbody>
@@ -21,6 +22,7 @@
             <td>{{ patients.resp }}</td>
             <td>{{ patients.sbp }}</td>
             <td>{{ patients.dbp }}</td>
+            <td>{{ patients.sepsis_percent }}</td>
           </tr>
           <tr v-for="(vs, index) in all" :key="index" :value="vs.input_time">
             <td @click="EditVital($event)" style="cursor: pointer; font-weight: bold; padding: 5px;" class="hover-gradient">{{ vs.input_time }}</td>
@@ -30,6 +32,7 @@
             <td>{{ vs.resp }}</td>
             <td>{{ vs.sbp }}</td>
             <td>{{ vs.dbp}}</td>
+            <td>{{ vs.sepsis_percent }}</td>
           </tr>
         </tbody>
       </table>
