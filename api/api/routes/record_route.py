@@ -169,43 +169,28 @@ def pred_sepsis(pred_sat:Record_for_Predict):
   else:
       return 0,percent
 
-def model_predict2(Record_i):
-  per=round(random.random()*100,2)
-  if per>50:
-    Record_i.sepsis_in_six=1
-  else :
-    Record_i.sepsis_in_six=0
-    Record_i.sepsis_percent=per
-  return Record_i
-
-def model_predict(record:VitalRecordAll):
-  per=round(random.random()*100,2)
-  if per>50:
-    record.sepsis_in_six=1
-  else :
-    record.sepsis_in_six=0
-  record.sepsis_percent=per
-  return record
-
-
-def model_pred(pid:int):
-  data_sat_raw = session.query(VitalRecordAllMask).filter(VitalRecordAllMask.pid == pid).order_by(VitalRecordAllMask.p_record_seq.desc()).limit(30).all()
-  if data_sat_raw:
-    data_sat_raw = pd.DataFrame.from_records([record.__dict__ for record in data_sat_raw])
+# model predict
+@router.get("/api/predict_sepsis/{pid}")
+async def model_pred(pid:int):
+  data_sat_raw2 = session.query(VitalRecordAllMask).filter(VitalRecordAllMask.pid == pid).order_by(VitalRecordAllMask.p_record_seq.desc()).limit(30).all()
+  if data_sat_raw2:
+    data_sat_raw = pd.DataFrame.from_records([record.__dict__ for record in data_sat_raw2])
     data_sat_raw.drop('_sa_instance_state',axis=1,inplace=True)
     data_sat_raw=data_sat_raw.sort_values(["pid", "p_record_seq"]).reset_index(drop=True)
-    max_ind = data_sat_raw['p_record_seq'].max()
+    max_seq = len(data_sat_raw)
+    max_ind = data_sat_raw.iloc[max_seq-1].ICULOS
     pred_sat=[]
     # ICULOS 값은 최근값만 사용하도록 해보자~
-    for k in range(max_ind):
-      if (data_sat_raw.iloc[max_ind-k-1].ICULOS - data_sat_raw.iloc[max_ind-k-2].ICULOS == 1):
-        pred_sat.insert(0, data_sat_raw.iloc[max_ind-k-1])
+    for k in range(max_seq):
+      if (data_sat_raw.iloc[max_seq-k-1].ICULOS - data_sat_raw.iloc[max_seq-k-2].ICULOS == 1):
+        pred_sat.insert(0, data_sat_raw.iloc[max_seq-k-1])
       else:
-        if k == max_ind-1:
-          pred_sat.insert(0, data_sat_raw.iloc[max_ind-k-1])
+        if k == max_seq-1:
+          pred_sat.insert(0, data_sat_raw.iloc[max_seq-k-1])
           break
         else:
           break
+    print(len(pred_sat))
     # 일단 최근 데이터 하나 가져와야 하네...
     latest_raw=session.query(VitalRecordAll).filter(VitalRecordAll.pid == pid).order_by(desc(VitalRecordAll.p_record_seq)).first()
     dict_latest_raw=latest_raw.__dict__
@@ -230,41 +215,6 @@ def model_pred(pid:int):
     session.commit()
     session.close()
 
-def make_mask_insert(pid:int):
-  latest_raw=session.query(VitalRecordAll).filter(VitalRecordAll.pid == pid).order_by(desc(VitalRecordAll.p_record_seq)).first()
-  dict_latest_raw=latest_raw.__dict__
-  df_latest=pd.DataFrame([dict_latest_raw])
-  df_latest.drop('_sa_instance_state',axis=1,inplace=True)
-  df_droped=df_latest.drop(lab_cols2,axis=1,inplace=False)
-
-  # pid빼고 null으로 채워진 lab 데이터 생성!
-  dict_null={'pid':pid}
-  lab_null=LabData(**dict_null)
-  dict_lab_null=lab_null.__dict__
-  df_lab_null=pd.DataFrame([dict_lab_null])
-  # merge data 생성해서 mask 만들어주기
-  df_null_merged=pd.merge(df_droped,df_lab_null,on='pid',how='outer')
-  df_masks = pd.DataFrame()
-  MASK_COLS = [x+'_mask' for x in COLS]
-  for col in COLS:
-      # 해당 column에서 NaN이 아닌 값의 index를 True로, NaN이면 False로 설정
-      df_masks[col+'_mask'] = df_null_merged[col].isna().astype(int)
-  # 모든 mask column을 결합하여 하나의 DataFrame으로 만듦
-  df_masks = pd.concat([df_masks[x] for x in MASK_COLS], axis=1)
-  df_droped[df_masks.columns]=df_masks
-  # df_filled와 df_masks를 merge
-  df_null_merged_mask = df_droped
-  df_null_merged_dict=df_null_merged_mask.iloc[0].to_dict()
-  
-  return df_null_merged_dict
-
-@router.get('/api/record/{pid}')
-async def p_record_all(pid:int):
-  p_record=session.query(AllPatientRecordView).filter(AllPatientRecordView.pid==pid).all()
-  session.close()
-  return p_record
-
-
 @router.get("/api/data/")
 async def get_data(limit: int = 10, page: int = 1):
   offset = (page - 1) * limit
@@ -274,61 +224,6 @@ async def get_data(limit: int = 10, page: int = 1):
   count = session.execute(text("SELECT COUNT(*) FROM vital_record_now_view")).fetchone()[0]
   session.close()
   return {"data": data, "count": count,'page':{'page':1,'limit':10}}
-
-
-# input window(batch) 숫자 정해지면 insult랑 predict 따로 분리시켜야겠다
-@router.post("/api/input_record")
-async def input_record(record :Record):
-  temp=VitalRecordAll()
-  temp.pid=record.pid
-  # temp.p_record_seq=record.p_record_seq
-  temp.birth_date=record.birth_date
-  temp.input_time=datetime.datetime.now()
-  # temp.p_age=record.p_age
-  temp.hr=record.hr
-  temp.O2Sat=record.O2Sat
-  temp.temp=record.temp
-  temp.resp=record.resp
-  temp.sbp=record.sbp
-  temp.dbp=record.dbp
-  temp.ICULOS = record.ICULOS
-  temp.BaseExcess=record.BaseExcess
-  temp.HCO3=record.HCO3
-  temp.FiO2=record.FiO2
-  temp.pH=record.pH
-  temp.PaCO2=record.PaCO2
-  temp.SaO2=record.SaO2
-  temp.Alkalinephos=record.Alkalinephos
-  temp.Calcium=record.Calcium
-  temp.Chloride=record.Chloride
-  temp.Creatinine=record.Creatinine
-  temp.Glucose=record.Glucose
-  temp.Lactate=record.Lactate
-  temp.Phosphate=record.Phosphate
-  temp.Potassium=record.Potassium
-  temp.Bilirubin_total=record.Bilirubin_total
-  temp.Hct=record.Hct
-  temp.Hgb=record.Hgb
-  temp.PTT=record.PTT
-  temp.WBC=record.WBC
-  temp.Fibrinogen=record.Fibrinogen
-  temp.Platelets=record.Platelets
-  temp.sepsis_in_six=record.sepsis_in_six
-  temp.sepsis_percent=record.sepsis_percent
-
-  pred=model_predict(temp)
-  session.add(pred)
-  session.commit()
-  session.close()
-  return {"record":pred}
-
-# 모든 환자의 최근 데이터를 가져오자(뷰를 만들었음) , 정철씨 안나옴!
-@router.get('/api/get_latest_all')
-async def get_latest_all():
-  record=session.query(VitalRecordNowView).all()
-  session.close()
-  return record
-
 
 # 모든 환자의 최근 데이터에서 한명의 환자 선택
 @router.get('/api/get_latest_all/{pid}')
@@ -419,23 +314,13 @@ async def update_record(pid:int, record_u:Record_u):
     # 쿼리 실행
   session.execute(query,values)
   session.commit()
-  updated_record = session.query(AllPatientRecordView).filter(AllPatientRecordView.pid == pid, AllPatientRecordView.p_record_seq == record_u.p_record_seq).first()
-  session.close()
-  return updated_record
-
-# 환자 vital 5개 빠른추가
-@router.post('/api/insert_fast_record/{pid}')
-async def insert_fast_record(pid:int, record_i:Record_i):
-  input_time = datetime.datetime.strptime(record_i.input_time, '%Y-%m-%dT%H:%M:%S')
-  birth_date = datetime.datetime.strptime(record_i.birth_date, '%Y-%m-%d').date()
-
-  model_predict2(record_i)
-  query = text(f"INSERT INTO vital_record_all (pid, input_time, birth_date, sex, hr, temp, resp, sbp, dbp, sepsis_in_six, sepsis_percent) VALUES (:pid, :input_time, :birth_date, :sex, :hr, :O2Sat, :temp, :resp, :sbp, :dbp, :sepsis_in_six, :sepsis_percent)")
-  values = {'pid': pid, 'input_time': input_time, 'birth_date': birth_date, 'sex': record_i.sex, 'hr': record_i.hr, 'O2Sat': record_i.O2Sat, 'temp': record_i.temp, 'resp': record_i.resp, 'sbp': record_i.sbp, 'dbp': record_i.dbp, 'sepsis_in_six': record_i.sepsis_in_six, 'sepsis_percent': record_i.sepsis_percent}
+  query = text(f"UPDATE vital_record_all_mask SET hr = :hr, O2Sat = :O2Sat, temp = :temp, resp = :resp, sbp = :sbp, dbp = :dbp WHERE pid = :pid AND p_record_seq = :p_record_seq")
+  values = {'hr': record_u.hr, 'O2Sat': record_u.O2Sat, 'temp': record_u.temp, 'resp': record_u.resp, 'sbp': record_u.sbp, 'dbp': record_u.dbp, 'pid': pid, 'p_record_seq': record_u.p_record_seq}
     # 쿼리 실행
   session.execute(query,values)
   session.commit()
-  updated_record = session.query(AllPatientRecordView).filter(AllPatientRecordView.pid == pid, AllPatientRecordView.input_time == input_time).first()
+  model_pred(pid)
+  updated_record = session.query(AllPatientRecordView).filter(AllPatientRecordView.pid == pid, AllPatientRecordView.p_record_seq == record_u.p_record_seq).first()
   session.close()
   return updated_record
 
@@ -526,10 +411,7 @@ async def lab_insert(pid:int,labdata: LabData):
     session.merge(sub_mask)
     session.commit()
   # # ------------------vital_record_all_mask 최근 batch 개 뽑아서 model pred 돌리기--------
-    model_pred(pid)
-
-
-
+  return pid
 v_insert_list=['hr', 'O2Sat', 'temp', 'sbp', 'dbp', 'map', 'resp']
   # ------------------vital_record_all 최근 데이터 sepsis업데이트하기--------------
 @router.post('/api/vital_insert/{pid}')
@@ -538,8 +420,6 @@ async def vital_insert(pid:int,vital: Record_i):
   birth_date = datetime.datetime.strptime(vital.birth_date, '%Y-%m-%d').date()
     # -----------------vital_record_all 만들기 넣기--------------------------
   latest_filled=session.query(LabDataFilled).filter(LabDataFilled.pid==pid).order_by(desc(LabDataFilled.lab_record_seq)).first()
-  patient=session.query(PatientGeneralTable).filter_by(pid=pid).first()
-  df_median_values=pd.DataFrame([median_values])
   vital_dict=vital.dict()
 
   if latest_filled: # lab data가 있을때
@@ -555,8 +435,8 @@ async def vital_insert(pid:int,vital: Record_i):
     session.commit()
 
   #-------------------vital_record_all_mask 만들어서 넣어주기-----------------
-    mask_raw=session.query(VitalRecordAllMask).filter(VitalRecordAllMask.pid==pid).order_by(desc(VitalRecordAllMask.p_record_seq)).first()
-    dict_mask=mask_raw.__dict__
+    mask_raw2=session.query(VitalRecordAllMask).filter(VitalRecordAllMask.pid==pid).order_by(desc(VitalRecordAllMask.p_record_seq)).first()
+    dict_mask=mask_raw2.__dict__
     # merged_dict 재사용!
     df_mask=pd.DataFrame([dict_mask])
     df_mask_droped=df_mask.drop(COLS,axis=1,inplace=False)
@@ -567,8 +447,9 @@ async def vital_insert(pid:int,vital: Record_i):
     dict_vital_mask=df_vital_mask.to_dict('records')[0].copy()
     vital_mask_insert=VitalRecordAllMask(**dict_vital_mask)
     session.add(vital_mask_insert)
+    session.commit()
     # model 예측 진행 및 예측값으로 업데이트
-    model_pred(pid)
+    await model_pred(pid)
   else:#lab data가 없을때~
       # -----------------vital_record_all 만들기 넣기--------------------------
     df_vi=pd.DataFrame([vital_dict])
@@ -613,7 +494,6 @@ async def vital_insert(pid:int,vital: Record_i):
     session.commit()
     # 최근 30개만 사용!            ~~~~~~~이 아래부분은 모듈화가 가능할것같음!~~~~~~~~~~~~
     # model 예측 진행 및 예측값으로 업데이트
-    model_pred(pid)
-  
+  return pid
 
 

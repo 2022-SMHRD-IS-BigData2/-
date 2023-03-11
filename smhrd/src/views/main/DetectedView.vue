@@ -104,8 +104,13 @@
 import moment from 'moment'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
+import VueToast from 'vue-toast-notification';
+import 'vue-toast-notification/dist/theme-sugar.css';
 export default {
   components: {},
+  plugins: [
+    VueToast
+  ],
   data () {
     return {
       clickTime: moment().format('YYYY-MM-DD HH:mm:ss'),
@@ -143,6 +148,9 @@ export default {
   },
   created () {
     this.fetchData();
+    // use(VueToast, {
+    //   position: 'top-right',
+    // });
   },
   watch: {
     '$store.state.searchQuery'(newSearchQuery, oldSearchQuery) {
@@ -156,6 +164,22 @@ export default {
       this.fetchData();
     }
   },
+    patients: function (newPatients, oldPatients) {
+      const addedNames = newPatients.map(patient => patient.name);
+      // const deletedNames = oldPatients.filter(name => !newPatients.some(patient => patient.name === name));
+      const deletedNames = oldPatients.filter(patient => !newPatients.some(p => p.name === patient.name));
+      const message = `${addedNames.join(', ')} 환자가 추가되었고, ${deletedNames.join(', ')} 환자가 제거되었습니다.`;
+    // this.$toast.success({
+    //   message: message,
+    //   duration: 3000, // 2초 동안 표시
+    //   position: 'top', // 화면 상단에 표시
+    //   className: 'custom-class', // 사용자 지정 CSS 클래스 적용
+    //   onClose: () => {
+    //     // console.log('토스트가 닫혔습니다.');
+    //   }
+    // });
+      console.log(message);
+  }  
 },
   mounted () {
     axios.get("http://127.0.0.1:8002/api/get_latest_sepsis_percent")
@@ -166,33 +190,9 @@ export default {
       this.page = data.page;
       return data;
     })
-    .then(data => {
-      setInterval(() => {
-        axios.get("http://127.0.0.1:8002/api/get_latest_sepsis_percent")
-        .then(res => res.data)
-        .then(data => {
-          const oldPatients = this.patients.map(patient => patient.name);
-          this.patients = data.data;
-          const newPatients = this.patients.filter(patient => !oldPatients.includes(patient.name));
-          const deletedPatients = oldPatients.filter(name => !this.patients.some(patient => patient.name === name));
-          if (newPatients.length > 0 || deletedPatients.length > 0) {
-            const addedNames = newPatients.map(patient => patient.NAME);
-            const deletedNames = deletedPatients.join(', ');
-            const message = `${addedNames.join(', ')} 환자가 추가되었고, ${deletedNames} 환자가 제거되었습니다.`;
-            this.$notify({
-              title: '환자 변동',
-              message: message,
-              type: 'success'
-            });
-          }
-        });
-      }, 5000);
-    })
     .catch(error => {
       console.log(error);
     });
-
-
 
     const now = new Date();
     const year = now.getFullYear();
@@ -348,7 +348,8 @@ navigateToRoute(patient) {
       try {
     console.log(record_i);
     // API 호출
-    const response = await axios.post(`http://127.0.0.1:8002/api/insert_fast_record/${pid}`,record_i);
+    const response = await axios.post(`http://127.0.0.1:8002/api/vital_insert/${pid}`,record_i);
+    await axios.get(`http://127.0.0.1:8002/api/predict_sepsis/${record_i.pid}`);
     // 응답 데이터 확인
     console.log(response.data);
     // 창 닫기

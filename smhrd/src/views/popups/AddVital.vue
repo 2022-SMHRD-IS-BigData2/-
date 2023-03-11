@@ -44,7 +44,7 @@
     <input type="hidden" v-model="patients.birth_date">
     <input type="hidden" v-model="patients.sex">
 
-    <button type="submit" class="btn">저장</button>
+    <button type="submit" @click=insertRecord class="btn">저장</button>
     <button class="btn" @click="closeWindow">취소</button>
   </form>
   </div>
@@ -59,7 +59,13 @@ export default {
   data () {
     return {
       clickTime: moment().format('YYYY-MM-DDTHH:mm:ss'),
-      patients: []
+      patients: [],
+      hr:null,
+      O2Sat:null,
+      temp:null,
+      resp:null,
+      sbp:null,
+      dbp:null
     }
   },
   setup () {},
@@ -85,7 +91,7 @@ export default {
     unmounted () {},
     methods: {
       closeWindow() {
-          window.close();
+        window.close();
     },
     async preventInvalidInput(event, field) {
   const inputVal = event.target.value;
@@ -128,18 +134,17 @@ export default {
       sepsis_percent: 0
     };
     try {
-    console.log(record_i);
-    // API 호출
-    const response = await axios.post(`http://127.0.0.1:8002/api/insert_fast_record/${record_i.pid}`,record_i);
-    // 응답 데이터 확인
-    console.log(response.data);
-    // 창 닫기
-    alert("입력 성공");    
-    window.close();
-  } 
-  catch (error) {
-    alert("입력값을 확인해주세요.")
-    console.error(error);
+      // API 호출
+      const response1=await axios.post(`http://127.0.0.1:8002/api/vital_insert/${record_i.pid}`,record_i);
+      await axios.get(`http://127.0.0.1:8002/api/predict_sepsis/${record_i.pid}`);
+      // alert("입력 성공");
+      window.close();
+      // 응답 데이터 확인
+      // 창 닫기
+    }
+    catch (error) {
+      console.error(error);
+      // alert("입력값을 확인해주세요.")
   }
 },
 

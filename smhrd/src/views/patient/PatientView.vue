@@ -105,12 +105,16 @@ export default {
   },
   setup() {
     const router = useRouter()
+    const updateParent = () => {
+        window.opener.location.reload(); // 부모 창 새로고침
+      };
     const AddVital = () => {
       window.open(
         router.resolve({ name: 'AddVital' }).href,
         'AddVital',
         'width=500,height=500'
-      )
+      );
+      window.addEventListener('beforeunload', updateParent); // 창이 닫히기 전에 업데이트 함수 호출
     }
 
     const AddLab = () => {
@@ -118,7 +122,8 @@ export default {
         router.resolve({ name: 'AddLab' }).href,
         'AddLab',
         'width=500,height=500'
-      )
+      );
+      window.addEventListener('beforeunload', updateParent); // 창이 닫히기 전에 업데이트 함수 호출
     }
 
     return {

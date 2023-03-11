@@ -69,7 +69,8 @@ export default {
   watch: {
   currentDate(newVal, oldVal) {
     this.getDataFromServer();
-  }
+  },
+  
 },
   mounted() {
     this.getDataFromServer();

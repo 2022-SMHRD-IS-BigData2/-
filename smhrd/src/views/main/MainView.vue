@@ -323,7 +323,8 @@ navigateToRoute(patient) {
       try {
     console.log(record_i);
     // API 호출
-    const response = await axios.post(`http://127.0.0.1:8002/api/insert_fast_record/${pid}`,record_i);
+    const response = await axios.post(`http://127.0.0.1:8002/api/vital_insert/${pid}`,record_i);
+    await axios.get(`http://127.0.0.1:8002/api/predict_sepsis/${record_i.pid}`);
     // 응답 데이터 확인
     console.log(response.data);
     // 창 닫기

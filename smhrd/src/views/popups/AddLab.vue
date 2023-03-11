@@ -2,7 +2,7 @@
   <div id="wrap-box">
     <h3 style="text-align: center">피검사 데이터 추가</h3>
 
-    <form action="">
+    <form @submit.prevent="insertLabData">
       <table>
         <tbody>
           <tr>
@@ -119,7 +119,7 @@
           </tr>
         </tbody>
       </table>
-      <button type="submit" class="btn" @click="db_input">저장</button>
+      <button type="submit" class="btn" @click="insertLabRecord">저장</button>
       <button class="btn" @click="close">취소</button>
     </form>
   </div>
@@ -183,7 +183,50 @@ export default {
   return;
 }
 },
-    db_input() {}
+async insertLabRecord() {
+// 서버로 보낼 데이터 객체 생성
+  const LabData = {
+      pid : this.patients.pid,
+      EtCO2 : this.EtCO2,
+      BaseExcess : this.BaseExcess,
+      HCO3 : this.HCO3,
+      FiO2: this.FiO2,
+      pH:this.pH,
+      PaCO2:this.PaCO2,
+      SaO2:this.SaO2,
+      AST : this.AST,
+      BUN : this.BUN,
+      Alkalinephos : this.Alkalinephos,
+      Calcium : this.Calcium,
+      Chloride : this.Chloride,
+      Creatinine:this.Creatinine,
+      Glucose: this.Glucose,
+      Lactate:this.Lactate,
+      Magnesium:this.Magnesium,
+      Phosphate:this.Phosphate,
+      Potassium:this.Potassium,
+      Bilirubin_total:this.Bilirubin_total,
+      Hct:this.Hct,
+      Hgb:this.Hgb,
+      PTT:this.PTT,
+      WBC:this.WBC,
+      Fibrinogen:this.Fibrinogen,
+      Platelets:this.Platelets
+    };
+    try {
+    console.log(LabData);
+    // API 호출
+    const response = await axios.post(`http://127.0.0.1:8002/api/lab_insert/${LabData.pid}`,LabData);
+    await axios.get(`http://127.0.0.1:8002/api/predict_sepsis/${LabData.pid}`);
+    // 창 닫기
+    alert("입력 성공");
+    window.close();
+  } 
+  catch (error) {
+    alert("입력값을 확인해주세요.")
+    console.error(error);
+  }
+},
   }
 }
 </script>
