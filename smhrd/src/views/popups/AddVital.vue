@@ -17,7 +17,7 @@
       </tr>
       <tr>
       <td>HR</td>
-      <td><input type="text" v-model="hr" :style="hr ? 'border-color: green;' : ''" @input="preventInvalidInput($event, 'hr')"></td>
+      <td><input type="text" v-model="HR" :style="HR ? 'border-color: green;' : ''" @input="preventInvalidInput($event, 'HR')"></td>
         </tr>
         <tr>
         <td>O2Sat</td>
@@ -25,24 +25,24 @@
         </tr>
         <tr>
           <td>Temp</td>
-          <td><input type="text" v-model="temp" :style="temp ? 'border-color: green;' : ''" @input="preventInvalidInput($event, 'temp')"></td>
+          <td><input type="text" v-model="Temp" :style="Temp ? 'border-color: green;' : ''" @input="preventInvalidInput($event, 'Temp')"></td>
         </tr>
         <tr>
           <td>Resp</td>
-          <td><input type="text" v-model="resp" :style="resp ? 'border-color: green;' : ''" @input="preventInvalidInput($event, 'resp')"></td>
+          <td><input type="text" v-model="Resp" :style="Resp ? 'border-color: green;' : ''" @input="preventInvalidInput($event, 'Resp')"></td>
         </tr>
         <tr>
           <td>SBP</td>
-          <td><input type="text" v-model="sbp" :style="sbp ? 'border-color: green;' : ''" @input="preventInvalidInput($event, 'sbp')"></td>
+          <td><input type="text" v-model="SBP" :style="SBP ? 'border-color: green;' : ''" @input="preventInvalidInput($event, 'SBP')"></td>
         </tr>
         <tr>
           <td>DBP</td>
-          <td><input type="text" v-model="dbp" :style="dbp ? 'border-color: green;' : ''" @input="preventInvalidInput($event, 'dbp')"></td>
+          <td><input type="text" v-model="DBP" :style="DBP ? 'border-color: green;' : ''" @input="preventInvalidInput($event, 'DBP')"></td>
         </tr>
     </table>
     <input type="hidden" v-model="patients.pid">
     <input type="hidden" v-model="patients.birth_date">
-    <input type="hidden" v-model="patients.sex">
+    <input type="hidden" v-model="patients.Gender">
 
     <button type="submit" @click=insertRecord class="btn">저장</button>
     <button class="btn" @click="closeWindow">취소</button>
@@ -60,12 +60,12 @@ export default {
     return {
       clickTime: moment().format('YYYY-MM-DDTHH:mm:ss'),
       patients: [],
-      hr:null,
+      HR:null,
       O2Sat:null,
-      temp:null,
-      resp:null,
-      sbp:null,
-      dbp:null
+      Temp:null,
+      Resp:null,
+      SBP:null,
+      DBP:null
     }
   },
   setup () {},
@@ -123,13 +123,13 @@ export default {
       pid : this.patients.pid,
       input_time: this.clickTime,
       birth_date: this.patients.birth_date,
-      sex: this.patients.sex,
-      hr: this.hr,
+      Gender: this.patients.Gender,
+      HR: this.HR,
       O2Sat: this.O2Sat,
-      temp: this.temp,
-      resp: this.resp,
-      sbp: this.sbp,
-      dbp: this.dbp,
+      Temp: this.Temp,
+      Resp: this.Resp,
+      SBP: this.SBP,
+      DBP: this.DBP,
       sepsis_in_six: 0,
       sepsis_percent: 0
     };

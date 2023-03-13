@@ -8,8 +8,8 @@ class PatientGeneralTable(Base):
   __tablename__='patient_general'
   pid = Column(INT, primary_key=True, autoincrement=True)
   birth_date = Column(DATE,nullable=False)
-  sex=Column(INT,nullable=False)
-  age=Column(INT,nullable=False)
+  Gender=Column(INT,nullable=False)
+  Age=Column(INT,nullable=False)
   name=Column(String(50),nullable=False)
   emp_id=Column(INT,nullable=False)
   admin_date=Column(DATETIME, nullable=False)

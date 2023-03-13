@@ -4,8 +4,8 @@ import datetime
 class Patient(BaseModel):
   pid : int
   birth_date: datetime.date
-  sex : int
-  age : int
+  Gender : int
+  Age : int
   name : str
   emp_id : int
   admin_date : datetime.datetime=datetime.datetime.now()

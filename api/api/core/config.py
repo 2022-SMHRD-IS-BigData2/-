@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "sepsis"
     PROJECT_DESCRIPTION: str = "sepsis"
     API_V1_STR: str = "/api/v1"
-    database :str= 'mysql://%s:%s@%s:3307/%s' % (
+    database :str= 'mysql://%s:%s@%s:3308/%s' % (
                     user_name,
                     user_pwd,
                     db_host,

@@ -40,28 +40,28 @@
 
             </td>
             <td>{{ patient.name }}</td>
-            <td>{{ patient.age }}</td>
+            <td>{{ patient.Age }}</td>
             <td>{{  gender[index] }}</td>
-            <td>{{ patient.hr }}</td>
+            <td>{{ patient.HR }}</td>
             <td>{{ patient.O2Sat }}</td>
-            <td>{{ patient.temp }}</td>
-            <td>{{ patient.resp }}</td>
-            <td>{{ patient.sbp }}</td>
-            <td>{{ patient.dbp }}</td>
+            <td>{{ patient.Temp }}</td>
+            <td>{{ patient.Resp }}</td>
+            <td>{{ patient.SBP }}</td>
+            <td>{{ patient.DBP }}</td>
             <td>{{ patient.sepsis_percent }}</td>
           </tr>
           <tr v-if="patient.isAddOn">
             <td colspan="13">
               PID <input type="text" readonly v-model="patient.pid" @input="preventInvalidInput" :name="'fast_pid'+patient.pid">
               Name <input type="text" readonly v-model="patient.name" @input="preventInvalidInput" :name="'fast_name'+patient.pid">
-              HR <input type="text" @input="preventInvalidInput" :name="'fast_hr'+patient.pid">
+              HR <input type="text" @input="preventInvalidInput" :name="'fast_HR'+patient.pid">
               O2Sat <input type="text" @input="preventInvalidInput" :name="'fast_O2Sat'+patient.pid">
-              Temp <input type="text" @input="preventInvalidInput" :name="'fast_temp'+patient.pid">
-              Resp <input type="text" @input="preventInvalidInput" :name="'fast_resp'+patient.pid">
-              SBP <input type="text" @input="preventInvalidInput" :name="'fast_sbp'+patient.pid">
-              DBP <input type="text" @input="preventInvalidInput" :name="'fast_dbp'+patient.pid">
+              Temp <input type="text" @input="preventInvalidInput" :name="'fast_Temp'+patient.pid">
+              Resp <input type="text" @input="preventInvalidInput" :name="'fast_Resp'+patient.pid">
+              SBP <input type="text" @input="preventInvalidInput" :name="'fast_SBP'+patient.pid">
+              DBP <input type="text" @input="preventInvalidInput" :name="'fast_DBP'+patient.pid">
               <input type="hidden" :name="'fast_birth_date'+patient.pid" :value="patient.birth_date">
-              <input type="hidden" :name="'fast_sex'+patient.pid" :value="patient.sex">
+              <input type="hidden" :name="'fast_Gender'+patient.pid" :value="patient.Gender">
               <input type="hidden" :name="'fast_ICULOS'+patient.pid" :value="patient.ICULOS">
               <button type="button" :id="'addbtn'+patient.pid" @click="insertRecord(patient.pid)"> 추가 </button>
             </td>
@@ -198,7 +198,7 @@ navigateToRoute(patient) {
     if (!patient) return;
     this.selectedPatient = {
       pid: patient.pid,
-      p_name: patient.p_name,
+      name: patient.name,
       index: index // 선택된 환자의 인덱스도 함께 저장
     };
   },
@@ -271,23 +271,23 @@ navigateToRoute(patient) {
         }
 
       switch(inputName) {
-        case "fast_hr{patient.pid}":
-        this.hr = isValidInput ? inputVal : '';
+        case "fast_HR{patient.pid}":
+        this.HR = isValidInput ? inputVal : '';
         break;
         case "fast_O2Sat{patient.pid}":
-        this.hr = isValidInput ? inputVal : '';
+        this.O2Sat = isValidInput ? inputVal : '';
         break;
-        case "fast_temp{patient.pid}":
-        this.temp = isValidInput ? inputVal : '';
+        case "fast_Temp{patient.pid}":
+        this.Temp = isValidInput ? inputVal : '';
         break;
-        case "fast_resp{patient.pid}":
-        this.resp = isValidInput ? inputVal : '';
+        case "fast_Resp{patient.pid}":
+        this.Resp = isValidInput ? inputVal : '';
         break;
-        case "fast_sbp{patient.pid}":
-        this.sbp = isValidInput ? inputVal : '';
+        case "fast_SBP{patient.pid}":
+        this.SBP = isValidInput ? inputVal : '';
         break;
-        case "fast_dbp{patient.pid}":
-        this.dbp = isValidInput ? inputVal : '';
+        case "fast_DBP{patient.pid}":
+        this.DBP = isValidInput ? inputVal : '';
         break;
       }
       if (!isValidInput || inputVal === '') {
@@ -299,26 +299,26 @@ navigateToRoute(patient) {
       async insertRecord(pid) {
       let fast_pid=document.querySelector("input[name=fast_pid"+pid+"]").value;
       let fast_birth_date=document.querySelector("input[name=fast_birth_date"+pid+"]").value;
-      let fast_sex=document.querySelector("input[name=fast_sex"+pid+"]").value;
-      let fast_hr=document.querySelector("input[name=fast_hr"+pid+"]").value;
-      let fast_O2Sat=document.querySelector("input[name=fast_hr"+pid+"]").value;
-      let fast_temp=document.querySelector("input[name=fast_temp"+pid+"]").value;
-      let fast_resp=document.querySelector("input[name=fast_resp"+pid+"]").value;
-      let fast_sbp=document.querySelector("input[name=fast_sbp"+pid+"]").value;
-      let fast_dbp=document.querySelector("input[name=fast_dbp"+pid+"]").value;
+      let fast_Gender=document.querySelector("input[name=fast_Gender"+pid+"]").value;
+      let fast_HR=document.querySelector("input[name=fast_HR"+pid+"]").value;
+      let fast_O2Sat=document.querySelector("input[name=fast_O2Sat"+pid+"]").value;
+      let fast_Temp=document.querySelector("input[name=fast_Temp"+pid+"]").value;
+      let fast_Resp=document.querySelector("input[name=fast_Resp"+pid+"]").value;
+      let fast_SBP=document.querySelector("input[name=fast_DBP"+pid+"]").value;
+      let fast_DBP=document.querySelector("input[name=fast_DBP"+pid+"]").value;
 
 
       const record_i = {
         pid: parseInt(pid),
         input_time: moment(Date.now()).format('YYYY-MM-DDTHH:mm:ss'),
         birth_date:fast_birth_date,
-        sex : parseInt(fast_sex),
-        hr: parseInt(fast_hr),
+        Gender : parseInt(fast_Gender),
+        HR: parseInt(fast_HR),
         O2Sat: parseInt(fast_O2Sat),
-        temp: parseFloat(fast_temp),
-        resp: parseInt(fast_resp),
-        sbp: parseInt(fast_sbp),
-        dbp: parseInt(fast_dbp),
+        Temp: parseFloat(fast_Temp),
+        Resp: parseInt(fast_Resp),
+        SBP: parseInt(fast_SBP),
+        DBP: parseInt(fast_DBP),
       };
       try {
     console.log(record_i);
@@ -326,7 +326,6 @@ navigateToRoute(patient) {
     const response = await axios.post(`http://127.0.0.1:8002/api/vital_insert/${pid}`,record_i);
     await axios.get(`http://127.0.0.1:8002/api/predict_sepsis/${record_i.pid}`);
     // 응답 데이터 확인
-    console.log(response.data);
     // 창 닫기
     const patient = this.patients.find(p => p.pid === parseInt(pid));
     if (patient) {

@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends
 from ..core.database import session
+from ..core.pred_model import Sepsis_Pred_Model
 from typing import List,Tuple
 from sqlalchemy import Boolean, Column, Integer, String, DateTime, ForeignKey,text,and_,desc
 from sqlalchemy.orm import relationship
@@ -11,124 +12,23 @@ import pandas as pd, numpy as np
 from datetime import datetime
 import datetime
 import random
+import json
 
-
+import torch
+import torch.nn.functional as F
+pd.set_option('display.max_columns', None)
+pd.set_option('display.max_rows', None)
 router = APIRouter()
 
-median_values = {
-'hr': 84.58,
-'O2Sat': 97.19,
-'temp': 36.98,
-'sbp': 123.75,
-'dbp': 63.83,
-'map': 82.40,
-'resp': 18.73,
-'EtCO2': 32.96,
-'BaseExcess': -0.69,
-'HCO3': 24.08,
-'FiO2': 0.55,
-'pH': 7.38,
-'PaCO2': 41.02,
-'SaO2': 92.65,
-'AST': 260.22,
-'BUN': 23.92,
-'Alkalinephos': 102.48,
-'Calcium': 7.56,
-'Chloride': 105.83,
-'Creatinine': 1.51,
-'Glucose': 136.93,
-'Lactate': 2.65,
-'Magnesium': 2.05,
-'Phosphate': 3.54,
-'Potassium': 4.14,
-'Bilirubin_total': 2.11,
-'Hct': 30.79,
-'Hgb': 10.43,
-'PTT': 41.23,
-'WBC': 11.45,
-'Fibrinogen': 287.39,
-'Platelets': 196.01
-}
-mean_values = {
-    'hr': 84.58,
-    'O2Sat': 97.19,
-    'temp': 36.98,
-    'sbp': 123.75,
-    'dbp': 63.83,
-    'map': 82.40,
-    'resp': 18.73,
-    'EtCO2': 32.96,
-    'BaseExcess': -0.69,
-    'HCO3': 24.08,
-    'FiO2': 0.55,
-    'pH': 7.38,
-    'PaCO2': 41.02,
-    'SaO2': 92.65,
-    'AST': 260.22,
-    'BUN': 23.92,
-    'Alkalinephos': 102.48,
-    'Calcium': 7.56,
-    'Chloride': 105.83,
-    'Creatinine': 1.51,
-    'Glucose': 136.93,
-    'Lactate': 2.65,
-    'Magnesium': 2.05,
-    'Phosphate': 3.54,
-    'Potassium': 4.14,
-    'Bilirubin_total': 2.11,
-    'Hct': 30.79,
-    'Hgb': 10.43,
-    'PTT': 41.23,
-    'WBC': 11.45,
-    'Fibrinogen': 287.39,
-    'Platelets': 196.01
-}
-std_values = {
-    'hr': 17.33,
-    'O2Sat': 2.94,
-    'temp': 0.77,
-    'sbp': 23.23,
-    'dbp': 13.96,
-    'map': 16.34,
-    'resp': 5.10,
-    'EtCO2': 7.95,
-    'BaseExcess': 4.29,
-    'HCO3': 4.38,
-    'FiO2': 11.12,
-    'pH': 0.07,
-    'PaCO2': 9.27,
-    'SaO2': 10.89,
-    'AST': 855.75,
-    'BUN': 19.99,
-    'Alkalinephos': 120.12,
-    'Calcium': 2.43,
-    'Chloride': 5.88,
-    'Creatinine': 1.81,
-    'Glucose': 51.31,
-    'Lactate': 2.53,
-    'Magnesium': 0.40,
-    'Phosphate': 1.42,
-    'Potassium': 0.64,
-    'Bilirubin_total': 4.31,
-    'Hct': 5.49,
-    'Hgb': 1.97,
-    'PTT': 26.22,
-    'WBC': 7.73,
-    'Fibrinogen': 153.00,
-    'Platelets': 103.64
-}
-vital_cols=['hr', 'O2Sat', 'temp', 'sbp', 'dbp', 'map', 'resp','EtCO2',
+col_stat = json.load(open('api\\col_stat.json', 'r'))
+
+vital_cols=['HR', 'O2Sat', 'Temp', 'SBP', 'DBP', 'MAP', 'Resp','EtCO2',
       'BaseExcess', 'HCO3', 'FiO2', 'pH', 'PaCO2', 'SaO2', 'AST', 'BUN',
       'Alkalinephos', 'Calcium', 'Chloride', 'Creatinine',
       'Glucose', 'Lactate', 'Magnesium', 'Phosphate', 'Potassium',
       'Bilirubin_total', 'Hct', 'Hgb', 'PTT', 'WBC',
-      'Fibrinogen', 'Platelets']
-COLSpp = ['HR', 'O2Sat', 'Temp', 'SBP', 'map', 'DBP', 'Resp', 'EtCO2',
-          'BaseExcess', 'HCO3', 'FiO2', 'pH', 'PaCO2', 'SaO2', 'AST', 'BUN',
-          'Alkalinephos', 'Calcium', 'Chloride', 'Creatinine',
-          'Glucose', 'Lactate', 'Magnesium', 'Phosphate', 'Potassium',
-          'Bilirubin_total', 'Hct', 'Hgb', 'PTT', 'WBC',
-          'Fibrinogen', 'Platelets', 'Age']
+      'Fibrinogen', 'Platelets','Age']
+
 INFO_COLS = ['pid', 'HospAdmTime', 'ICULOS', 'SepsisLabel', 'Age','Gender']
 
 lab_cols=['pid','EtCO2',
@@ -150,25 +50,35 @@ lab_cols3=['EtCO2',
       'Bilirubin_total', 'Hct', 'Hgb', 'PTT', 'WBC',
       'Fibrinogen', 'Platelets']
 
-COLS = ['age', 'hr', 'O2Sat', 'temp', 'resp', 'sbp', 'dbp', 'map', 'EtCO2',
+COLS = ['HR', 'O2Sat', 'Temp', 'SBP', 'MAP', 'DBP', 'Resp','EtCO2',
       'BaseExcess', 'HCO3', 'FiO2', 'pH', 'PaCO2', 'SaO2', 'AST', 'BUN',
       'Alkalinephos', 'Calcium', 'Chloride', 'Creatinine',
       'Glucose', 'Lactate', 'Magnesium', 'Phosphate', 'Potassium',
       'Bilirubin_total', 'Hct', 'Hgb', 'PTT', 'WBC',
-      'Fibrinogen', 'Platelets']
+      'Fibrinogen', 'Platelets','Age']
+
+MASK_COLS = [x+"_mask" for x in COLS]
+drop_list=["pid","p_record_seq","birth_date","input_time","Gender","ICULOS"]
 
 #model 예시
+def cut_or_fill_seq(input_tensor, seq_len=30):
+  if input_tensor.shape[1]>seq_len:
+      input_tensor=input_tensor[:,-seq_len:]
+  elif input_tensor.shape[1]<seq_len:
+      zeros = np.zeros([input_tensor.shape[0], seq_len-input_tensor.shape[1], input_tensor.shape[2]])
+      input_tensor = np.concatenate([zeros, input_tensor], axis=1)
+  return torch.Tensor(input_tensor)
 
-def pred_sepsis(pred_sat:Record_for_Predict):
-    # 랜덤한 0~100의 값을 가진 변수 생성
-  percent = random.uniform(0, 100)
-  
-  # 실수값이 80 이상이면 1, 아니면 0을 리턴
-  if percent >= 80:
-      return 1,percent
+def percent_80(output:float):
+  if output>0.8:
+    sepsis=1
   else:
-      return 0,percent
+    sepsis=0
+  return sepsis,output*100
 
+sepsis_model=Sepsis_Pred_Model(66,64)
+
+  # import pdb; pdb.set_trace()
 # model predict
 @router.get("/api/predict_sepsis/{pid}")
 async def model_pred(pid:int):
@@ -178,42 +88,53 @@ async def model_pred(pid:int):
     data_sat_raw.drop('_sa_instance_state',axis=1,inplace=True)
     data_sat_raw=data_sat_raw.sort_values(["pid", "p_record_seq"]).reset_index(drop=True)
     max_seq = len(data_sat_raw)
-    max_ind = data_sat_raw.iloc[max_seq-1].ICULOS
+
     pred_sat=[]
     # ICULOS 값은 최근값만 사용하도록 해보자~
     for k in range(max_seq):
       if (data_sat_raw.iloc[max_seq-k-1].ICULOS - data_sat_raw.iloc[max_seq-k-2].ICULOS == 1):
-        pred_sat.insert(0, data_sat_raw.iloc[max_seq-k-1])
+        pred_sat.insert(0,data_sat_raw.iloc[max_seq-k-1])
       else:
         if k == max_seq-1:
-          pred_sat.insert(0, data_sat_raw.iloc[max_seq-k-1])
+          pred_sat.insert(0,data_sat_raw.iloc[max_seq-k-1])
           break
         else:
           break
-    print(len(pred_sat))
-    # 일단 최근 데이터 하나 가져와야 하네...
-    latest_raw=session.query(VitalRecordAll).filter(VitalRecordAll.pid == pid).order_by(desc(VitalRecordAll.p_record_seq)).first()
-    dict_latest_raw=latest_raw.__dict__
-    df_latest=pd.DataFrame([dict_latest_raw]).copy()
+
     # pred_sat df로 묶어주기
-    pred_sat=pd.DataFrame(pred_sat)
+    pred_sat2=pd.DataFrame(pred_sat)
+    pred_sat_dropped=pred_sat2.drop(drop_list,axis=1,inplace=False).copy()
+    # 컬럼 재배열
+    pred_sat_dropped = pred_sat_dropped[COLS+MASK_COLS]
+    max_seq_len = 30
     # 스케일링하기~
-    pred_list=[]
-    for col in vital_cols:
-      pred_sat[col] = (pred_sat[col] - mean_values[col]) / std_values[col]
-    for i in range(len(pred_sat)):
-      r = dict(pred_sat.iloc[i])
-      pred_list.append(Record_for_Predict(**r))
+    for col in COLS:
+      pred_sat_dropped[col] = (pred_sat_dropped[col] - col_stat[col]['mean']) / col_stat[col]['std']
+    
+    # zero 패딩하기!
+    pred_array=pred_sat_dropped.values
+    # print(pred_array)
+    input_tensor_raw = torch.tensor(pred_array, dtype=torch.float32).unsqueeze(0) 
+    input_tensor=cut_or_fill_seq(input_tensor_raw,seq_len=max_seq_len)
+
+    sepsis_model.load_state_dict(torch.load("api\\0.774.pth"))
+    sepsis_model.eval()
+    with torch.no_grad():
+      output_tensor = sepsis_model(input_tensor)
+    # 출력값 출력
+    output_tensor = F.sigmoid(output_tensor)
+    output = output_tensor.squeeze().item() # Tensor에서 값을 꺼내서 scalar 값으로 변환
     # update해주기
-    sep,percent=pred_sepsis(pred_list)
+    sep,percent=percent_80(output)
     query=text("update vital_record_all set sepsis_in_six = :sepsis_in_six, sepsis_percent = :sepsis_percent where pid = :pid and p_record_seq = :p_record_seq")
     values={'sepsis_in_six' : sep,
             'sepsis_percent' : percent,
             'pid': pid,
-            'p_record_seq':df_latest.iloc[0].p_record_seq}
+            'p_record_seq':data_sat_raw.iloc[-1].p_record_seq}
     session.execute(query,values)
     session.commit()
     session.close()
+    return sep,percent
 
 @router.get("/api/data/")
 async def get_data(limit: int = 10, page: int = 1):
@@ -309,13 +230,13 @@ async def get_select_record(pid: int, input_time: str):
 # record 수정한 값 받아서 업데이트하는 api
 @router.post('/api/update_record/{pid}')
 async def update_record(pid:int, record_u:Record_u):
-  query = text(f"UPDATE vital_record_all SET hr = :hr, O2Sat = :O2Sat, temp = :temp, resp = :resp, sbp = :sbp, dbp = :dbp WHERE pid = :pid AND p_record_seq = :p_record_seq")
-  values = {'hr': record_u.hr, 'O2Sat': record_u.O2Sat, 'temp': record_u.temp, 'resp': record_u.resp, 'sbp': record_u.sbp, 'dbp': record_u.dbp, 'pid': pid, 'p_record_seq': record_u.p_record_seq}
+  query = text(f"UPDATE vital_record_all SET HR = :HR, O2Sat = :O2Sat, Temp = :Temp, Resp = :Resp, SBP = :SBP, DBP = :DBP WHERE pid = :pid AND p_record_seq = :p_record_seq")
+  values = {'HR': record_u.HR, 'O2Sat': record_u.O2Sat, 'Temp': record_u.Temp, 'Resp': record_u.Resp, 'SBP': record_u.SBP, 'DBP': record_u.DBP, 'pid': pid, 'p_record_seq': record_u.p_record_seq}
     # 쿼리 실행
   session.execute(query,values)
   session.commit()
-  query = text(f"UPDATE vital_record_all_mask SET hr = :hr, O2Sat = :O2Sat, temp = :temp, resp = :resp, sbp = :sbp, dbp = :dbp WHERE pid = :pid AND p_record_seq = :p_record_seq")
-  values = {'hr': record_u.hr, 'O2Sat': record_u.O2Sat, 'temp': record_u.temp, 'resp': record_u.resp, 'sbp': record_u.sbp, 'dbp': record_u.dbp, 'pid': pid, 'p_record_seq': record_u.p_record_seq}
+  query = text(f"UPDATE vital_record_all_mask SET HR = :HR, O2Sat = :O2Sat, Temp = :Temp, Resp = :Resp, SBP = :SBP, DBP = :DBP WHERE pid = :pid AND p_record_seq = :p_record_seq")
+  values = {'HR': record_u.HR, 'O2Sat': record_u.O2Sat, 'Temp': record_u.Temp, 'Resp': record_u.Resp, 'SBP': record_u.SBP, 'DBP': record_u.DBP, 'pid': pid, 'p_record_seq': record_u.p_record_seq}
     # 쿼리 실행
   session.execute(query,values)
   session.commit()
@@ -346,11 +267,11 @@ async def lab_insert(pid:int,labdata: LabData):
   df_fill_list = pd.read_sql(session.query(LabDataRecord).filter(LabDataRecord.pid==pid).statement, session.bind)
   # 채울때 하나채우고 dup을 해보자
 
-  for col in lab_cols:
+  for col in COLS:
     # pid의 첫번째 행(record_seq=1)들만 남긴다 => 인덱스 구해서 저장
     first_index = df_fill_list.drop_duplicates(['pid'], keep='first').index
     # train_df.loc[first_index,col]의 값: 각 pid의 첫번째 행들의 컬럼별 값들이 null이면 중앙값으로 채우고, 아니면 그냥 그대로 써라!
-    df_fill_list.loc[first_index, col] = df_fill_list.loc[first_index,col].apply(lambda x:median_values[col] if pd.isna(x) else x)
+    df_fill_list.loc[first_index, col] = df_fill_list.loc[first_index,col].apply(lambda x:col_stat[col]['median'] if pd.isna(x) else x)
     # 맨 앞이 null이면 중앙값으로 채웠으니까 ffill 써서 쭉 채워줌
     df_fill_list[col] = df_fill_list[col].fillna(method='ffill')
     db_lab_fill = LabDataFilled(**df_fill_list.iloc[-1].to_dict())
@@ -396,7 +317,7 @@ async def lab_insert(pid:int,labdata: LabData):
     df_masks = pd.DataFrame()
     for col in COLS:
         # 해당 column에서 NaN이 아닌 값의 index를 True로, NaN이면 False로 설정
-        df_masks[col+'_mask'] = df_sub[col].isna().astype(int)
+        df_masks[col+'_mask'] = df_sub[col].notnull().astype(int)
     # 모든 mask column을 결합하여 하나의 DataFrame으로 만듦
     df_masks = pd.concat([df_masks[x] for x in MASK_COLS], axis=1)
     df_filled1[df_masks.columns]=df_masks
@@ -412,7 +333,7 @@ async def lab_insert(pid:int,labdata: LabData):
     session.commit()
   # # ------------------vital_record_all_mask 최근 batch 개 뽑아서 model pred 돌리기--------
   return pid
-v_insert_list=['hr', 'O2Sat', 'temp', 'sbp', 'dbp', 'map', 'resp']
+v_insert_list=['HR', 'O2Sat', 'Temp', 'SBP', 'DBP', 'MAP', 'Resp']
   # ------------------vital_record_all 최근 데이터 sepsis업데이트하기--------------
 @router.post('/api/vital_insert/{pid}')
 async def vital_insert(pid:int,vital: Record_i):
@@ -437,7 +358,6 @@ async def vital_insert(pid:int,vital: Record_i):
   #-------------------vital_record_all_mask 만들어서 넣어주기-----------------
     mask_raw2=session.query(VitalRecordAllMask).filter(VitalRecordAllMask.pid==pid).order_by(desc(VitalRecordAllMask.p_record_seq)).first()
     dict_mask=mask_raw2.__dict__
-    # merged_dict 재사용!
     df_mask=pd.DataFrame([dict_mask])
     df_mask_droped=df_mask.drop(COLS,axis=1,inplace=False)
     df_mask_droped.drop('_sa_instance_state',axis=1,inplace=True)
@@ -448,12 +368,15 @@ async def vital_insert(pid:int,vital: Record_i):
     vital_mask_insert=VitalRecordAllMask(**dict_vital_mask)
     session.add(vital_mask_insert)
     session.commit()
-    # model 예측 진행 및 예측값으로 업데이트
-    await model_pred(pid)
   else:#lab data가 없을때~
       # -----------------vital_record_all 만들기 넣기--------------------------
+    lab_list=[]
     df_vi=pd.DataFrame([vital_dict])
-    df_median=pd.DataFrame([mean_values])
+    lab_list=[]
+    for col in COLS:
+      lab_list.append([col_stat[col]['median']])  # [] 추가
+    df_median=pd.DataFrame(lab_list).T
+    df_median.columns=COLS
     df_medi_droped=df_median.drop(v_insert_list,axis=1,inplace=False).copy()
     df_merged=pd.concat([df_vi,df_medi_droped],axis=1)
     merged_dict = df_merged.to_dict(orient='records')[0]
@@ -480,7 +403,7 @@ async def vital_insert(pid:int,vital: Record_i):
     MASK_COLS = [x+'_mask' for x in COLS]
     for col in COLS:
         # 해당 column에서 NaN이 아닌 값의 index를 True로, NaN이면 False로 설정
-        df_masks[col+'_mask'] = df_null_merged[col].isna().astype(int)
+        df_masks[col+'_mask'] = df_null_merged[col].notnull().astype(int)
     # 모든 mask column을 결합하여 하나의 DataFrame으로 만듦
     df_masks = pd.concat([df_masks[x] for x in MASK_COLS], axis=1)
     df_droped[df_masks.columns]=df_masks

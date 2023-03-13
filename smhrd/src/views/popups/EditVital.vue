@@ -17,27 +17,27 @@
       </tr>
       <tr>
       <td>HR</td>
-      <td><input type="text" v-model="hr" :style="hr ? 'border-color: green;' : ''" @input="preventInvalidInput($event, 'hr')"></td>
+      <td><input type="text" v-model="HR" :style="HR ? 'border-color: green;' : ''" @input="preventInvalidInput($event, 'HR')"></td>
         </tr>
         <tr>
       <td>O2Sat</td>
-      <td><input type="text" v-model="O2Sat" :style="hr ? 'border-color: green;' : ''" @input="preventInvalidInput($event, 'O2Sat')"></td>
+      <td><input type="text" v-model="O2Sat" :style="O2Sat ? 'border-color: green;' : ''" @input="preventInvalidInput($event, 'O2Sat')"></td>
         </tr>
         <tr>
           <td>Temp</td>
-          <td><input type="text" v-model="temp" :style="temp ? 'border-color: green;' : ''" @input="preventInvalidInput($event, 'temp')"></td>
+          <td><input type="text" v-model="Temp" :style="Temp ? 'border-color: green;' : ''" @input="preventInvalidInput($event, 'Temp')"></td>
         </tr>
         <tr>
           <td>Resp</td>
-          <td><input type="text" v-model="resp" :style="resp ? 'border-color: green;' : ''" @input="preventInvalidInput($event, 'resp')"></td>
+          <td><input type="text" v-model="Resp" :style="Resp ? 'border-color: green;' : ''" @input="preventInvalidInput($event, 'Resp')"></td>
         </tr>
         <tr>
           <td>SBP</td>
-          <td><input type="text" v-model="sbp" :style="sbp ? 'border-color: green;' : ''" @input="preventInvalidInput($event, 'sbp')"></td>
+          <td><input type="text" v-model="SBP" :style="SBP ? 'border-color: green;' : ''" @input="preventInvalidInput($event, 'SBP')"></td>
         </tr>
         <tr>
           <td>DBP</td>
-          <td><input type="text" v-model="dbp" :style="dbp ? 'border-color: green;' : ''" @input="preventInvalidInput($event, 'dbp')"></td>
+          <td><input type="text" v-model="DBP" :style="DBP ? 'border-color: green;' : ''" @input="preventInvalidInput($event, 'DBP')"></td>
         </tr>
     </table>
     <input type="hidden" v-model="patients.pid">
@@ -58,11 +58,11 @@ export default {
     return {
       patients: [],
       modifiedInput: '',
-      hr: null,
-      temp: null,
-      sbp: null,
-      dbp: null,
-      resp: null,
+      HR: null,
+      Temp: null,
+      SBP: null,
+      DBP: null,
+      Resp: null,
     }
   },
   setup () {},
@@ -79,12 +79,12 @@ export default {
       .then(data => {
         console.log(data['data'])
         this.patients=data['data'];
-        this.hr = this.patients.hr;  // `hr` 프로퍼티 추가
+        this.HR = this.patients.HR;  // `hr` 프로퍼티 추가
         this.O2Sat = this.patients.O2Sat;  // `hr` 프로퍼티 추가
-        this.temp = this.patients.temp;  // `temp` 프로퍼티 추가
-        this.sbp = this.patients.sbp;  // `sbp` 프로퍼티 추가
-        this.dbp = this.patients.dbp;  // `dbp` 프로퍼티 추가
-        this.resp = this.patients.resp;  // `resp` 프로퍼티 추가
+        this.Temp = this.patients.Temp;  // `temp` 프로퍼티 추가
+        this.SBP = this.patients.SBP;  // `sbp` 프로퍼티 추가
+        this.DBP = this.patients.DBP;  // `dbp` 프로퍼티 추가
+        this.Resp = this.patients.Resp;  // `resp` 프로퍼티 추가
         return data
       })
       .then(response => {
@@ -130,12 +130,12 @@ export default {
       const record_u = {
         pid: parseInt(this.patients.pid),
         p_record_seq: parseInt(this.patients.p_record_seq),
-        hr: parseInt(this.hr),
+        HR: parseInt(this.HR),
         O2Sat: parseInt(this.O2Sat),
-        temp: parseFloat(this.temp),
-        resp: parseInt(this.resp),
-        sbp: parseInt(this.sbp),
-        dbp: parseInt(this.dbp)
+        Temp: parseFloat(this.Temp),
+        Resp: parseInt(this.Resp),
+        SBP: parseInt(this.SBP),
+        DBP: parseInt(this.DBP)
       };
     try {
       // API 호출

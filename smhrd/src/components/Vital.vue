@@ -16,22 +16,22 @@
         <tbody>
           <tr id="td-bold">
             <td style="cursor: pointer; font-weight: bold; padding: 5px;">RECENT<br>{{  patients.input_time }}</td>
-            <td>{{ patients.hr }}</td>
+            <td>{{ patients.HR }}</td>
             <td>{{ patients.O2Sat }}</td>
-            <td>{{ patients.temp }}</td>
-            <td>{{ patients.resp }}</td>
-            <td>{{ patients.sbp }}</td>
-            <td>{{ patients.dbp }}</td>
+            <td>{{ patients.Temp }}</td>
+            <td>{{ patients.Resp }}</td>
+            <td>{{ patients.SBP }}</td>
+            <td>{{ patients.DBP }}</td>
             <td>{{ patients.sepsis_percent }}</td>
           </tr>
           <tr v-for="(vs, index) in all" :key="index" :value="vs.input_time">
             <td @click="EditVital($event)" style="cursor: pointer; font-weight: bold; padding: 5px;" class="hover-gradient">{{ vs.input_time }}</td>
-            <td>{{ vs.hr }}</td>
+            <td>{{ vs.HR }}</td>
             <td>{{ vs.O2Sat }}</td>
-            <td>{{ vs.temp }}</td>
-            <td>{{ vs.resp }}</td>
-            <td>{{ vs.sbp }}</td>
-            <td>{{ vs.dbp}}</td>
+            <td>{{ vs.Temp }}</td>
+            <td>{{ vs.Resp }}</td>
+            <td>{{ vs.SBP }}</td>
+            <td>{{ vs.DBP}}</td>
             <td>{{ vs.sepsis_percent }}</td>
           </tr>
         </tbody>

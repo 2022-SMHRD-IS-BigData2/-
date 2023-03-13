@@ -8,14 +8,14 @@ class RecordNormal(BaseModel):
   p_record_seq : int
   birth_date :datetime.date
   input_time : datetime.datetime
-  sex :int
-  age: int
-  hr: int
+  Gender :int
+  Age: int
+  HR: int
   O2Sat :float
-  temp: float
-  resp: int
-  sbp: int
-  dbp: int
+  Temp: float
+  Resp: int
+  SBP: int
+  DBP: int
   ICULOS : int
   sepsis_in_six:int
   sepsis_percent:float
@@ -26,14 +26,14 @@ class Record(BaseModel):
   # p_record_seq : int
   birth_date :datetime.date
   input_time : datetime.datetime
-  sex: int
+  Gender: int
   # p_age: int
-  hr: int
+  HR: int
   O2Sat :float
-  temp: float
-  resp: int
-  sbp: int
-  dbp: int
+  Temp: float
+  Resp: int
+  SBP: int
+  DBP: int
   ICULOS : int
   EtCO2: float
   BaseExcess:float
@@ -66,24 +66,24 @@ class Record(BaseModel):
 class Record_u(BaseModel):
   pid : int
   p_record_seq : int
-  hr: int
+  HR: int
   O2Sat :float
-  temp: float
-  resp: int
-  sbp: int
-  dbp: int
+  Temp: float
+  Resp: int
+  SBP: int
+  DBP: int
 
 class Record_i(BaseModel):
   pid : int
   input_time: str
   birth_date: str
-  sex: int
-  hr: int
+  Gender: int
+  HR: int
   O2Sat :float
-  temp: float
-  resp: int
-  sbp: int
-  dbp: int
+  Temp: float
+  Resp: int
+  SBP: int
+  DBP: int
   
   sepsis_in_six: int=None
   sepsis_percent: float=None
@@ -95,18 +95,18 @@ class Record_v(BaseModel):
   p_record_seq : int
   birth_date: datetime.date
   name : str
-  age: int
-  sex : int
+  Age: int
+  Gender : int
   emp_id : int
   admin_date : datetime.datetime=datetime.datetime.now()
   disch_date : datetime.datetime=None
   input_time : datetime.datetime=datetime.datetime.now()
-  hr: int
+  HR: int
   O2Sat :float
-  temp: float
-  resp: int
-  sbp: int
-  dbp: int
+  Temp: float
+  Resp: int
+  SBP: int
+  DBP: int
   MAP:float
   ICULOS: int
   EtCO2: float
@@ -138,13 +138,13 @@ class Record_v(BaseModel):
   sepsis_percent:float
 
 class Record_for_Predict(BaseModel):
-  age : int
-  hr: int
+  Age : int
+  HR: int
   O2Sat :float
-  temp: float
-  resp: int
-  sbp: int
-  dbp: int
+  Temp: float
+  Resp: int
+  SBP: int
+  DBP: int
   map:float
   ICULOS: int
   EtCO2: float
@@ -214,13 +214,13 @@ class Record_for_Predict(BaseModel):
 class LabData(BaseModel):
   pid : int
 #  lab_record_seq: int
-  # age : Optional[int] = None
-  # hr: Optional[int] = None
+  # Age : Optional[int] = None
+  # HR: Optional[int] = None
   # O2Sat :Optional[float] = None
-  # temp: Optional[float] = None
-  # resp: Optional[float] = None
-  # sbp: Optional[int] = None
-  # dbp: Optional[int] = None
+  # Temp: Optional[float] = None
+  # Resp: Optional[float] = None
+  # SBP: Optional[int] = None
+  # DBP: Optional[int] = None
   EtCO2: Optional[float] = None
   BaseExcess:Optional[float] = None
   HCO3:Optional[float] = None

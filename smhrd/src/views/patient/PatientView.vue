@@ -16,7 +16,7 @@
           </tr>
           <tr>
             <td style="font-weight: bold; background-color: #dff2f5">나이</td>
-            <td>{{ patients.age }}</td>
+            <td>{{ patients.Age }}</td>
           </tr>
           <tr>
             <td style="font-weight: bold; background-color: #dff2f5">성별</td>
@@ -133,7 +133,7 @@ export default {
   },
   computed: {
     gender() {
-      return this.patients.sex === 1 ? 'F' : 'M'
+      return this.patients.Gender === 1 ? 'F' : 'M'
     },
     bgColor() {
       return this.patients.sepsis_percent >= 80 ? '#fab1a0' : '#85E9A7'
