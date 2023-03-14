@@ -222,8 +222,8 @@ async def get_search_patient(path: str = '', search_str: str = '', limit: int = 
 @router.get('/api/get_select_record/{pid}')
 async def get_select_record(pid: int, input_time: str):
     input_time = datetime.datetime.strptime(input_time, '%Y-%m-%dT%H:%M:%S')
-    query = text(f'select * from all_patients_vital_record_view where pid=pid and input_time=:input_time')
-    record = session.execute(query, {"input_time": input_time}).first()
+    query = text(f'select * from all_patients_vital_record_view where pid =:pid and input_time=:input_time')
+    record = session.execute(query, {"pid":pid,"input_time": input_time}).first()
     session.close()
     return {"data": record}
 
@@ -248,7 +248,6 @@ async def update_record(pid:int, record_u:Record_u):
 # 선택한 환자의 최근 7개 record를 가져오자
 @router.get('/api/chart_records/{pid}')
 async def chart_records(pid:int):
-  
   query=text(f"SELECT * FROM all_patients_vital_record_view WHERE pid={pid} ORDER BY input_time DESC LIMIT 7")
   
   chart_records = session.execute(query).all()
@@ -267,7 +266,7 @@ async def lab_insert(pid:int,labdata: LabData):
   df_fill_list = pd.read_sql(session.query(LabDataRecord).filter(LabDataRecord.pid==pid).statement, session.bind)
   # 채울때 하나채우고 dup을 해보자
 
-  for col in COLS:
+  for col in lab_cols:
     # pid의 첫번째 행(record_seq=1)들만 남긴다 => 인덱스 구해서 저장
     first_index = df_fill_list.drop_duplicates(['pid'], keep='first').index
     # train_df.loc[first_index,col]의 값: 각 pid의 첫번째 행들의 컬럼별 값들이 null이면 중앙값으로 채우고, 아니면 그냥 그대로 써라!
@@ -297,18 +296,14 @@ async def lab_insert(pid:int,labdata: LabData):
     df_merged=pd.merge(df_droped,df_filled,on='pid',how='outer')
     # to_dict!
     dict_merged=df_merged.iloc[0].to_dict()
-    print(dict_merged)
     vital_update=VitalRecordAll(**dict_merged)
     session.merge(vital_update)
     session.commit()
     # latest_record가 있을 경우 vital_record_all 및 vital_record_all_mask 업데이트
     # COLS: 기존 column 이름들의 리스트
-    MASK_COLS = [x+'_mask' for x in COLS]
     # 안되면 되는거해라
     data1 = session.execute(f"SELECT * FROM vital_record_all WHERE pid={pid} ORDER BY p_record_seq DESC").fetchone()
-    cols = session.execute("SELECT column_name FROM information_schema.columns WHERE table_name='vital_record_all'").fetchall()
-    cols = [c[0] for c in cols]  # 튜플을 리스트로 변환
-    raw_data = pd.DataFrame([data1], columns=cols) # 데이터 프레임으로
+    raw_data = pd.DataFrame([data1]) # 데이터 프레임으로
     df_filled1 = raw_data.drop(['sepsis_in_six','sepsis_percent'],axis=1,inplace=False).copy()
     data2=raw_data.drop(lab_cols2,axis=1,inplace=False)
     data3=pd.DataFrame([labdata.dict()])
@@ -322,18 +317,19 @@ async def lab_insert(pid:int,labdata: LabData):
     df_masks = pd.concat([df_masks[x] for x in MASK_COLS], axis=1)
     df_filled1[df_masks.columns]=df_masks
     # df_filled와 df_masks를 merge
-    df_sub_mask = df_filled1
+    df_sub_mask = df_filled1.copy()
     df_sub_dict=df_sub_mask.iloc[0].to_dict()
-
+    print(df_sub_dict)
 #   VitalRecordAllMask 테이블의 primary key가 'pid'와 'p_record_seq' 인지 확인이 필요합니다
 # -------------vital_record_all_mask 업데이트~-----------------
     sub_mask = VitalRecordAllMask(**df_sub_dict)
-    print(sub_mask)
     session.merge(sub_mask)
     session.commit()
-  # # ------------------vital_record_all_mask 최근 batch 개 뽑아서 model pred 돌리기--------
+#   # # ------------------vital_record_all_mask 최근 batch 개 뽑아서 model pred 돌리기--------
   return pid
+
 v_insert_list=['HR', 'O2Sat', 'Temp', 'SBP', 'DBP', 'MAP', 'Resp']
+
   # ------------------vital_record_all 최근 데이터 sepsis업데이트하기--------------
 @router.post('/api/vital_insert/{pid}')
 async def vital_insert(pid:int,vital: Record_i):
