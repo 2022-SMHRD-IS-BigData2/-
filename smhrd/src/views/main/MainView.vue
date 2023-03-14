@@ -341,7 +341,7 @@ navigateToRoute(patient) {
   },
     computed: {
       gender() {
-    return this.patients.map(patient => patient.sex === 1 ? 'F' : 'M');
+    return this.patients.map(patient => patient.Gender === 1 ? 'F' : 'M');
   },
     pageCount() {
       const count = this.count;
