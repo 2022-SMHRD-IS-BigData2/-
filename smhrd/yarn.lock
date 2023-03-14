@@ -11,6 +11,11 @@
     event-pubsub "4.3.0"
     js-message "1.0.7"
 
+"@adobe/css-tools@^4.0.1":
+  version "4.2.0"
+  resolved "https://registry.npmjs.org/@adobe/css-tools/-/css-tools-4.2.0.tgz"
+  integrity sha512-E09FiIft46CmH5Qnjb0wsW54/YQd69LsxeKUOWawmws1XWvyFGURnAChH0mlr7YPFR1ofwvUQfcL0J3lMxXqPA==
+
 "@ampproject/remapping@^2.1.0":
   version "2.2.0"
   resolved "https://registry.npmjs.org/@ampproject/remapping/-/remapping-2.2.0.tgz"
@@ -1102,6 +1107,14 @@
   resolved "https://registry.npmjs.org/@leichtgewicht/ip-codec/-/ip-codec-2.0.4.tgz"
   integrity sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==
 
+"@meforma/vue-toaster@^1.3.0":
+  version "1.3.0"
+  resolved "https://registry.npmjs.org/@meforma/vue-toaster/-/vue-toaster-1.3.0.tgz"
+  integrity sha512-jH0zOA/jTiT+UKHO9n5hjPTLkIfg7d66X4fnd7ssIbcXpZOoe+J8IY6Kf3nRW5iVD6/tkjeyp+tjVK8zk6zASg==
+  dependencies:
+    stylus "~0.54.8"
+    stylus-loader "~3.0.2"
+
 "@nicolo-ribaudo/eslint-scope-5-internals@5.1.1-v1":
   version "5.1.1-v1"
   resolved "https://registry.npmjs.org/@nicolo-ribaudo/eslint-scope-5-internals/-/eslint-scope-5-internals-5.1.1-v1.tgz"
@@ -2070,6 +2083,11 @@ at-least-node@^1.0.0:
   resolved "https://registry.npmjs.org/at-least-node/-/at-least-node-1.0.0.tgz"
   integrity sha512-+q/t7Ekv1EDY2l6Gda6LLiX14rU9TV20Wa3ofeQmwPFZbOMo9DXrLbOjFaaclkXKWidIaopwAObQDqwWtGUjqg==
 
+atob@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.npmjs.org/atob/-/atob-2.1.2.tgz"
+  integrity sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
+
 autoprefixer@^10.2.4:
   version "10.4.13"
   resolved "https://registry.npmjs.org/autoprefixer/-/autoprefixer-10.4.13.tgz"
@@ -2669,6 +2687,13 @@ css-minimizer-webpack-plugin@^3.0.2:
     serialize-javascript "^6.0.0"
     source-map "^0.6.1"
 
+css-parse@~2.0.0:
+  version "2.0.0"
+  resolved "https://registry.npmjs.org/css-parse/-/css-parse-2.0.0.tgz"
+  integrity sha512-UNIFik2RgSbiTwIW1IsFwXWn6vs+bYdq83LKTSOsx7NJR7WII9dxewkHLltfTLVppoUApHV0118a4RZRI9FLwA==
+  dependencies:
+    css "^2.0.0"
+
 css-select@^4.1.3:
   version "4.3.0"
   resolved "https://registry.npmjs.org/css-select/-/css-select-4.3.0.tgz"
@@ -2692,6 +2717,16 @@ css-what@^6.0.1:
   version "6.1.0"
   resolved "https://registry.npmjs.org/css-what/-/css-what-6.1.0.tgz"
   integrity sha512-HTUrgRJ7r4dsZKU6GjmpfRK1O76h97Z8MfS1G0FozR+oF2kG6Vfe8JE6zwrkbxigziPHinCJ+gCPjA9EaBDtRw==
+
+css@^2.0.0:
+  version "2.2.4"
+  resolved "https://registry.npmjs.org/css/-/css-2.2.4.tgz"
+  integrity sha512-oUnjmWpy0niI3x/mPL8dVEI1l7MnG3+HHyRPHf+YFSbK+svOhXpmSOcDURUh2aOCgl2grzrOPt1nHLuCVFULLw==
+  dependencies:
+    inherits "^2.0.3"
+    source-map "^0.6.1"
+    source-map-resolve "^0.5.2"
+    urix "^0.1.0"
 
 cssesc@^3.0.0:
   version "3.0.0"
@@ -2778,12 +2813,24 @@ debug@^4.0.1, debug@^4.1.0, debug@^4.1.1, debug@^4.3.2:
   dependencies:
     ms "2.1.2"
 
+debug@~3.1.0:
+  version "3.1.0"
+  resolved "https://registry.npmjs.org/debug/-/debug-3.1.0.tgz"
+  integrity sha512-OX8XqP7/1a9cqkxYw2yXss15f26NKWBpDXQd0/uK/KPqdQhxbPa994hnzjcE2VqQpDslf55723cKPUOGSmMY3g==
+  dependencies:
+    ms "2.0.0"
+
 debug@2.6.9:
   version "2.6.9"
   resolved "https://registry.npmjs.org/debug/-/debug-2.6.9.tgz"
   integrity sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==
   dependencies:
     ms "2.0.0"
+
+decode-uri-component@^0.2.0:
+  version "0.2.2"
+  resolved "https://registry.npmjs.org/decode-uri-component/-/decode-uri-component-0.2.2.tgz"
+  integrity sha512-FqUYQ+8o158GyGTrMFJms9qh3CqTKvAqgqsTnkLI8sKu0028orqBhxNMFkFen0zGyg6epACD32pjVk58ngIErQ==
 
 deep-is@^0.1.3:
   version "0.1.4"
@@ -3720,7 +3767,7 @@ glob-to-regexp@^0.4.1:
   resolved "https://registry.npmjs.org/glob-to-regexp/-/glob-to-regexp-0.4.1.tgz"
   integrity sha512-lkX1HJXwyMcprw/5YUZc2s7DrpAiHB21/V+E1rHUrVNokkvB6bqMzT0VfV6/86ZNabt1k14YOIaT7nDvOX3Iiw==
 
-glob@^7.1.3:
+glob@^7.1.3, glob@^7.1.6:
   version "7.2.3"
   resolved "https://registry.npmjs.org/glob/-/glob-7.2.3.tgz"
   integrity sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==
@@ -4477,6 +4524,11 @@ locate-path@^5.0.0:
   dependencies:
     p-locate "^4.1.0"
 
+lodash.clonedeep@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.npmjs.org/lodash.clonedeep/-/lodash.clonedeep-4.5.0.tgz"
+  integrity sha512-H5ZhCF25riFd9uB5UCkVKo61m3S/xZk1x4wA6yp/L3RFP6Z/eHH1ymQcGLo7J3GMPfm0V/7m1tryHuGVxpqEBQ==
+
 lodash.debounce@^4.0.8:
   version "4.0.8"
   resolved "https://registry.npmjs.org/lodash.debounce/-/lodash.debounce-4.0.8.tgz"
@@ -4703,6 +4755,11 @@ mkdirp@^0.5.6:
   integrity sha512-FP+p8RB8OWpF3YZBCrP5gtADmtXApB5AMLn+vdyA+PyxCjrCs00mjyUozssO33cwDeT3wNGdLxJ5M//YqtHAJw==
   dependencies:
     minimist "^1.2.6"
+
+mkdirp@~1.0.4:
+  version "1.0.4"
+  resolved "https://registry.npmjs.org/mkdirp/-/mkdirp-1.0.4.tgz"
+  integrity sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==
 
 module-alias@^2.2.2:
   version "2.2.2"
@@ -5630,6 +5687,11 @@ resolve-from@^4.0.0:
   resolved "https://registry.npmjs.org/resolve-from/-/resolve-from-4.0.0.tgz"
   integrity sha512-pb/MYmXstAkysRFx8piNI1tGFNQIFA3vkE3Gq4EuA1dF6gHp/+vgZqsCGJapvy8N3Q+4o7FwvquPJcnZ7RYy4g==
 
+resolve-url@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.npmjs.org/resolve-url/-/resolve-url-0.2.1.tgz"
+  integrity sha512-ZuF55hVUQaaczgOIwqWzkEcEidmlD/xl44x1UZnhOXcYuFN2S6+rcxpG+C1N3So0wvNI3DmJICUFfu2SxhBmvg==
+
 resolve@^1.10.0, resolve@^1.10.1, resolve@^1.14.2, resolve@^1.20.0, resolve@^1.22.1:
   version "1.22.1"
   resolved "https://registry.npmjs.org/resolve/-/resolve-1.22.1.tgz"
@@ -5703,10 +5765,15 @@ safe-regex-test@^1.0.0:
     get-intrinsic "^1.1.3"
     is-regex "^1.1.4"
 
-"safer-buffer@>= 2.1.2 < 3":
+safer-buffer@^2.1.2, "safer-buffer@>= 2.1.2 < 3":
   version "2.1.2"
   resolved "https://registry.npmjs.org/safer-buffer/-/safer-buffer-2.1.2.tgz"
   integrity sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==
+
+sax@~1.2.4:
+  version "1.2.4"
+  resolved "https://registry.npmjs.org/sax/-/sax-1.2.4.tgz"
+  integrity sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==
 
 schema-utils@^2.6.5:
   version "2.7.1"
@@ -5960,6 +6027,17 @@ source-map-js@^1.0.2:
   resolved "https://registry.npmjs.org/source-map-js/-/source-map-js-1.0.2.tgz"
   integrity sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==
 
+source-map-resolve@^0.5.2:
+  version "0.5.3"
+  resolved "https://registry.npmjs.org/source-map-resolve/-/source-map-resolve-0.5.3.tgz"
+  integrity sha512-Htz+RnsXWk5+P2slx5Jh3Q66vhQj1Cllm0zvnaY98+NFx+Dv2CF/f5O/t8x+KaNdrdIAsruNzoh/KpialbqAnw==
+  dependencies:
+    atob "^2.1.2"
+    decode-uri-component "^0.2.0"
+    resolve-url "^0.2.1"
+    source-map-url "^0.4.0"
+    urix "^0.1.0"
+
 source-map-support@~0.5.20:
   version "0.5.21"
   resolved "https://registry.npmjs.org/source-map-support/-/source-map-support-0.5.21.tgz"
@@ -5968,10 +6046,20 @@ source-map-support@~0.5.20:
     buffer-from "^1.0.0"
     source-map "^0.6.0"
 
+source-map-url@^0.4.0:
+  version "0.4.1"
+  resolved "https://registry.npmjs.org/source-map-url/-/source-map-url-0.4.1.tgz"
+  integrity sha512-cPiFOTLUKvJFIg4SKVScy4ilPPW6rFgMgfuZJPNoDuMs3nC1HbMUycBoJw77xFIp6z1UJQJOfx6C9GMH80DiTw==
+
 source-map@^0.6.0, source-map@^0.6.1, source-map@~0.6.0, source-map@~0.6.1:
   version "0.6.1"
   resolved "https://registry.npmjs.org/source-map/-/source-map-0.6.1.tgz"
   integrity sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==
+
+source-map@^0.7.3:
+  version "0.7.4"
+  resolved "https://registry.npmjs.org/source-map/-/source-map-0.7.4.tgz"
+  integrity sha512-l3BikUxvPOcn5E74dZiq5BGsTb5yEwhaTSzccU6t4sDOH8NWJCstKO5QT2CvtFoK6F0saL7p9xHAqHOlCPJygA==
 
 sourcemap-codec@^1.4.8:
   version "1.4.8"
@@ -6155,6 +6243,40 @@ stylehacks@^5.1.1:
     browserslist "^4.21.4"
     postcss-selector-parser "^6.0.4"
 
+stylus-loader@^3.0.2, stylus-loader@~3.0.2:
+  version "3.0.2"
+  resolved "https://registry.npmjs.org/stylus-loader/-/stylus-loader-3.0.2.tgz"
+  integrity sha512-+VomPdZ6a0razP+zinir61yZgpw2NfljeSsdUF5kJuEzlo3khXhY19Fn6l8QQz1GRJGtMCo8nG5C04ePyV7SUA==
+  dependencies:
+    loader-utils "^1.0.2"
+    lodash.clonedeep "^4.5.0"
+    when "~3.6.x"
+
+stylus@^0.59.0, stylus@>=0.52.4:
+  version "0.59.0"
+  resolved "https://registry.npmjs.org/stylus/-/stylus-0.59.0.tgz"
+  integrity sha512-lQ9w/XIOH5ZHVNuNbWW8D822r+/wBSO/d6XvtyHLF7LW4KaCIDeVbvn5DF8fGCJAUCwVhVi/h6J0NUcnylUEjg==
+  dependencies:
+    "@adobe/css-tools" "^4.0.1"
+    debug "^4.3.2"
+    glob "^7.1.6"
+    sax "~1.2.4"
+    source-map "^0.7.3"
+
+stylus@~0.54.8:
+  version "0.54.8"
+  resolved "https://registry.npmjs.org/stylus/-/stylus-0.54.8.tgz"
+  integrity sha512-vr54Or4BZ7pJafo2mpf0ZcwA74rpuYCZbxrHBsH8kbcXOwSfvBFwsRfpGO5OD5fhG5HDCFW737PKaawI7OqEAg==
+  dependencies:
+    css-parse "~2.0.0"
+    debug "~3.1.0"
+    glob "^7.1.6"
+    mkdirp "~1.0.4"
+    safer-buffer "^2.1.2"
+    sax "~1.2.4"
+    semver "^6.3.0"
+    source-map "^0.7.3"
+
 supports-color@^5.3.0:
   version "5.5.0"
   resolved "https://registry.npmjs.org/supports-color/-/supports-color-5.5.0.tgz"
@@ -6198,6 +6320,11 @@ svgo@^2.7.0:
     csso "^4.2.0"
     picocolors "^1.0.0"
     stable "^0.1.8"
+
+sweetalert2@11.x:
+  version "11.7.3"
+  resolved "https://registry.npmjs.org/sweetalert2/-/sweetalert2-11.7.3.tgz"
+  integrity sha512-fUN/fyVSBZNtY4Rr/Qtxn7tNNnlRAbUhQxTQ9uOo0xVMIHBmqq4/9pau5N9dB2pvkB353XL/ywRAycscLoYU3w==
 
 table@^6.0.9:
   version "6.8.1"
@@ -6415,6 +6542,11 @@ uri-js@^4.2.2:
   dependencies:
     punycode "^2.1.0"
 
+urix@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.npmjs.org/urix/-/urix-0.1.0.tgz"
+  integrity sha512-Am1ousAhSLBeB9cG/7k7r2R0zj50uDRlZHPGbazid5s9rlF1F/QKYObEKSIunSjIOkJZqwRRLpvewjEkM7pSqg==
+
 util-deprecate@^1.0.1, util-deprecate@^1.0.2, util-deprecate@~1.0.1:
   version "1.0.2"
   resolved "https://registry.npmjs.org/util-deprecate/-/util-deprecate-1.0.2.tgz"
@@ -6506,6 +6638,13 @@ vue-style-loader@^4.1.0, vue-style-loader@^4.1.3:
   dependencies:
     hash-sum "^1.0.2"
     loader-utils "^1.0.2"
+
+vue-sweetalert2@^5.0.5:
+  version "5.0.5"
+  resolved "https://registry.npmjs.org/vue-sweetalert2/-/vue-sweetalert2-5.0.5.tgz"
+  integrity sha512-Q7+TjQxNwGruT2jfPaSKMz18HHWs81r4umEwlrrtOf/QL5Iwl1T+tUaNkcvKB7Rf9rYftubt7NnOMjfDMnDH3A==
+  dependencies:
+    sweetalert2 "11.x"
 
 vue-template-es2015-compiler@^1.9.0:
   version "1.9.1"
@@ -6711,6 +6850,11 @@ whatwg-url@^5.0.0:
   dependencies:
     tr46 "~0.0.3"
     webidl-conversions "^3.0.0"
+
+when@~3.6.x:
+  version "3.6.4"
+  resolved "https://registry.npmjs.org/when/-/when-3.6.4.tgz"
+  integrity sha512-d1VUP9F96w664lKINMGeElWdhhb5sC+thXM+ydZGU3ZnaE09Wv6FaS+mpM9570kcDs/xMfcXJBTLsMdHEFYY9Q==
 
 which-boxed-primitive@^1.0.2:
   version "1.0.2"
