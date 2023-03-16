@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends,HTTPException, status,Request,Header
+from fastapi.security import OAuth2PasswordBearer
 from ..core.database import session
 from ..core.pred_model import Sepsis_Pred_Model
 from typing import List,Tuple
@@ -13,23 +14,24 @@ from datetime import datetime
 import datetime
 import random
 import json
-
 import torch
 import torch.nn.functional as F
+from ..core.security import check_token,token
+
+
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
 router = APIRouter()
 
 col_stat = json.load(open('api\\col_stat.json', 'r'))
+# vital_cols=['HR', 'O2Sat', 'Temp', 'SBP', 'DBP', 'MAP', 'Resp','EtCO2',
+#       'BaseExcess', 'HCO3', 'FiO2', 'pH', 'PaCO2', 'SaO2', 'AST', 'BUN',
+#       'Alkalinephos', 'Calcium', 'Chloride', 'Creatinine',
+#       'Glucose', 'Lactate', 'Magnesium', 'Phosphate', 'Potassium',
+#       'Bilirubin_total', 'Hct', 'Hgb', 'PTT', 'WBC',
+#       'Fibrinogen', 'Platelets','Age']
 
-vital_cols=['HR', 'O2Sat', 'Temp', 'SBP', 'DBP', 'MAP', 'Resp','EtCO2',
-      'BaseExcess', 'HCO3', 'FiO2', 'pH', 'PaCO2', 'SaO2', 'AST', 'BUN',
-      'Alkalinephos', 'Calcium', 'Chloride', 'Creatinine',
-      'Glucose', 'Lactate', 'Magnesium', 'Phosphate', 'Potassium',
-      'Bilirubin_total', 'Hct', 'Hgb', 'PTT', 'WBC',
-      'Fibrinogen', 'Platelets','Age']
-
-INFO_COLS = ['pid', 'HospAdmTime', 'ICULOS', 'SepsisLabel', 'Age','Gender']
+# INFO_COLS = ['pid', 'HospAdmTime', 'ICULOS', 'SepsisLabel','Gender']
 
 lab_cols=['pid','EtCO2',
       'BaseExcess', 'HCO3', 'FiO2', 'pH', 'PaCO2', 'SaO2', 'AST', 'BUN',
@@ -70,14 +72,27 @@ def cut_or_fill_seq(input_tensor, seq_len=30):
   return torch.Tensor(input_tensor)
 
 def percent_80(output:float):
-  if output>0.8:
+  if output>=0.8:
     sepsis=1
   else:
     sepsis=0
   return sepsis,output*100
 
 sepsis_model=Sepsis_Pred_Model(66,64)
-
+@router.post("/api/pred_test")
+async def pred_test(list:List):
+  nor_list=[]
+  sep_list=[]
+  for i in list:
+    sep,pers=await model_pred(i)
+    str=f"{i}환자 precent: {pers}, sep: {sep}"
+    if pers>=80:
+      sep_list.append(str)
+    else:
+      nor_list.append(str)
+  print(sep_list)
+  print(nor_list)
+  return sep_list,len(sep_list), nor_list, len(nor_list)
   # import pdb; pdb.set_trace()
 # model predict
 @router.get("/api/predict_sepsis/{pid}")
@@ -117,7 +132,7 @@ async def model_pred(pid:int):
     input_tensor_raw = torch.tensor(pred_array, dtype=torch.float32).unsqueeze(0) 
     input_tensor=cut_or_fill_seq(input_tensor_raw,seq_len=max_seq_len)
 
-    sepsis_model.load_state_dict(torch.load("api\\0.774.pth"))
+    sepsis_model.load_state_dict(torch.load("api\\0.775.pt"))
     sepsis_model.eval()
     with torch.no_grad():
       output_tensor = sepsis_model(input_tensor)
@@ -126,18 +141,18 @@ async def model_pred(pid:int):
     output = output_tensor.squeeze().item() # Tensor에서 값을 꺼내서 scalar 값으로 변환
     # update해주기
     sep,percent=percent_80(output)
-    query=text("update vital_record_all set sepsis_in_six = :sepsis_in_six, sepsis_percent = :sepsis_percent where pid = :pid and p_record_seq = :p_record_seq")
-    values={'sepsis_in_six' : sep,
-            'sepsis_percent' : percent,
-            'pid': pid,
-            'p_record_seq':data_sat_raw.iloc[-1].p_record_seq}
-    session.execute(query,values)
-    session.commit()
-    session.close()
+    # query=text("update vital_record_all set sepsis_in_six = :sepsis_in_six, sepsis_percent = :sepsis_percent where pid = :pid and p_record_seq = :p_record_seq")
+    # values={'sepsis_in_six' : sep,
+    #         'sepsis_percent' : percent,
+    #         'pid': pid,
+    #         'p_record_seq':data_sat_raw.iloc[-1].p_record_seq}
+    # session.execute(query,values)
+    # session.commit()
+    # session.close()
     return sep,percent
-
+  
 @router.get("/api/data/")
-async def get_data(limit: int = 10, page: int = 1):
+async def get_data(limit: int = 10, page: int = 1, token: str = Depends(check_token)):
   offset = (page - 1) * limit
   query = text(f"SELECT * FROM vital_record_now_view LIMIT :limit OFFSET :offset")
   result = session.execute(query, {"limit": limit, "offset": offset})
@@ -148,14 +163,14 @@ async def get_data(limit: int = 10, page: int = 1):
 
 # 모든 환자의 최근 데이터에서 한명의 환자 선택
 @router.get('/api/get_latest_all/{pid}')
-async def get_latest_all(pid:int):
+async def get_latest_all(pid:int,token: str = Depends(check_token)):
   record=session.query(VitalRecordNowView).filter(VitalRecordNowView.pid==pid).all()
   session.close()
   return record
 
 # sepsis 환자만 가져오기/페이징 들어갔음
 @router.get('/api/get_latest_sepsis_all')
-async def get_latest_sepsis_all(limit: int = 10, page: int = 1):
+async def get_latest_sepsis_all(limit: int = 10, page: int = 1,token: str = Depends(check_token)):
   offset = (page - 1) * limit
   query = text(f"SELECT * FROM now_view_sepsis LIMIT :limit OFFSET :offset")
   result = session.execute(query, {"limit": limit, "offset": offset}).all()
@@ -166,7 +181,7 @@ async def get_latest_sepsis_all(limit: int = 10, page: int = 1):
 
 # sepsis 위험확률 80프로 넘는것만 / 페이징 들어갔음
 @router.get('/api/get_latest_sepsis_percent')
-async def get_latest_sepsis_percent(limit: int = 10, page: int = 1):
+async def get_latest_sepsis_percent(limit: int = 10, page: int = 1,token: str = Depends(check_token)):
   offset = (page - 1) * limit
   query = text(f"SELECT * FROM vital_record_now_view where sepsis_percent>=80 LIMIT :limit OFFSET :offset")
   result = session.execute(query, {"limit": limit, "offset": offset}).all()
@@ -177,13 +192,13 @@ async def get_latest_sepsis_percent(limit: int = 10, page: int = 1):
 
 # 
 @router.get('/api/get_all_record')
-async def get_all_record():
+async def get_all_record(token: str = Depends(check_token)):
   record=session.query(AllPatientRecordView).all()
   session.close()
   return record
 
 @router.get('/api/get_select_date')
-async def get_select_date(pid:int,date:str):
+async def get_select_date(pid:int,date:str,token: str = Depends(check_token)):
   date_obj = datetime.datetime.strptime(date, '%Y-%m-%d').date()  # 문자열 형식의 날짜를 datetime 객체로 변환
   record = session.query(AllPatientRecordView).filter(and_(AllPatientRecordView.pid == pid, AllPatientRecordView.input_time >= date_obj, AllPatientRecordView.input_time < date_obj + datetime.timedelta(days=1))).all()
   session.close()
@@ -191,7 +206,7 @@ async def get_select_date(pid:int,date:str):
 
 # 검색기능~페이지 추가하면 딕셔너리부분에 추가해주면됨
 @router.get('/api/get_search_data')
-async def get_search_patient(path: str = '', search_str: str = '', limit: int = 10, page: int = 1):
+async def get_search_patient(path: str = '', search_str: str = '', limit: int = 10, page: int = 1,token: str = Depends(check_token)):
     offset = (page - 1) * limit
     search_str = f"%{search_str}%" # 검색 문자열 앞뒤에 % 추가
     query = None
@@ -220,7 +235,7 @@ async def get_search_patient(path: str = '', search_str: str = '', limit: int = 
 
 # pid, input_time 입력받아서 그 시간의 record 가져오는 api
 @router.get('/api/get_select_record/{pid}')
-async def get_select_record(pid: int, input_time: str):
+async def get_select_record(pid: int, input_time: str,token: str = Depends(check_token)):
     input_time = datetime.datetime.strptime(input_time, '%Y-%m-%dT%H:%M:%S')
     query = text(f'select * from all_patients_vital_record_view where pid =:pid and input_time=:input_time')
     record = session.execute(query, {"pid":pid,"input_time": input_time}).first()
@@ -229,7 +244,7 @@ async def get_select_record(pid: int, input_time: str):
 
 # record 수정한 값 받아서 업데이트하는 api
 @router.post('/api/update_record/{pid}')
-async def update_record(pid:int, record_u:Record_u):
+async def update_record(pid:int, record_u:Record_u,token: str = Depends(check_token)):
   query = text(f"UPDATE vital_record_all SET HR = :HR, O2Sat = :O2Sat, Temp = :Temp, Resp = :Resp, SBP = :SBP, DBP = :DBP WHERE pid = :pid AND p_record_seq = :p_record_seq")
   values = {'HR': record_u.HR, 'O2Sat': record_u.O2Sat, 'Temp': record_u.Temp, 'Resp': record_u.Resp, 'SBP': record_u.SBP, 'DBP': record_u.DBP, 'pid': pid, 'p_record_seq': record_u.p_record_seq}
     # 쿼리 실행
@@ -247,7 +262,7 @@ async def update_record(pid:int, record_u:Record_u):
 
 # 선택한 환자의 최근 7개 record를 가져오자
 @router.get('/api/chart_records/{pid}')
-async def chart_records(pid:int):
+async def chart_records(pid:int,token: str = Depends(check_token)):
   query=text(f"SELECT * FROM all_patients_vital_record_view WHERE pid={pid} ORDER BY input_time DESC LIMIT 7")
   
   chart_records = session.execute(query).all()
@@ -256,7 +271,7 @@ async def chart_records(pid:int):
 
 # lab data!!!!!!
 @router.post('/api/lab_insert/{pid}')
-async def lab_insert(pid:int,labdata: LabData):
+async def lab_insert(pid:int,labdata: LabData,token: str = Depends(check_token)):
     # -----------------lab_data_record 넣기--------------------------
   db_lab_data = LabDataRecord(**labdata.dict())
   session.add(db_lab_data)
@@ -332,7 +347,7 @@ v_insert_list=['HR', 'O2Sat', 'Temp', 'SBP', 'DBP', 'MAP', 'Resp']
 
   # ------------------vital_record_all 최근 데이터 sepsis업데이트하기--------------
 @router.post('/api/vital_insert/{pid}')
-async def vital_insert(pid:int,vital: Record_i):
+async def vital_insert(pid:int,vital: Record_i,token: str = Depends(check_token)):
   input_time = datetime.datetime.strptime(vital.input_time, '%Y-%m-%dT%H:%M:%S')
   birth_date = datetime.datetime.strptime(vital.birth_date, '%Y-%m-%d').date()
     # -----------------vital_record_all 만들기 넣기--------------------------

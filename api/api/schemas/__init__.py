@@ -1,5 +1,6 @@
 from .patient_schema import *
 from .record_schema import  *
+from ..core import TokenSepsis_sche,User
 
 __all__ = [
     'Patient',
@@ -10,4 +11,6 @@ __all__ = [
     'Record_v',
     'Record_u',
     'Record_i',
+    'TokenSepsis_sche',
+    'User'
 ]

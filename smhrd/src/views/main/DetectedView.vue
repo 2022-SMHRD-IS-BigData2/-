@@ -141,7 +141,6 @@ export default {
 
   },
   created () {
-    this.fetchData();
     // use(VueToast, {
     //   position: 'top-right',
     // });

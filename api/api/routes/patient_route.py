@@ -7,12 +7,13 @@ import datetime
 from ..models.patient_model import PatientGeneralTable
 from ..schemas.patient_schema import Patient
 from ..core.database import session
+from ..core.security import check_token,token
 
 router = APIRouter()
 
 
 @router.get('/api/patients')
-async def index():
+async def index(current_token: str = Depends(check_token)):
   patients=session.query(PatientGeneralTable).all()
   session.close()
   return patients

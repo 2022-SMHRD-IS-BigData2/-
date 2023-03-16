@@ -125,7 +125,8 @@ export default {
       currentDate: "",
       searchQuery:"",
       searchData: [], // 검색 결과 데이터
-      path:""
+      path:"",
+      token:""
     }
   },
   setup () {
@@ -140,11 +141,10 @@ export default {
     }
   },
   async created () {
-    this.fetchData();
   },
   watch: {
   '$store.state.searchQuery'(newSearchQuery, oldSearchQuery) {
-    this.searchQuery=this.$store.state.searchQuery
+    this.searchQuery=this.$store.state.searchQuery;
     if (newSearchQuery !== oldSearchQuery) {
       this.fetchData();
     }
@@ -153,25 +153,33 @@ export default {
       this.currentPage = 1;
       this.fetchData();
     }
+    },
+    '$store.state.token'(){
+      this.token=this.$store.state.token;
     }
   },
-  mounted () {
-    axios.get('http://127.0.0.1:8002/api/data')
-      .then(response =>{
-        return response.data
-      })
-      .then(data => {
-        console.log(data)
-        this.patients=data.data;
-        this.count=data.count;
-        this.page=data.page;
-        return data
-      })
-      .catch(error => {
-        console.log(error)
-      })
-
-  },
+  async mounted () {
+    while(!this.$store.state.token){
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+        // 토큰 값이 변경되면 fetchData 호출
+      await axios.get('http://127.0.0.1:8002/api/data')
+        .then(response =>{
+          return response.data
+        })
+          .then(data => {
+            console.log(data)
+            this.patients=data.data;
+            this.count=data.count;
+            this.page=data.page;
+            return data
+          })
+          .catch(error => {
+            console.log(error)
+          },
+          { immediate: true }
+          );
+    },
   unmounted () {},
   methods: {
     reRun() {

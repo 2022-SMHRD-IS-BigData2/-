@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from api.routes import patient_router, record_router
+from api.routes import patient_router, record_router,Security
 from typing import List
 from starlette.middleware.cors import CORSMiddleware
 
@@ -26,3 +26,5 @@ app.add_middleware(
 
 app.include_router(patient_router)
 app.include_router(record_router)
+app.include_router(Security)
+

@@ -24,19 +24,35 @@
 </template>
 
 <script>
-import { thisTypeAnnotation } from '@babel/types'
+import { thisTypeAnnotation, throwStatement } from '@babel/types'
 import moment from 'moment';
 import axios from 'axios';
+import sha512 from 'js-sha512';
+import bcrypt from 'bcryptjs';
 
 export default {
   data () {
     return {
       currentTime: '',
       searchQuery: '',
+      ipAddress: '',
+      id: '',
+      password: '',
+      encryptedId: '',
+      encryptedPassword: '',
+      encryptedIP:'localhost',
+      defaultCredentials: {
+        user_id: 'user1',
+        password: 'password1',
+        IP:'http://127.0.0.1'
+      },
+      salt:'',
+      token:''
     }
   },
-  created(){
+  async created(){
     this.url = this.$route.path;
+    await this.loadToken();
   },
   methods: {
     goBack() {
@@ -46,6 +62,40 @@ export default {
       // store에 searchQuery 저장
       this.$store.dispatch('setSearchQuery', this.searchQuery);
   },
+    async loadToken() {
+      let storedToken;
+      if (!sessionStorage.getItem('storedToken')) {
+        this.cryption();
+      } else {
+        // 토큰이 이미 localStorage에 있다면, 스토어에 저장하거나 필요한 작업을 수행합니다.
+        storedToken=sessionStorage.getItem('storedToken');
+        this.$store.dispatch('setToken', storedToken);
+      }
+    },
+    async cryption(){
+      const config = { 
+        headers: { 
+          'Content-Type': 'application/json'
+        }
+      };
+      // const salt = await bcrypt.genSalt(10); // 10자리 salt 생성
+      const hashedId=sha512(this.defaultCredentials.user_id);
+      const user_raw= await axios.post("http://127.0.0.1:8002/api/get_salt");
+      this.salt=user_raw.data.salt;
+      const hashedPassword = await bcrypt.hash(this.defaultCredentials.password,this.salt);
+      const hashedIP=sha512(this.defaultCredentials.IP);
+      const User={
+        "user_id":hashedId,
+        "password":hashedPassword,
+        "IP":hashedIP,
+        "salt":this.salt
+      };
+      const token_raw=await axios.post("http://127.0.0.1:8002/api/mk_token",User);
+      this.token=token_raw.data.token;
+      sessionStorage.setItem('storedToken', this.token);
+      this.$store.dispatch('setToken', this.token);
+      console.log(this.token);
+    }
   },
   mounted () {
     this.moment = moment // moment 함수를 this에 할당합니다.
@@ -56,7 +106,7 @@ export default {
   },
   beforeUnmount () {
     clearInterval(this.timer)
-  }
+  },
 }
 
 </script>
