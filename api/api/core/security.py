@@ -61,19 +61,6 @@ async def mk_token(User:User):
     return {"token":token}
   else:
     return {"status":"access failed.."}
-  
-# # 어찌합니까....
-# async def check_token(request: Request):
-#   token_user = request.headers.get("Authorization")
-#   if not token_user:
-#       raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Missing token")
-#   # 'Bearer' 문자열 제거
-#   token_user = token_user[7:]
-#   # 전역 변수에 저장된 토큰과 비교
-#   if token_user != token:
-#       raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
-#   return token_user
-# from fastapi import Request, HTTPException, status
 
 async def check_token(authorization: Optional[str] = Header(None)):
     if authorization is None:
