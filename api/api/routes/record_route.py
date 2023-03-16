@@ -19,6 +19,7 @@ import torch.nn.functional as F
 from ..core.security import check_token,token
 
 
+
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
 router = APIRouter()
@@ -125,11 +126,11 @@ async def model_pred(pid:int):
     # 스케일링하기~
     for col in COLS:
       pred_sat_dropped[col] = (pred_sat_dropped[col] - col_stat[col]['mean']) / col_stat[col]['std']
-    
+
     # zero 패딩하기!
     pred_array=pred_sat_dropped.values
     # print(pred_array)
-    input_tensor_raw = torch.tensor(pred_array, dtype=torch.float32).unsqueeze(0) 
+    input_tensor_raw = torch.tensor(pred_array, dtype=torch.float32).unsqueeze(0)
     input_tensor=cut_or_fill_seq(input_tensor_raw,seq_len=max_seq_len)
 
     sepsis_model.load_state_dict(torch.load("api\\0.775.pt"))
@@ -150,7 +151,7 @@ async def model_pred(pid:int):
     # session.commit()
     # session.close()
     return sep,percent
-  
+
 @router.get("/api/data/")
 async def get_data(limit: int = 10, page: int = 1, token: str = Depends(check_token)):
   offset = (page - 1) * limit
@@ -190,7 +191,7 @@ async def get_latest_sepsis_percent(limit: int = 10, page: int = 1,token: str = 
   session.close()
   return {"data": data, "count": count,'page':{'page':1,'limit':10}}
 
-# 
+#
 @router.get('/api/get_all_record')
 async def get_all_record(token: str = Depends(check_token)):
   record=session.query(AllPatientRecordView).all()
@@ -264,7 +265,7 @@ async def update_record(pid:int, record_u:Record_u,token: str = Depends(check_to
 @router.get('/api/chart_records/{pid}')
 async def chart_records(pid:int,token: str = Depends(check_token)):
   query=text(f"SELECT * FROM all_patients_vital_record_view WHERE pid={pid} ORDER BY input_time DESC LIMIT 7")
-  
+
   chart_records = session.execute(query).all()
   session.close()
   return chart_records
