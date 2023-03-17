@@ -431,4 +431,8 @@ async def vital_insert(pid:int,vital: Record_i,token: str = Depends(check_token)
     # model 예측 진행 및 예측값으로 업데이트
   return pid
 
-
+@router.get("/api/sepsis_list_for_alarm")
+async def sepsis_list_for_alarm():
+  sepsis_raw=session.query(NowViewSepsis).all()
+  dict_sepsis = [x.__dict__ for x in sepsis_raw]
+  print(dict_sepsis)

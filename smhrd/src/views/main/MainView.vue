@@ -262,6 +262,7 @@ navigateToRoute(patient) {
       const pageNum = parseInt(this.pageSearchTerm);
       if (!isNaN(pageNum) && pageNum > 0 && pageNum <= this.pageCount) {
         this.currentPage = pageNum;
+        this.fetchData();
       }
       this.pageSearchTerm = '';
     },
@@ -349,13 +350,13 @@ navigateToRoute(patient) {
   },
     computed: {
       gender() {
-    return this.patients.map(patient => patient.Gender === 1 ? 'F' : 'M');
+        return this.patients.map(patient => patient.Gender === 1 ? 'F' : 'M');
   },
-    pageCount() {
-      const count = this.count;
-      const perPage = this.perPage;
-      return Math.ceil(count / perPage);
-    },
+      pageCount() {
+        const count = this.count;
+        const perPage = this.perPage;
+        return Math.ceil(count / perPage);
+      },
     pages() {
       const pagesToShow = 10;
       const pages = [];

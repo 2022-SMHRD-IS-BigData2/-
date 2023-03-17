@@ -278,6 +278,7 @@ navigateToRoute(patient) {
       const pageNum = parseInt(this.pageSearchTerm);
       if (!isNaN(pageNum) && pageNum > 0 && pageNum <= this.pageCount) {
         this.currentPage = pageNum;
+        this.fetchData();
       }
       this.pageSearchTerm = '';
     },

@@ -9,7 +9,8 @@ import { createStore } from 'vuex'
 export default createStore({
   state: {
     searchQuery: '',
-    token:''
+    token:'',
+    sepsis_patient:''
   },
   getters: {},
   mutations: {
