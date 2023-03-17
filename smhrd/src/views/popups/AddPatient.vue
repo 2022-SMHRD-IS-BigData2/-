@@ -48,7 +48,7 @@
         </tr>
       </table>
       <input type="hidden" v-model="admin_date">
-      <button type="submit" class="btn" @click="mk_patient">저장</button>
+      <button type="submit" class="btn">저장</button>
       <button class="btn" @click="closeWindow">취소</button>
     </form>
   </div>

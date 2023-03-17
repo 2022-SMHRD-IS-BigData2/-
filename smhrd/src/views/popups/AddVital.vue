@@ -44,7 +44,7 @@
     <input type="hidden" v-model="patients.birth_date">
     <input type="hidden" v-model="patients.Gender">
 
-    <button type="submit" @click=insertRecord class="btn">저장</button>
+    <button type="submit" class="btn">저장</button>
     <button class="btn" @click="closeWindow">취소</button>
   </form>
   </div>

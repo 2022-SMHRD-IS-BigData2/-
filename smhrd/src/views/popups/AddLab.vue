@@ -119,7 +119,7 @@
           </tr>
         </tbody>
       </table>
-      <button type="submit" class="btn" @click="insertLabRecord">저장</button>
+      <button type="submit" class="btn">저장</button>
       <button class="btn" @click="close">취소</button>
     </form>
   </div>
