@@ -9,7 +9,7 @@
         </tr>
         <tr>
           <td>생년월일</td>
-          <td><input type="date" v-model="birth_date" :style="birth_date ? 'border-color: green;' : 'border-color: red;'"></td>
+          <td><input type="date" v-model="birth_date" :style="birth_date ? 'border-color: green;' : 'border-color: red;'" style="width: 100px;"></td>
         </tr>
         <tr>
           <td>성별</td>
@@ -140,7 +140,7 @@ export default {
     catch (error) {
     alert("입력값을 확인해주세요.")
     console.error(error);
-  } 
+  }
   }
   }
   }
