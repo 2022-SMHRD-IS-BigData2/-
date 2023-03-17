@@ -126,10 +126,7 @@ async def model_pred(pid:int):
     # 스케일링하기~
     for col in COLS:
       pred_sat_dropped[col] = (pred_sat_dropped[col] - col_stat[col]['mean']) / col_stat[col]['std']
-<<<<<<< HEAD
-=======
 
->>>>>>> cf3f9a793cc35f8c71e875859cafee4ce9a3f138
     # zero 패딩하기!
     pred_array=pred_sat_dropped.values
     # print(pred_array)
