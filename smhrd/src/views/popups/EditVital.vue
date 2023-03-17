@@ -44,7 +44,6 @@
     <input type="hidden" v-model="patients.p_record_seq">
     <button type="submit" class="btn">저장</button>
     <button class="btn" @click="closeWindow">취소</button>
-    <button class="btn">삭제</button>
   </form>
   </div>
 </template>

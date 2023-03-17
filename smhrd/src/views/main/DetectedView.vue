@@ -156,25 +156,25 @@ export default {
       this.currentPage = 1;
       this.fetchData();
     }
-  },
-  patients: function(newPatients, oldPatients) {
-    const addedNames = newPatients.map(patient => patient.name);
-    const deletedNames = oldPatients.filter(patient => !newPatients.some(p => p.name === patient.name));
-    const message = `${addedNames.join(', ')} 환자가 추가되었고, ${deletedNames.join(', ')} 환자가 제거되었습니다.`;
-
-    this.showToast(message);
-    console.log(message);
-    // this.$toast.success({
-    //   message: message,
-    //   duration: 3000, // 2초 동안 표시
-    //   position: 'top', // 화면 상단에 표시
-    //   className: 'custom-class', // 사용자 지정 CSS 클래스 적용
-    //   onClose: () => {
-    //     // console.log('토스트가 닫혔습니다.');
-    //   }
-    // });
-      console.log(message);
   }
+  // patients: function(newPatients, oldPatients) {
+  //   const addedNames = newPatients.map(patient => patient.name);
+  //   const deletedNames = oldPatients.filter(patient => !newPatients.some(p => p.name === patient.name));
+  //   const message = `${addedNames.join(', ')} 환자가 추가되었고, ${deletedNames.join(', ')} 환자가 제거되었습니다.`;
+
+  //   this.showToast(message);
+  //   console.log(message);
+  //   // this.$toast.success({
+  //   //   message: message,
+  //   //   duration: 3000, // 2초 동안 표시
+  //   //   position: 'top', // 화면 상단에 표시
+  //   //   className: 'custom-class', // 사용자 지정 CSS 클래스 적용
+  //   //   onClose: () => {
+  //   //     // console.log('토스트가 닫혔습니다.');
+  //   //   }
+  //   // });
+  //     console.log(message);
+  // }
 },
   mounted () {
     axios.get("http://127.0.0.1:8002/api/get_latest_sepsis_percent")
