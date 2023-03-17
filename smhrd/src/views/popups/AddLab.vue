@@ -216,7 +216,7 @@ async insertLabRecord() {
     try {
     console.log(LabData);
     // API 호출
-    const response = await axios.post(`http://127.0.0.1:8002/api/lab_insert/${LabData.pid}`,LabData);
+    await axios.post(`http://127.0.0.1:8002/api/lab_insert/${LabData.pid}`,LabData);
     await axios.get(`http://127.0.0.1:8002/api/predict_sepsis/${LabData.pid}`);
     // 창 닫기
     alert("입력 성공");

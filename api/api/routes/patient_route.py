@@ -27,11 +27,11 @@ async def index(pid:int):
 
 @router.post('/api/mk_patient')
 async def mk_patient(mk_patient:Patient):
-  query = text(f"insert into patient_general (birth_date, Gender, name, emp_id) values ('{mk_patient.birth_date}', {mk_patient.Gender}, '{mk_patient.name}', {mk_patient.emp_id})")
+  query = text(f"insert into patient_general (birth_date, Gender, name, emp_id,admin_date) values ('{mk_patient.birth_date}', {mk_patient.Gender}, '{mk_patient.name}', {mk_patient.emp_id}, '{mk_patient.admin_date}')")
   session.execute(query)
   session.commit()
   query2="SELECT * FROM patient_general ORDER BY pid DESC LIMIT 1"
-  patient=session.execute(query2)
+  patient=session.execute(query2).fetchone()
   session.close()
-  return patient
+  return {"patient":patient}
 

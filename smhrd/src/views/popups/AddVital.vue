@@ -135,7 +135,7 @@ export default {
     };
     try {
       // API 호출
-      const response1=await axios.post(`http://127.0.0.1:8002/api/vital_insert/${record_i.pid}`,record_i);
+      await axios.post(`http://127.0.0.1:8002/api/vital_insert/${record_i.pid}`,record_i);
       await axios.get(`http://127.0.0.1:8002/api/predict_sepsis/${record_i.pid}`);
       // alert("입력 성공");
       window.close();

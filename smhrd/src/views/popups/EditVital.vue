@@ -139,10 +139,9 @@ export default {
       };
     try {
       // API 호출
-      const response = await axios.post(`http://127.0.0.1:8002/api/update_record/${this.patients.pid}`,record_u);
+      await axios.post(`http://127.0.0.1:8002/api/update_record/${this.patients.pid}`,record_u);
       await axios.get(`http://127.0.0.1:8002/api/predict_sepsis/${record_u.pid}`);
       // 응답 데이터 확인
-      console.log(response.data);
       alert('업데이트 성공')
       // 창 닫기
       window.close();

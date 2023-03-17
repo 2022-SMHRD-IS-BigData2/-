@@ -8,7 +8,7 @@ import datetime
 class VitalRecordAll(Base):
   __tablename__ = 'vital_record_all'
   pid=Column(INT,ForeignKey('patient_general.pid'),primary_key=True)
-  ICULOS=Column(INT,nullable=False)
+  ICULOS=Column(INT,nullable=True)
   p_record_seq = Column(INT, primary_key=True)
   birth_date=Column(DATE,nullable=False)
   input_time=Column(DATETIME,nullable=False)

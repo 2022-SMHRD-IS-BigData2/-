@@ -125,14 +125,13 @@ async def model_pred(pid:int):
     # 스케일링하기~
     for col in COLS:
       pred_sat_dropped[col] = (pred_sat_dropped[col] - col_stat[col]['mean']) / col_stat[col]['std']
-    
     # zero 패딩하기!
     pred_array=pred_sat_dropped.values
     # print(pred_array)
     input_tensor_raw = torch.tensor(pred_array, dtype=torch.float32).unsqueeze(0) 
     input_tensor=cut_or_fill_seq(input_tensor_raw,seq_len=max_seq_len)
 
-    sepsis_model.load_state_dict(torch.load("api\\0.775.pt"))
+    sepsis_model.load_state_dict(torch.load("api\\0.775_2.pt"))
     sepsis_model.eval()
     with torch.no_grad():
       output_tensor = sepsis_model(input_tensor)
@@ -141,14 +140,14 @@ async def model_pred(pid:int):
     output = output_tensor.squeeze().item() # Tensor에서 값을 꺼내서 scalar 값으로 변환
     # update해주기
     sep,percent=percent_80(output)
-    # query=text("update vital_record_all set sepsis_in_six = :sepsis_in_six, sepsis_percent = :sepsis_percent where pid = :pid and p_record_seq = :p_record_seq")
-    # values={'sepsis_in_six' : sep,
-    #         'sepsis_percent' : percent,
-    #         'pid': pid,
-    #         'p_record_seq':data_sat_raw.iloc[-1].p_record_seq}
-    # session.execute(query,values)
-    # session.commit()
-    # session.close()
+    query=text("update vital_record_all set sepsis_in_six = :sepsis_in_six, sepsis_percent = :sepsis_percent where pid = :pid and p_record_seq = :p_record_seq")
+    values={'sepsis_in_six' : sep,
+            'sepsis_percent' : percent,
+            'pid': pid,
+            'p_record_seq':data_sat_raw.iloc[-1].p_record_seq}
+    session.execute(query,values)
+    session.commit()
+    session.close()
     return sep,percent
   
 @router.get("/api/data/")

@@ -29,7 +29,6 @@ import moment from 'moment';
 import axios from 'axios';
 import sha512 from 'js-sha512';
 import bcrypt from 'bcryptjs';
-
 export default {
   data () {
     return {
@@ -105,7 +104,7 @@ export default {
     }, 1000)
   },
   beforeUnmount () {
-    clearInterval(this.timer)
+    clearInterval(this.timer);
   },
 }
 
