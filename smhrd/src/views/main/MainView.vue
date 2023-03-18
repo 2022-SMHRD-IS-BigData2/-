@@ -102,6 +102,8 @@
 import moment from 'moment'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
+import { throwStatement } from '@babel/types'
+
 export default {
   components: {},
   data () {
@@ -156,7 +158,20 @@ export default {
     },
     '$store.state.token'(){
       this.token=this.$store.state.token;
-    }
+    },
+    // '$store.state.sepsisPatient': {
+    //   deep: true,
+    //   handler: function(newVal, oldVal) {
+    //     const addedPatients = newVal.filter(x => !oldVal.includes(x));
+    //     const removedPatients = oldVal.filter(x => !newVal.includes(x));
+    //     addedPatients.forEach(patient => {
+    //       this.$toast.success(`'${patient}' 환자가 위험군에 추가되었습니다.`);
+    //     });
+    //     removedPatients.forEach(patient => {
+    //       this.$toast.info(`'${patient}' 환자가 위험군에서 제외되었습니다.`);
+    //     });
+    //   }
+    // }
   },
   async mounted () {
     while(!this.$store.state.token){
@@ -305,7 +320,7 @@ navigateToRoute(patient) {
       event.target.style.borderColor = 'green';
       }
       },
-      async insertRecord(pid) {
+    async insertRecord(pid) {
       let fast_pid=document.querySelector("input[name=fast_pid"+pid+"]").value;
       let fast_birth_date=document.querySelector("input[name=fast_birth_date"+pid+"]").value;
       let fast_Gender=document.querySelector("input[name=fast_Gender"+pid+"]").value;
@@ -334,8 +349,11 @@ navigateToRoute(patient) {
     // API 호출
     await axios.post(`http://127.0.0.1:8002/api/vital_insert/${pid}`,record_i);
     await axios.get(`http://127.0.0.1:8002/api/predict_sepsis/${record_i.pid}`);
-    // 응답 데이터 확인
-    // 창 닫기
+    const name_raw=await axios.get('http://127.0.0.1:8002/api/sepsis_list_for_alarm');
+    const name_list=name_raw.data.name_list;
+    if (name_list!=this.$store.state.sepsisPatient){
+      this.$store.dispatch('setSepsisPatient',name_list);
+      }
     const patient = this.patients.find(p => p.pid === parseInt(pid));
     if (patient) {
       patient.isAddOn = false;

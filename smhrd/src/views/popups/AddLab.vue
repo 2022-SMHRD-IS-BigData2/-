@@ -218,6 +218,11 @@ async insertLabRecord() {
     // API 호출
     await axios.post(`http://127.0.0.1:8002/api/lab_insert/${LabData.pid}`,LabData);
     await axios.get(`http://127.0.0.1:8002/api/predict_sepsis/${LabData.pid}`);
+    const name_raw=await axios.get('http://127.0.0.1:8002/api/sepsis_list_for_alarm');
+    const name_list=name_raw.data.name_list;
+    if (name_list!=this.$store.state.sepsisPatient){
+      this.$store.dispatch('setSepsisPatient',name_list);
+      }
     // 창 닫기
     alert("입력 성공");
     window.close();

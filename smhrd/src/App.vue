@@ -46,12 +46,55 @@ export default {
         IP:'http://127.0.0.1'
       },
       salt:'',
-      token:''
+      token:'',
+      sepsisPatient:[],
+      initialLoad: true
     }
   },
   async created(){
     this.url = this.$route.path;
     await this.loadToken();
+    if (this.$store.state.sepsisPatient.lenth==0){
+      this.loadSepsisPatient();
+    }
+  },
+  watch: {
+    '$store.state.sepsisPatient': {
+      deep: true,
+      handler: function(newVal, oldVal) {
+        console.log('Watch handler 실행됨');
+        console.log('sepsisPatient 변경됨:', newVal, oldVal);
+        if (this.initialLoad) {
+        this.initialLoad = false;
+        return;
+      }
+
+      newVal = Array.isArray(newVal) ? newVal : [];
+      oldVal = Array.isArray(oldVal) ? oldVal : [];
+
+      const addedPatients = newVal.filter(patient => !oldVal.some(oldPatient => oldPatient.pid === patient.pid));
+      const removedPatients = oldVal.filter(patient => !newVal.some(newPatient => newPatient.pid === patient.pid));
+      addedPatients.forEach(patient => {
+                console.log(patient);
+                this.$swal.fire({
+                    icon: 'success',
+                    title: `pid '${patient.pid}'번 '${patient.name}' 환자가 추가되었습니다.`,
+                    timer: 3000,
+                    showConfirmButton: false,
+                });
+            });
+
+      removedPatients.forEach(patient => {
+          console.log(patient);
+          this.$swal.fire({
+              icon: 'info',
+              title: `pid '${patient.pid}'번 '${patient.name}' 환자가 제거되었습니다.`,
+              timer: 3000,
+              showConfirmButton: false,
+              });
+          });
+      }
+        }
   },
   methods: {
     goBack() {
@@ -61,6 +104,11 @@ export default {
       // store에 searchQuery 저장
       this.$store.dispatch('setSearchQuery', this.searchQuery);
   },
+    async loadSepsisPatient(){
+      const sepsis_raw=await axios.get("http://127.0.0.1:8002/api/sepsis_list_for_alarm");
+      this.sepsisPatient=sepsis_raw.data.name_list;
+      this.$store.dispatch('setSepsisPatient',this.sepsisPatient);
+    },
     async loadToken() {
       let storedToken;
       if (!sessionStorage.getItem('storedToken')) {
@@ -94,7 +142,7 @@ export default {
       sessionStorage.setItem('storedToken', this.token);
       this.$store.dispatch('setToken', this.token);
       console.log(this.token);
-    }
+    },
   },
   mounted () {
     this.moment = moment // moment 함수를 this에 할당합니다.

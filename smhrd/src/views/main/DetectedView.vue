@@ -102,6 +102,7 @@ import moment from 'moment'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
 
+
 export default {
   components: {},
   data () {
@@ -141,6 +142,7 @@ export default {
 
   },
   created () {
+    this.makeSepsisPatient();
     // use(VueToast, {
     //   position: 'top-right',
     // });
@@ -349,8 +351,12 @@ navigateToRoute(patient) {
     // API 호출
     await axios.post(`http://127.0.0.1:8002/api/vital_insert/${pid}`,record_i);
     await axios.get(`http://127.0.0.1:8002/api/predict_sepsis/${record_i.pid}`);
-    // 응답 데이터 확인
-    // 창 닫기
+    const name_raw=await axios.get('http://127.0.0.1:8002/api/sepsis_list_for_alarm');
+    const name_list=name_raw.data.name_list;
+    if (name_list!=this.$store.state.sepsisPatient){
+      this.$store.dispatch('setSepsisPatient',name_list);
+      console.log(name_list);
+    }
     const patient = this.patients.find(p => p.pid === parseInt(pid));
     if (patient) {
       patient.isAddOn = false;
@@ -361,7 +367,14 @@ navigateToRoute(patient) {
     alert("입력값을 확인해주세요.")
     console.error(error);
   }
-}
+},
+async makeSepsisPatient(){
+      const name_raw=await axios.get('http://127.0.0.1:8002/api/sepsis_list_for_alarm');
+      const name_list=name_raw.data.name_list;
+      if (name_list!=this.$store.state.sepsisPatient){
+        this.$store.dispatch('setSepsisPatient',name_list);
+      }
+    }
   },
     computed: {
       gender() {

@@ -142,6 +142,11 @@ export default {
       await axios.get(`http://127.0.0.1:8002/api/predict_sepsis/${record_u.pid}`);
       // 응답 데이터 확인
       alert('업데이트 성공')
+      const name_raw=await axios.get('http://127.0.0.1:8002/api/sepsis_list_for_alarm');
+      const name_list=name_raw.data.name_list;
+      if (name_list!=this.$store.state.sepsisPatient){
+      this.$store.dispatch('setSepsisPatient',name_list);
+      }
       // 창 닫기
       window.close();
     }

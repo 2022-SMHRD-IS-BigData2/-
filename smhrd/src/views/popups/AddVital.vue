@@ -137,6 +137,11 @@ export default {
       // API 호출
       await axios.post(`http://127.0.0.1:8002/api/vital_insert/${record_i.pid}`,record_i);
       await axios.get(`http://127.0.0.1:8002/api/predict_sepsis/${record_i.pid}`);
+      const name_raw=await axios.get('http://127.0.0.1:8002/api/sepsis_list_for_alarm');
+      const name_list=name_raw.data.name_list;
+      if (name_list!=this.$store.state.sepsisPatient){
+      this.$store.dispatch('setSepsisPatient',name_list);
+      }
       // alert("입력 성공");
       window.close();
       // 응답 데이터 확인

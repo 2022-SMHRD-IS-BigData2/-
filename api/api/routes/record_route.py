@@ -104,7 +104,6 @@ async def model_pred(pid:int):
     data_sat_raw.drop('_sa_instance_state',axis=1,inplace=True)
     data_sat_raw=data_sat_raw.sort_values(["pid", "p_record_seq"]).reset_index(drop=True)
     max_seq = len(data_sat_raw)
-
     pred_sat=[]
     # ICULOS 값은 최근값만 사용하도록 해보자~
     for k in range(max_seq):
@@ -116,7 +115,6 @@ async def model_pred(pid:int):
           break
         else:
           break
-
     # pred_sat df로 묶어주기
     pred_sat2=pd.DataFrame(pred_sat)
     pred_sat_dropped=pred_sat2.drop(drop_list,axis=1,inplace=False).copy()
@@ -126,7 +124,6 @@ async def model_pred(pid:int):
     # 스케일링하기~
     for col in COLS:
       pred_sat_dropped[col] = (pred_sat_dropped[col] - col_stat[col]['mean']) / col_stat[col]['std']
-
     # zero 패딩하기!
     pred_array=pred_sat_dropped.values
     # print(pred_array)
@@ -395,7 +392,6 @@ async def vital_insert(pid:int,vital: Record_i,token: str = Depends(check_token)
     vital_insert=VitalRecordAll(**merged_dict)
     session.add(vital_insert)
     session.commit()
-
     # ------------------vital_record_all_mask 만들기 넣기------------  ~~~~~~~~이부분도 모듈화가 가능할듯!!~~~~~~~~~~~~
     # 최근의 record_all 하나 가져오기
     latest_raw=session.query(VitalRecordAll).filter(VitalRecordAll.pid == pid).order_by(desc(VitalRecordAll.p_record_seq)).first()
@@ -403,7 +399,6 @@ async def vital_insert(pid:int,vital: Record_i,token: str = Depends(check_token)
     df_latest=pd.DataFrame([dict_latest_raw])
     df_latest.drop('_sa_instance_state',axis=1,inplace=True)
     df_droped=df_latest.drop(lab_cols2,axis=1,inplace=False)
-
     # pid빼고 null으로 채워진 lab 데이터 생성!
     dict_null={'pid':pid}
     lab_null=LabData(**dict_null)
@@ -422,17 +417,14 @@ async def vital_insert(pid:int,vital: Record_i,token: str = Depends(check_token)
     # df_filled와 df_masks를 merge
     df_null_merged_mask = df_droped
     df_null_merged_dict=df_null_merged_mask.iloc[0].to_dict()
-#   VitalRecordAllMask 테이블의 primary key가 'pid'와 'p_record_seq' 인지 확인이 필요합니다
 # -------------vital_record_all_mask 업데이트~-----------------
     sub_mask = VitalRecordAllMask(**df_null_merged_dict)
     session.add(sub_mask)
     session.commit()
-    # 최근 30개만 사용!            ~~~~~~~이 아래부분은 모듈화가 가능할것같음!~~~~~~~~~~~~
-    # model 예측 진행 및 예측값으로 업데이트
   return pid
 
 @router.get("/api/sepsis_list_for_alarm")
 async def sepsis_list_for_alarm():
-  sepsis_raw=session.query(NowViewSepsis).all()
-  dict_sepsis = [x.__dict__ for x in sepsis_raw]
-  print(dict_sepsis)
+  sepsis_raw = session.query(NowViewSepsis).all()
+  sepsis_list = [{"pid": x.pid, "name": x.name} for x in sepsis_raw]
+  return  {"name_list":sepsis_list}

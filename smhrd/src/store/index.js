@@ -10,7 +10,7 @@ export default createStore({
   state: {
     searchQuery: '',
     token:'',
-    sepsis_patient:''
+    sepsisPatient:[]
   },
   getters: {},
   mutations: {
@@ -21,6 +21,9 @@ export default createStore({
     setToken(state, token) {
       state.token = token
     },
+    setSepsisPatient(state, sepsisPatient) {
+      state.sepsisPatient = sepsisPatient
+    },
   },
   actions: {
     // 데이터 가져오기
@@ -29,6 +32,9 @@ export default createStore({
     },
     setToken({ commit }, token) {
       commit('setToken', token)
+    },
+    setSepsisPatient({ commit }, sepsisPatient) {
+      commit('setSepsisPatient', sepsisPatient)
     },
 },
   modules: {},
