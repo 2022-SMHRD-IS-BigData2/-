@@ -75,26 +75,26 @@ export default {
       const addedPatients = newVal.filter(patient => !oldVal.some(oldPatient => oldPatient.pid === patient.pid));
       const removedPatients = oldVal.filter(patient => !newVal.some(newPatient => newPatient.pid === patient.pid));
       addedPatients.forEach(patient => {
-                console.log(patient);
-                this.$swal.fire({
-                    icon: 'success',
-                    title: `pid '${patient.pid}'번 '${patient.name}' 환자가 추가되었습니다.`,
-                    timer: 3000,
-                    showConfirmButton: false,
-                });
-            });
+        console.log(patient);
+        this.$swal.fire({
+            icon: 'success',
+            title: `pid '${patient.pid}'번 '${patient.name}' 환자가 패혈증 환자에 추가되었습니다.`,
+            timer: 3000,
+            showConfirmButton: false,
+        });
+      });
 
       removedPatients.forEach(patient => {
-          console.log(patient);
-          this.$swal.fire({
-              icon: 'info',
-              title: `pid '${patient.pid}'번 '${patient.name}' 환자가 제거되었습니다.`,
-              timer: 3000,
-              showConfirmButton: false,
-              });
-          });
+        console.log(patient);
+        this.$swal.fire({
+            icon: 'info',
+            title: `pid '${patient.pid}'번 '${patient.name}' 환자가 패혈증 환자에서 제외 되었습니다.`,
+            timer: 3000,
+            showConfirmButton: false,
+            });
+        });
+    }
       }
-        }
   },
   methods: {
     goBack() {
