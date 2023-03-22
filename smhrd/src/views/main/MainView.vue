@@ -328,7 +328,7 @@ navigateToRoute(patient) {
       let fast_O2Sat=document.querySelector("input[name=fast_O2Sat"+pid+"]").value;
       let fast_Temp=document.querySelector("input[name=fast_Temp"+pid+"]").value;
       let fast_Resp=document.querySelector("input[name=fast_Resp"+pid+"]").value;
-      let fast_SBP=document.querySelector("input[name=fast_DBP"+pid+"]").value;
+      let fast_SBP=document.querySelector("input[name=fast_SBP"+pid+"]").value;
       let fast_DBP=document.querySelector("input[name=fast_DBP"+pid+"]").value;
 
 

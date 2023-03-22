@@ -378,8 +378,7 @@ async def vital_insert(pid:int,vital: Record_i,token: str = Depends(check_token)
     session.add(vital_mask_insert)
     session.commit()
   else:#lab data가 없을때~
-      # -----------------vital_record_all 만들기 넣기--------------------------
-    lab_list=[]
+    vital_dict=vital.dict()
     df_vi=pd.DataFrame([vital_dict])
     lab_list=[]
     for col in COLS:
@@ -390,6 +389,7 @@ async def vital_insert(pid:int,vital: Record_i,token: str = Depends(check_token)
     df_merged=pd.concat([df_vi,df_medi_droped],axis=1)
     merged_dict = df_merged.to_dict(orient='records')[0]
     vital_insert=VitalRecordAll(**merged_dict)
+    print(merged_dict)
     session.add(vital_insert)
     session.commit()
     # ------------------vital_record_all_mask 만들기 넣기------------  ~~~~~~~~이부분도 모듈화가 가능할듯!!~~~~~~~~~~~~
@@ -415,16 +415,74 @@ async def vital_insert(pid:int,vital: Record_i,token: str = Depends(check_token)
     df_masks = pd.concat([df_masks[x] for x in MASK_COLS], axis=1)
     df_droped[df_masks.columns]=df_masks
     # df_filled와 df_masks를 merge
-    df_null_merged_mask = df_droped
+    df_null_merged_mask2 = pd.merge(df_latest,df_droped)
+    df_null_merged_mask=df_null_merged_mask2.drop(['sepsis_in_six','sepsis_percent'],axis=1,inplace=False).copy()
     df_null_merged_dict=df_null_merged_mask.iloc[0].to_dict()
-# -------------vital_record_all_mask 업데이트~-----------------
+    print(df_null_merged_dict)
+
+  # # -------------vital_record_all_mask 업데이트~-----------------
     sub_mask = VitalRecordAllMask(**df_null_merged_dict)
     session.add(sub_mask)
     session.commit()
   return pid
 
+
+
+@router.post('/api/vital_insert_initial/{pid}')
+async def vital_insert(pid:int,vital: Record_i,token: str = Depends(check_token)):
+      # -----------------vital_record_all 만들기 넣기--------------------------
+  vital_dict=vital.dict()
+  df_vi=pd.DataFrame([vital_dict])
+  lab_list=[]
+  for col in COLS:
+    lab_list.append([col_stat[col]['median']])  # [] 추가
+  df_median=pd.DataFrame(lab_list).T
+  df_median.columns=COLS
+  df_medi_droped=df_median.drop(v_insert_list,axis=1,inplace=False).copy()
+  df_merged=pd.concat([df_vi,df_medi_droped],axis=1)
+  merged_dict = df_merged.to_dict(orient='records')[0]
+  vital_insert=VitalRecordAll(**merged_dict)
+  print(merged_dict)
+  session.add(vital_insert)
+  session.commit()
+  # ------------------vital_record_all_mask 만들기 넣기------------  ~~~~~~~~이부분도 모듈화가 가능할듯!!~~~~~~~~~~~~
+  # 최근의 record_all 하나 가져오기
+  latest_raw=session.query(VitalRecordAll).filter(VitalRecordAll.pid == pid).order_by(desc(VitalRecordAll.p_record_seq)).first()
+  dict_latest_raw=latest_raw.__dict__
+  df_latest=pd.DataFrame([dict_latest_raw])
+  df_latest.drop('_sa_instance_state',axis=1,inplace=True)
+  df_droped=df_latest.drop(lab_cols2,axis=1,inplace=False)
+  # pid빼고 null으로 채워진 lab 데이터 생성!
+  dict_null={'pid':pid}
+  lab_null=LabData(**dict_null)
+  dict_lab_null=lab_null.__dict__
+  df_lab_null=pd.DataFrame([dict_lab_null])
+  # merge data 생성해서 mask 만들어주기
+  df_null_merged=pd.merge(df_droped,df_lab_null,on='pid',how='outer')
+  df_masks = pd.DataFrame()
+  MASK_COLS = [x+'_mask' for x in COLS]
+  for col in COLS:
+      # 해당 column에서 NaN이 아닌 값의 index를 True로, NaN이면 False로 설정
+      df_masks[col+'_mask'] = df_null_merged[col].notnull().astype(int)
+  # 모든 mask column을 결합하여 하나의 DataFrame으로 만듦
+  df_masks = pd.concat([df_masks[x] for x in MASK_COLS], axis=1)
+  df_droped[df_masks.columns]=df_masks
+  # df_filled와 df_masks를 merge
+  df_null_merged_mask2 = pd.merge(df_latest,df_droped)
+  df_null_merged_mask=df_null_merged_mask2.drop(['sepsis_in_six','sepsis_percent'],axis=1,inplace=False).copy()
+  df_null_merged_dict=df_null_merged_mask.iloc[0].to_dict()
+  print(df_null_merged_dict)
+
+# # -------------vital_record_all_mask 업데이트~-----------------
+  sub_mask = VitalRecordAllMask(**df_null_merged_dict)
+  session.add(sub_mask)
+  session.commit()
+  return pid
+
+
 @router.get("/api/sepsis_list_for_alarm")
 async def sepsis_list_for_alarm():
   sepsis_raw = session.query(NowViewSepsis).all()
   sepsis_list = [{"pid": x.pid, "name": x.name} for x in sepsis_raw]
+
   return  {"name_list":sepsis_list}

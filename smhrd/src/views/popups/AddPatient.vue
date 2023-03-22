@@ -116,11 +116,11 @@ export default {
       "emp_id":this.emp_id,
       "admin_data":this.admin_date
     }
-
-    await axios.post(`http://127.0.0.1:8002/api/mk_patient/`,patient);
+    const response=await axios.post(`http://127.0.0.1:8002/api/mk_patient/`,patient);
     this.patient=response.data.patient;
     const record_i={
       pid : this.patient.pid,
+      ICULOS:1,
       input_time: this.admin_date,
       birth_date: this.patient.birth_date,
       Gender: this.patient.Gender,
@@ -133,18 +133,20 @@ export default {
       sepsis_in_six: 0,
       sepsis_percent: 0
     };
-    await axios.post(`http://127.0.0.1:8002/api/vital_insert/${record_i.pid}`,record_i);
-    await axios.get(`http://127.0.0.1:8002/api/predict_sepsis/${record_i.pid}`);
-    const name_raw=await axios.get('http://127.0.0.1:8002/api/sepsis_list_for_alarm');
-    const name_list=name_raw.data.name_list;
-    if (name_list!=this.$store.state.sepsisPatient){
-      this.$store.dispatch('setSepsisPatient',name_list);
+      await axios.post(`http://127.0.0.1:8002/api/vital_insert_initial/${record_i.pid}`,record_i);
+      await axios.get(`http://127.0.0.1:8002/api/predict_sepsis/${record_i.pid}`);
+      const name_raw=await axios.get('http://127.0.0.1:8002/api/sepsis_list_for_alarm');
+      const name_list=name_raw.data.name_list;
+      if (name_list!=this.$store.state.sepsisPatient){
+        this.$store.dispatch('setSepsisPatient',name_list);
       }
-    alert("입력 성공");
+      alert("입력 성공");
+      window.close();
+      
     }
-    catch (error) {
-    alert("입력값을 확인해주세요.")
-    console.error(error);
+      catch (error) {
+      alert("입력값을 확인해주세요.")
+      console.error(error);
   }
   }
   }
