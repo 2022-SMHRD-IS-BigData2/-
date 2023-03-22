@@ -127,7 +127,7 @@ export default {
       };
       // const salt = await bcrypt.genSalt(10); // 10자리 salt 생성
       const hashedId=sha512(this.defaultCredentials.user_id);
-      const user_raw= await axios.post("http://127.0.0.1:8002/api/get_salt");
+      const user_raw= await axios.get("http://127.0.0.1:8002/api/get_salt/");
       this.salt=user_raw.data.salt;
       const hashedPassword = await bcrypt.hash(this.defaultCredentials.password,this.salt);
       const hashedIP=sha512(this.defaultCredentials.IP);

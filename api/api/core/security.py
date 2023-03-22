@@ -42,10 +42,12 @@ import secrets
 import base64
 # iv = secrets.token_bytes(16)
 token=None
-@router.post("/api/get_salt")
+@router.get("/api/get_salt/")
 async def get_salt():
-  # query=text(f"select salt from token_sepsis where user_id='{hashedId}'")
-  # salt=session.execute(query).fetchone()
+  # query=text(f"select * from token_sepsis where user_id='{hashedId}'")
+  # data_raw=session.execute(query).fetchone()
+  # data_dict=data_raw.__dict__
+  # salt=data_dict['salt']
   salt=session.query(TokenSepsis).filter(TokenSepsis.user_id=="9ec62c20118ff506dac139ec30a521d12b9883e55da92b7d9adeefe09ed4e0bd152e2a099339871424263784f8103391f83b781c432f45eccb03e18e28060d2f").first()
   return salt
 
