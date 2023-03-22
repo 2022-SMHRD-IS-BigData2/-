@@ -117,6 +117,7 @@ async def model_pred(pid:int):
           break
     # pred_sat df로 묶어주기
     pred_sat2=pd.DataFrame(pred_sat)
+    print(pred_sat2)
     pred_sat_dropped=pred_sat2.drop(drop_list,axis=1,inplace=False).copy()
     # 컬럼 재배열
     pred_sat_dropped = pred_sat_dropped[COLS+MASK_COLS]
