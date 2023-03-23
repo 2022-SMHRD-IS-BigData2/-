@@ -2,7 +2,7 @@
   <div id="wrap-box">
     <h3 style="text-align: center">피검사 데이터 추가</h3>
 
-    <form @submit.prevent="insertLabData">
+    <form @submit.prevent>
       <table>
         <tbody>
           <tr>
@@ -119,7 +119,7 @@
           </tr>
         </tbody>
       </table>
-      <button type="submit" class="btn">저장</button>
+      <button type="submit" @click="insertLabRecord" class="btn">저장</button>
       <button class="btn" @click="close">취소</button>
     </form>
   </div>
@@ -132,7 +132,32 @@ export default {
   data() {
     return {
       clickTime: moment().format('YYYY-MM-DDTHH:mm:ss'),
-      patients: []
+      patients: [],
+      EtCO2:null,
+      BaseExcess:null,
+      HCO3:null,
+      FiO2:null,
+      pH:null,
+      PaCO2:null,
+      SaO2:null,
+      AST:null,
+      BUN:null,
+      Alkalinephos:null,
+      Calcium:null,
+      Chloride:null,
+      Creatinine:null,
+      Glucose:null,
+      Lactate:null,
+      Magnesium:null,
+      Phosphate:null,
+      Potassium:null,
+      Bilirubin_total:null,
+      Hct:null,
+      Hgb:null,
+      PTT:null,
+      WBC:null,
+      Fibrinogen:null,
+      Plateletsnull:null,
     }
   },
   setup() {},
